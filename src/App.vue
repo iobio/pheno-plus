@@ -1,20 +1,19 @@
 <template>
-  <div>{{ "Number of encounters: " + encountersNum }}</div>
-  <br>
-  <div v-for="encounter in encountersList">
-    <h3>{{ encounter.type }}</h3>
-    <p>{{ encounter.reason }}</p>
-    <p>{{ "Start: " + encounter.start + " End: " + encounter.end}}</p>
-    <p>{{ encounter.id }}</p>
-  </div>
-
+    <MainContainer
+      :encountersList="encountersList" 
+      :encountersNum="encountersNum">
+    </MainContainer>
 </template>
 
 <script>
   import Encounter from '@/models/Encounter';
+  import MainContainer from '@/components/MainContainer.vue';
 
   export default {
     name: 'App',
+    components: {
+      MainContainer
+    },
     data () {
       return {
         encountersList: [],
@@ -40,7 +39,7 @@
           .then(
               (encounters) => {
                   this.encountersNum = encounters.length;
-                  
+
                   for (let encounter of encounters) {
                       var id = encounter.resource.id;
                       var encType = null;
@@ -89,6 +88,6 @@
   }
 </script>
 
-<style scoped>
+<style lang="css">
 
 </style>

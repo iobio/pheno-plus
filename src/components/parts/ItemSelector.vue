@@ -1,0 +1,56 @@
+<template>
+    <div id="item-selector">
+        <SelectItem 
+        class="list-item" 
+        v-for="item in encountersList"
+        :encounter="item"
+        :color="item.reason !== 'No reason found.' ? true : false"
+        @click="selectEncounter">
+        </SelectItem>
+    </div>
+</template>
+
+<script>
+    import SelectItem from './SelectItem.vue'
+
+    export default {
+        name: 'ItemSelector',
+        components: {
+            SelectItem
+        },
+        props: {
+            encountersList: Array,
+        },
+        data () {
+            return {
+                selected: null,
+            }
+        }, 
+        async mounted () {
+        },
+        methods: {
+            selectEncounter (encounter) {
+                this.$emit('selectEncounter', encounter)
+            }
+        }
+    }
+
+</script>
+
+<style scoped lang="css">
+    #item-selector {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .list-item {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        padding: .5em;
+        border-bottom: 1px solid #ccc;
+    }
+    .list-item:hover {
+        background-color: #ccc;
+    }
+
+</style>
