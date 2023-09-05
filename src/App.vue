@@ -39,7 +39,8 @@
           // Set the list of encounters & the number of encounters
           .then(
               (encounters) => {
-                  console.log(encounters);
+                  this.encountersNum = encounters.length;
+                  
                   for (let encounter of encounters) {
                       var id = encounter.resource.id;
                       var encType = null;
