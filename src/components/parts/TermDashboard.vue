@@ -8,7 +8,6 @@
     export default {
         name: 'TermDashboard',
         props: {
-            term: Object,
         },
         data () {
             return {

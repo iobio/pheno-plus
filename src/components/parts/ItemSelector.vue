@@ -5,6 +5,7 @@
         v-for="item in encountersList"
         :encounter="item"
         :color="item.reason !== 'No reason found.' ? true : false"
+        :selectedEncounter="selectedEncounter"
         @click="selectEncounter">
         </SelectItem>
     </div>
@@ -20,6 +21,7 @@
         },
         props: {
             encountersList: Array,
+            selectedEncounter: Object,
         },
         data () {
             return {
@@ -32,7 +34,7 @@
             selectEncounter (encounter) {
                 this.$emit('selectEncounter', encounter)
             }
-        }
+        },
     }
 
 </script>

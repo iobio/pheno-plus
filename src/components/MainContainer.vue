@@ -5,6 +5,7 @@
         <h3>Item List ({{ encountersNum }})</h3>
         <ItemSelector class="sub-container" 
         :encountersList="encountersList"
+        :selectedEncounter="selectedEncounter"
         @selectEncounter="selectEncounter">
         </ItemSelector>
       </div>
@@ -12,7 +13,7 @@
 
       <div class="content-title-wrapper">
         <h3>Selected Item Content</h3>
-        <ViewInfo class="sub-container" 
+        <ViewInfo
         :encounter="selectedEncounter">
         </ViewInfo>
       </div>
