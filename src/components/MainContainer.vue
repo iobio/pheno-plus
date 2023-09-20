@@ -109,7 +109,6 @@
     width: 100%;
 
     margin-top: 0px;
-    margin-bottom: 20px;
     overflow-y: auto;
     box-sizing: border-box;
     height: 300px;
@@ -134,10 +133,13 @@
     justify-content: center;
     align-items: center;
     width: 8%;
+    min-width: 45px;
   }
 
   #process-btn {
     width: 100%;
+    min-width: 45px;
+    font-size: .8rem;
 
     margin-right: 0px;
     height: 30px;
@@ -152,6 +154,10 @@
   }
   #process-btn:hover {
     background-color: rgb(0,113,189, .8);
+  }
+
+  #view-info.sub-container {
+    overflow-y: hidden;
   }
 
 </style>
