@@ -6,6 +6,7 @@
         <ItemSelector class="sub-container" 
         :encountersList="encountersList"
         :selectedEncounter="selectedEncounter"
+        :alreadyProcessed="itemsAlreadyProcessed"
         @selectEncounter="selectEncounter">
         </ItemSelector>
       </div>
@@ -14,12 +15,13 @@
       <div class="content-title-wrapper">
         <h3>Selected Item Content</h3>
         <ViewInfo
-        :encounter="selectedEncounter">
+        :encounter="selectedEncounter"
+        @textChanged="changeTextContent">
         </ViewInfo>
       </div>
 
       <div id="process-btn-container">
-        <button id="process-btn">Process</button>
+        <button id="process-btn" @click="processText">Process</button>
       </div>
     </div>
 
@@ -52,6 +54,8 @@
     data () {
       return {
         selectedEncounter: null,
+        selectedItemTextContent: null,
+        itemsAlreadyProcessed: [],
       }
     }, 
     async mounted () {
@@ -59,6 +63,22 @@
     methods: {
       selectEncounter (encounter) {
         this.selectedEncounter = encounter;
+      },
+      processText () {
+        //If nothing is selected dont process
+        if (this.selectedEncounter === null) {
+          return;
+        }
+
+        //If the item has already been processed dont add it to the list again
+        if (!this.itemsAlreadyProcessed.includes(this.selectedEncounter.id)) {
+          this.itemsAlreadyProcessed.push(this.selectedEncounter.id);
+        }
+
+        //TODO: Send this text to the phenotype thing and get the response into the term dashboard
+      }, 
+      changeTextContent (textContent) {
+        this.selectedItemTextContent = textContent;
       }
     },
   }

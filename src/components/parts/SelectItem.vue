@@ -1,7 +1,9 @@
 <template>
     <p 
     :class="{'attention': color, 'current-selection' : isSelected}"
-    @click="selectEncounter">{{ encounter.id }}
+    @click="selectEncounter">
+    <div class="select-item-span">{{ encounter.id }}</div>
+    <span class="already-added-sign" v-if="alreadyProcessed.includes(encounter.id)"><img alt="OK" src="../../assets/checkbox.svg"></span>
     </p>
 </template>
 
@@ -12,6 +14,7 @@
             encounter: Object,
             color: Boolean,
             selectedEncounter: Object,
+            alreadyProcessed: Array,
         },
         data () {
             return {
@@ -43,6 +46,17 @@
     }
     .current-selection {
         background-color: #aed5ff;
+    }
+
+    .select-item-span {
+        width: 70%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .already-added-sign {
+        color: green;
+        width: 10%;
     }
 
 </style>

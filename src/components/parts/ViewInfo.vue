@@ -1,7 +1,11 @@
 <template>
     <div v-if="encounter" id="view-info" class="sub-container">
-        <textarea id="encounter-info" type="text" 
-            :value="encounterText"></textarea>
+        <textarea
+            @change="textChanged"
+            @input="textChanged"
+            id="encounter-info" 
+            type="text" 
+            v-model="textInputText"></textarea>
     </div>
 
     <div class="sub-container" v-if="!encounter" id="view-info">
@@ -13,20 +17,33 @@
 <script>
     export default {
         name: 'ViewInfo',
+        emits: ['textChanged'],
         props: {
             encounter: Object,
         },
         data () {
             return {
+                textInputText: '',
             }
         }, 
         async mounted () {
         },
         methods: {
+            textChanged() {
+                this.$emit('textChanged', this.textInputText);
+            }, 
+            setText() {
+                if (!this.encounter) {
+                    return;
+                }
+                this.textInputText = this.encounter.type + '\n' + this.encounter.reason + '\n' + this.encounter.start + '\n' + this.encounter.end;
+            }
         },
         computed: {
-            encounterText() {
-                return this.encounter.type + '\n' + this.encounter.reason + '\n' + this.encounter.start + '\n' + this.encounter.end;
+        }, 
+        watch: {
+            encounter: function (newVal, oldVal) {
+                this.setText();
             }
         }
     }

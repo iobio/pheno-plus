@@ -8,6 +8,7 @@
 <script>
   import Encounter from '@/models/Encounter';
   import MainContainer from '@/components/MainContainer.vue';
+  import constructData from './constructData';
 
   export default {
     name: 'App',
@@ -22,6 +23,8 @@
     }, 
     async mounted () {
       await this.getInfo();
+      let list2 = constructData();
+      this.encountersList = this.encountersList.concat(list2);
     },
     methods: {
       async getInfo () {

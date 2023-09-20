@@ -6,6 +6,7 @@
         :encounter="item"
         :color="item.reason !== 'No reason found.' ? true : false"
         :selectedEncounter="selectedEncounter"
+        :alreadyProcessed="alreadyProcessed"
         @click="selectEncounter">
         </SelectItem>
     </div>
@@ -22,6 +23,7 @@
         props: {
             encountersList: Array,
             selectedEncounter: Object,
+            alreadyProcessed: Array,
         },
         data () {
             return {
@@ -43,6 +45,7 @@
     #item-selector {
         max-height: 300px;
         overflow-y: scroll;
+        padding: 0px;
     }
 
     .list-item {
@@ -50,6 +53,10 @@
         margin-top: 0px;
         padding: .5em;
         border-bottom: 1px solid #ccc;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
     .list-item:hover {
         background-color: #ccc;
