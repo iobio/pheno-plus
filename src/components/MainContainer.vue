@@ -1,29 +1,48 @@
 <template>
-  <div id="num-encounters">{{ "Number of encounters: " + encountersNum }}</div>
-  <div id="selector-view-container">
-    <ItemSelector class="sub-container" 
-      :encountersList="encountersList"
-      @selectEncounter="selectEncounter">
-    </ItemSelector>
+  <div id="the-main-container">
+    <div id="selector-view-container">
+      <div class="content-title-wrapper">
+        <h3>Item List ({{ encountersNum }})</h3>
+        <ItemSelector class="sub-container" 
+        :encountersList="encountersList"
+        @selectEncounter="selectEncounter">
+        </ItemSelector>
+      </div>
 
 
-    <ViewInfo class="sub-container" 
-      :encounter="selectedEncounter">
-    </ViewInfo>
+      <div class="content-title-wrapper">
+        <h3>Selected Item Content</h3>
+        <ViewInfo class="sub-container" 
+        :encounter="selectedEncounter">
+        </ViewInfo>
+      </div>
+
+      <div id="process-btn-container">
+        <button id="process-btn">Process</button>
+      </div>
+    </div>
+
+    <div id="full-width-box-container">
+      <TermDashboard></TermDashboard>
+      <ClipBoardBox></ClipBoardBox>
+    </div>
   </div>
-
 
 </template>
 
 <script>
   import ViewInfo from './parts/ViewInfo.vue'
   import ItemSelector from './parts/ItemSelector.vue'
+  import TermDashboard from './parts/TermDashboard.vue'
+  import ClipBoardBox from './parts/ClipBoardBox.vue'
 
   export default {
     name: 'MainContainer',
     components: {
       ViewInfo,
-      ItemSelector
+      ItemSelector,
+      TermDashboard,
+      ClipBoardBox,
     },
     props: {
       encountersList: Array,
@@ -45,6 +64,13 @@
 </script>
 
 <style lang="css">
+  h3 {
+    width: 100%;
+    border-radius: 3px 3px 0px 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
   #num-encounters {
     font-size: 20px;
     font-weight: bold;
@@ -52,21 +78,80 @@
     margin-top: 20px;
   }
 
-  #selector-view-container {
+  #the-main-container {
+    height: 100%;
+    padding-top: 20px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
-  #selector-view-container .sub-container {
-    width: 40%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 20px;
+  #selector-view-container {
+    width: 85%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+
+  }
+
+  #full-width-box-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    flex: 2;
+    width: 85%;
+  }
+
+  .content-title-wrapper .sub-container {
+    width: 100%;
+
+    margin-top: 0px;
     margin-bottom: 20px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    box-sizing: border-box;
     height: 300px;
     padding: 10px;
+  }
+
+  .content-title-wrapper {
+    margin-top: 1em;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border-radius: 3px;
+
+    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+  }
+
+  #process-btn-container {
+    display: flex;
+    margin-bottom: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 8%;
+  }
+
+  #process-btn {
+    width: 100%;
+
+    margin-right: 0px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+
+    background-color: rgb(0,113,189);
+    color: white;
+
+    text-align: center;
+  }
+  #process-btn:hover {
+    background-color: rgb(0,113,189, .8);
   }
 
 </style>
