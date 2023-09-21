@@ -38,6 +38,7 @@
   import ItemSelector from './parts/ItemSelector.vue'
   import TermDashboard from './parts/TermDashboard.vue'
   import ClipBoardBox from './parts/ClipBoardBox.vue'
+  import fetchFromGru from '../fetchFromGru'
 
   export default {
     name: 'MainContainer',
@@ -76,6 +77,7 @@
         }
 
         //TODO: Send this text to the phenotype thing and get the response into the term dashboard
+        fetchFromGru(this.selectedItemTextContent);
       }, 
       changeTextContent (textContent) {
         this.selectedItemTextContent = textContent;

@@ -1,5 +1,15 @@
 <template>
     <div id="term-dashboard-container">
+        <table id="term-table">
+            <tr>
+                <th>Severity</th>
+                <th>Phenotype / Disorder</th>
+                <th>HPO Term</th>
+                <th>Inheritance</th>
+                <th>Mother</th>
+                <th>Father</th>
+            </tr>
+        </table>
     </div>
 
 </template>
@@ -30,6 +40,11 @@
         padding: 1em;
         
         box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+    }
+
+    #term-table {
+        width: 100%;
+        height: 100%;
     }
 
 </style>
