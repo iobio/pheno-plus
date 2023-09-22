@@ -2,23 +2,25 @@
 export default async function fetchFromGru(data) {
     var chpcGruURL = 'https://mosaic.chpc.utah.edu/gru/api/v1/';
 
-    fetchFromPhenotypeExtractor(chpcGruURL, data);
-    fetchFromClinPhen(chpcGruURL, data);
+    let phenotypeExData = await fetchFromPhenotypeExtractor(chpcGruURL, data);
+    let clinPhenData = await fetchFromClinPhen(chpcGruURL, data);
+
+    return {phenotypeExData: phenotypeExData, clinPhenData: clinPhenData}
 }
 
 async function fetchFromPhenotypeExtractor(gruBaseUrl, data) {
 
-    fetch(gruBaseUrl + 'phenotypeExtractor?notes=' + data)
+    return fetch(gruBaseUrl + 'phenotypeExtractor?notes=' + data)
     .then(response => response.text())
     .then((data) => {
-        console.log(data)
+        return data;
     });
 }
 
 async function fetchFromClinPhen(gruBaseUrl, data) {
     var theText = '';
 
-    fetch(gruBaseUrl + 'clinphen?notes=' + data)
+    return fetch(gruBaseUrl + 'clinphen?notes=' + data)
     .then(response => response.text())
     .then((data) => {
         theText = data;
@@ -42,7 +44,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         });
         //remove any empty objects
         delete theObject[''];
-        console.log(theObject);
+        return theObject;
     });
 
 }

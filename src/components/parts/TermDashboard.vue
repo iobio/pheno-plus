@@ -1,27 +1,39 @@
 <template>
     <div id="term-dashboard-container">
-        <table id="term-table">
-            <tr>
-                <th>Severity</th>
-                <th>Phenotype / Disorder</th>
-                <th>HPO Term</th>
-                <th>Inheritance</th>
-                <th>Mother</th>
-                <th>Father</th>
-            </tr>
-        </table>
+        <h4 id="title-row">
+            <span>Severity</span>
+            <span>Phenotype / Disorder</span>
+            <span>HPO Term</span>
+            <span>Inheritance</span>
+            <span>Mother</span>
+            <span>Father</span>
+            <span>Add</span>
+        </h4>
+        <div v-if="Object.keys(hpoItemsObj).length > 0" id="table-container">
+            <HpoTermRow
+                v-for="hpoItem in hpoItemsObj"
+                :hpoItemObj="hpoItem"></HpoTermRow>
+        </div>
+        <div v-else id="table-container">
+            <span>No terms to show.</span>
+        </div>
     </div>
 
 </template>
 
 <script>
+    import HpoTermRow from './HpoTermRow.vue';
+
     export default {
         name: 'TermDashboard',
+        components: {
+            HpoTermRow,
+        },
         props: {
+            hpoItemsObj: Object,
         },
         data () {
             return {
-                term: this.term,
             }
         }, 
         async mounted () {
@@ -34,6 +46,11 @@
 
 <style>
     #term-dashboard-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+
         width: 100%;
         height: 60%;
         border-radius: 3px;
@@ -42,9 +59,23 @@
         box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
     }
 
-    #term-table {
+    #table-container {
         width: 100%;
-        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    #title-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr 1fr .5fr .5fr .5fr;
+        justify-items: center;
+
+        margin-top: 10px;
+        color: rgb(0,113,189);
     }
 
 </style>

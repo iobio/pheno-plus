@@ -1,10 +1,10 @@
 class ClinPhenResult {
-    constructor(hpoId, phenotypeName, numOccurrences, earliness, exampleSentence) {
-        this.hpoId = hpoId;
-        this.phenotypeName = phenotypeName;
-        this.numOccurrences = numOccurrences;
-        this.earliness = earliness;
-        this.exampleSentence = exampleSentence;
+    constructor(clinPhenResultObj) {
+        this.hpoId = clinPhenResultObj["HPO ID"];
+        this.phenotypeName = clinPhenResultObj["Phenotype name"];
+        this.numOccurrences = clinPhenResultObj["No. occurrences"];
+        this.earliness = clinPhenResultObj["Earliness (lower = earlier)"];
+        this.exampleSentence = clinPhenResultObj["Example sentence"];
     }
 
     //Getters and Setters

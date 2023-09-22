@@ -26,7 +26,9 @@
     </div>
 
     <div id="full-width-box-container">
-      <TermDashboard></TermDashboard>
+      <TermDashboard
+        :hpoItemsObj="hpoItemsObj">
+      </TermDashboard>
       <ClipBoardBox></ClipBoardBox>
     </div>
   </div>
@@ -39,6 +41,7 @@
   import TermDashboard from './parts/TermDashboard.vue'
   import ClipBoardBox from './parts/ClipBoardBox.vue'
   import fetchFromGru from '../fetchFromGru'
+  import ClinPhenResult from '../models/ClinPhenResult.js'
 
   export default {
     name: 'MainContainer',
@@ -57,6 +60,7 @@
         selectedEncounter: null,
         selectedItemTextContent: null,
         itemsAlreadyProcessed: [],
+        hpoItemsObj: {},
       }
     }, 
     async mounted () {
@@ -65,7 +69,7 @@
       selectEncounter (encounter) {
         this.selectedEncounter = encounter;
       },
-      processText () {
+      async processText () {
         //If nothing is selected dont process
         if (this.selectedEncounter === null) {
           return;
@@ -77,7 +81,14 @@
         }
 
         //TODO: Send this text to the phenotype thing and get the response into the term dashboard
-        fetchFromGru(this.selectedItemTextContent);
+        let gru_data = await fetchFromGru(this.selectedItemTextContent);
+        let clinPhen = gru_data.clinPhenData;
+
+        //for each item in the clinPhen object create a new clinPhenResult and add to the hpoItemsObj
+        for (let key in clinPhen) {
+          let clinPhenResult = new ClinPhenResult(clinPhen[key]);
+          this.hpoItemsObj[key] = clinPhenResult;
+        }
       }, 
       changeTextContent (textContent) {
         this.selectedItemTextContent = textContent;
