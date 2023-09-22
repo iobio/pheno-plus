@@ -7,7 +7,7 @@
             <span>Inheritance</span>
             <span>Mother</span>
             <span>Father</span>
-            <span>Add</span>
+            <span></span>
         </h4>
         <div v-if="Object.keys(hpoItemsObj).length > 0" id="table-container">
             <HpoTermRow
@@ -61,21 +61,26 @@
 
     #table-container {
         width: 100%;
-        overflow-y: auto;
+        overflow-y: scroll;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        height: auto;
+        flex: 1;
     }
 
     #title-row {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1.5fr 1fr 1fr .5fr .5fr .5fr;
-        justify-items: center;
+        justify-items: start;
 
         margin-top: 10px;
+        margin-bottom: 5px;
         color: rgb(0,113,189);
+        padding-left: .25em;
+        padding-right: 16px;
     }
 
 </style>

@@ -114,7 +114,7 @@
     padding-top: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
   }
 
@@ -123,8 +123,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    flex: 1;
-
+    height: 35%;
   }
 
   #full-width-box-container {
@@ -132,7 +131,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    flex: 2;
+
     width: 85%;
   }
 
@@ -152,7 +151,7 @@
     flex-direction: column;
     align-items: start;
     border-radius: 3px;
-    height: 350px;
+    height: 95%;
 
     box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
   }
