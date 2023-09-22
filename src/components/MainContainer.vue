@@ -123,7 +123,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 35%;
+    height: 40%;
   }
 
   #full-width-box-container {
@@ -131,7 +131,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-
+    height: 55%;
     width: 85%;
   }
 

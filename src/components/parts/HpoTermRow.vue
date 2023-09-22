@@ -6,7 +6,8 @@
         <span>Unknown</span>
         <span><input type="radio"></span>
         <span><input type="radio"></span>
-        <span class="delete-btn-span"><img class="delete-btn-img" alt="OK" src="../../assets/backspace.svg"></span>
+        <span class="delete-btn-span"><input type="checkbox" name="use" id=""></span>
+        <span class="delete-btn-span"><img class="delete-btn-img" alt="remove" src="../../assets/backspace.svg"></span>
     </div>
 </template>
 
@@ -32,7 +33,7 @@
     .hpo-row-container {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1.5fr 1fr 1fr .5fr .5fr .5fr;
+        grid-template-columns: .5fr 1.75fr 1fr 1fr .5fr .5fr .25fr .25fr;
         justify-items: start;
         align-items: center;
 

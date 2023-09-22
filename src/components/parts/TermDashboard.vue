@@ -8,6 +8,7 @@
             <span>Mother</span>
             <span>Father</span>
             <span></span>
+            <span></span>
         </h4>
         <div v-if="Object.keys(hpoItemsObj).length > 0" id="table-container">
             <HpoTermRow
@@ -73,10 +74,10 @@
     #title-row {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1.5fr 1fr 1fr .5fr .5fr .5fr;
+        grid-template-columns: .5fr 1.75fr 1fr 1fr .5fr .5fr .25fr .25fr;
         justify-items: start;
 
-        margin-top: 10px;
+        margin-top: 0px;
         margin-bottom: 5px;
         color: rgb(0,113,189);
         padding-left: .25em;
