@@ -43,7 +43,7 @@
 
 <style scoped lang="css">
     #item-selector {
-        max-height: 300px;
+
         overflow-y: scroll;
         padding: 0px;
     }

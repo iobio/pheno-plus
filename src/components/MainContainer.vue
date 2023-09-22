@@ -1,7 +1,7 @@
 <template>
   <div id="the-main-container">
     <div id="selector-view-container">
-      <div class="content-title-wrapper">
+      <div class="content-title-wrapper item-selector">
         <h3>Item List ({{ encountersNum }})</h3>
         <ItemSelector class="sub-container" 
         :encountersList="encountersList"
@@ -12,16 +12,13 @@
       </div>
 
 
-      <div class="content-title-wrapper">
+      <div class="content-title-wrapper view-info">
         <h3>Selected Item Content</h3>
         <ViewInfo
         :encounter="selectedEncounter"
         @textChanged="changeTextContent">
         </ViewInfo>
-      </div>
-
-      <div id="process-btn-container">
-        <button id="process-btn" @click="processText">Process</button>
+        <button id="process-btn" @click="processText">Process Into HPO Terms</button>
       </div>
     </div>
 
@@ -145,37 +142,34 @@
     margin-top: 0px;
     overflow-y: auto;
     box-sizing: border-box;
-    height: 300px;
+
     padding: 10px;
   }
 
   .content-title-wrapper {
     margin-top: 1em;
-    width: 45%;
     display: flex;
     flex-direction: column;
     align-items: start;
     border-radius: 3px;
+    height: 350px;
 
     box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
   }
 
-  #process-btn-container {
-    display: flex;
-    margin-bottom: 20px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 8%;
-    min-width: 45px;
+  .content-title-wrapper.item-selector {
+    width: 42%;
+  }
+  .content-title-wrapper.view-info {
+    width: 55%;
   }
 
   #process-btn {
-    width: 100%;
+    width: 95%;
     min-width: 45px;
     font-size: .8rem;
 
-    margin-right: 0px;
+    margin: 5px 2.5% 5px 2.5%;
     height: 30px;
     border: none;
     border-radius: 3px;
@@ -192,6 +186,7 @@
 
   #view-info.sub-container {
     overflow-y: hidden;
+    height: 80%;
   }
 
 </style>
