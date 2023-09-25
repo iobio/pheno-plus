@@ -1,5 +1,5 @@
 <template>
-    <div class="hpo-row-container">
+    <div class="hpo-row-container" :class="this.thisHpoItemObj.use ? '' : 'disabled'">
         <span>
             <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
                 <option value="mild">mild</option>
@@ -93,6 +93,11 @@
         align-items: center;
 
         padding: .25em;
+    }
+    .hpo-row-container.disabled {
+        opacity: .5;
+        color: grey;
+        text-decoration: line-through;
     }
 
     .delete-btn-span {
