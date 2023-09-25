@@ -1,5 +1,8 @@
 <template>
   <div id="the-main-container">
+    <div id="loading-overlay" :class="{ hidden: hideOverlay}">
+      <p>Loading <br> HPO <br> Terms...</p>
+    </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
         <h3>Item List ({{ encountersNum }})</h3>
@@ -64,6 +67,7 @@
         itemsAlreadyProcessed: [],
         hpoItemsObj: {},
         clipTerms: [],
+        hideOverlay: true,
       }
     }, 
     async mounted () {
@@ -103,7 +107,8 @@
           this.itemsAlreadyProcessed.push(this.selectedEncounter.id);
         }
 
-        //TODO: Send this text to the phenotype thing and get the response into the term dashboard
+        //Show the loading overlay
+        this.hideOverlay = false;
         let gru_data = await fetchFromGru(this.selectedItemTextContent);
         let clinPhen = gru_data.clinPhenData;
 
@@ -112,6 +117,7 @@
           let item = new ChartItem(clinPhen[key]);
           this.hpoItemsObj[key] = item;
         }
+        this.hideOverlay = true;
       }, 
       changeTextContent (textContent) {
         this.selectedItemTextContent = textContent;
@@ -218,6 +224,48 @@
   #view-info.sub-container {
     overflow-y: hidden;
     height: 80%;
+  }
+
+  #loading-overlay.hidden {
+    display: none;
+  }
+
+  #loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(255, 255, 255, .5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #loading-overlay p {
+    font-size: 1.5em;
+    font-weight: bold;
+
+    padding: 1em;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+
+    animation: dimAndBright 2s infinite;
+    text-align: center;
+  }
+
+  @keyframes dimAndBright {
+    0% {
+      background-color: white;
+    }
+    50% {
+      background-color: rgba(7, 135, 221, 0.763);
+    }
+    100% {
+      background-color: white;
+    }
   }
 
 </style>
