@@ -24,7 +24,9 @@
 
     <div id="full-width-box-container">
       <TermDashboard
-        :hpoItemsObj="hpoItemsObj">
+        :hpoItemsObj="hpoItemsObj"
+        @removeItem="removeItem"
+        @updateItem="updateItem">
       </TermDashboard>
       <ClipBoardBox></ClipBoardBox>
     </div>
@@ -38,7 +40,7 @@
   import TermDashboard from './parts/TermDashboard.vue'
   import ClipBoardBox from './parts/ClipBoardBox.vue'
   import fetchFromGru from '../fetchFromGru'
-  import ClinPhenResult from '../models/ClinPhenResult.js'
+  import ChartItem from '../models/ChartItem.js'
 
   export default {
     name: 'MainContainer',
@@ -66,6 +68,12 @@
       selectEncounter (encounter) {
         this.selectedEncounter = encounter;
       },
+      removeItem (id) {
+        delete this.hpoItemsObj[id];
+      },
+      updateItem (item) {
+        this.hpoItemsObj[item.getHpoId()] = item;
+      },
       async processText () {
         //If nothing is selected dont process
         if (this.selectedEncounter === null) {
@@ -81,10 +89,10 @@
         let gru_data = await fetchFromGru(this.selectedItemTextContent);
         let clinPhen = gru_data.clinPhenData;
 
-        //for each item in the clinPhen object create a new clinPhenResult and add to the hpoItemsObj
+        //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
         for (let key in clinPhen) {
-          let clinPhenResult = new ClinPhenResult(clinPhen[key]);
-          this.hpoItemsObj[key] = clinPhenResult;
+          let item = new ChartItem(clinPhen[key]);
+          this.hpoItemsObj[key] = item;
         }
       }, 
       changeTextContent (textContent) {

@@ -7,13 +7,15 @@
             <span>Inheritance</span>
             <span>Mother</span>
             <span>Father</span>
-            <span></span>
+            <span>Use</span>
             <span></span>
         </h4>
         <div v-if="Object.keys(hpoItemsObj).length > 0" id="table-container">
             <HpoTermRow
                 v-for="hpoItem in hpoItemsObj"
-                :hpoItemObj="hpoItem"></HpoTermRow>
+                :hpoItemObj="hpoItem"
+                @deleteItem="removeItem"
+                @updateItem="updateItem"></HpoTermRow>
         </div>
         <div v-else id="table-container">
             <span>No terms to show.</span>
@@ -35,13 +37,30 @@
         },
         data () {
             return {
+                termDashHpoItemsObj: this.hpoItemsObj,
             }
         }, 
         async mounted () {
         },
         methods: {
+            removeItem (id) {
+                this.$emit('removeItem', id);
+            },
+            updateItem (item) {
+                this.$emit('updateItem', item);
+            },
+        }, 
+        watch: {
+            hpoItemsObj: {
+                handler: function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        this.termDashHpoItemsObj = newVal;
+                    }
+                },
+                deep: true,
         }
     }
+}
 
 </script>
 
@@ -74,7 +93,7 @@
     #title-row {
         width: 100%;
         display: grid;
-        grid-template-columns: .5fr 1.75fr 1fr 1fr .5fr .5fr .25fr .25fr;
+        grid-template-columns: .75fr 1.5fr 1fr 1fr .5fr .5fr .25fr .25fr;
         justify-items: start;
 
         margin-top: 0px;
