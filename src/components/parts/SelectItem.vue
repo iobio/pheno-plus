@@ -116,7 +116,7 @@
     }
 
     #check-svg {
-        z-index: 10;
+        z-index: 2;
     }
     
 </style>

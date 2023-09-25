@@ -243,6 +243,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 100;
 
     background-color: rgba(255, 255, 255, .5);
     display: flex;
@@ -256,6 +257,7 @@
 
     padding: 1em;
     border-radius: 50%;
+    border: gray 1px solid;
     width: 150px;
     height: 150px;
 
@@ -268,7 +270,7 @@
       background-color: white;
     }
     50% {
-      background-color: rgba(7, 135, 221, 0.8);
+      background-color: rgba(7, 135, 221, .9);
     }
     100% {
       background-color: white;
