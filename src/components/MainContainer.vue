@@ -270,7 +270,7 @@
       background-color: white;
     }
     50% {
-      background-color: rgba(7, 135, 221, .9);
+      background-color: rgba(112, 181, 227, 0.9);
     }
     100% {
       background-color: white;

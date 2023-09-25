@@ -20,7 +20,7 @@
 
         <!-- only if there is no content to be rendered yet -->
         <div v-else id="table-container">
-            <span>No terms to show.</span>
+            <span id="no-terms-alt-msg">No terms to show.</span>
         </div>
 
         <div id="send-terms-btn-container">
@@ -72,6 +72,9 @@
 </script>
 
 <style>
+    #no-terms-alt-msg {
+        padding-top: 10px;
+    }
     #send-terms-btn-container {
         width: 100%;
         display: flex;
