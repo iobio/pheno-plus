@@ -139,7 +139,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    height: 55%;
+    height: 58%;
     width: 85%;
   }
 
