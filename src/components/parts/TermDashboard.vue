@@ -97,6 +97,9 @@
     #send-terms-btn:hover {
         background-color: rgb(0,113,189, .8);
     }
+    #send-terms-btn:active {
+    background-color: rgba(4, 83, 136);
+    }
 
     #clear-terms-btn {
         width: 10%;
@@ -115,6 +118,9 @@
     }
     #clear-terms-btn:hover {
         background-color: rgb(0,113,189, .8);
+    }
+    #clear-terms-btn:active {
+    background-color: rgba(4, 83, 136);
     }
 
     #term-dashboard-container {

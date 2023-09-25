@@ -224,6 +224,9 @@
   #process-btn:hover {
     background-color: rgb(0,113,189, .8);
   }
+  #process-btn:active {
+    background-color: rgba(4, 83, 136);
+  }
 
   #view-info.sub-container {
     overflow-y: hidden;
@@ -265,10 +268,22 @@
       background-color: white;
     }
     50% {
-      background-color: rgba(7, 135, 221, 0.763);
+      background-color: rgba(7, 135, 221, 0.8);
     }
     100% {
       background-color: white;
+    }
+  }
+
+  @keyframes showAndHide {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
     }
   }
 

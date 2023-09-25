@@ -7,8 +7,8 @@
             <p>Nothing to show, select and send terms to populate.</p>
         </div>
         <div id="clip-btns-container">
-            <button @click="clearTerms">Clear</button>
-            <button @click="copyToClipboard">Copy List</button>
+            <button class="clip-board-box-btn" @click="clearTerms">Clear</button>
+            <button class="clip-board-box-btn" @click="copyToClipboard">Copy List</button>
         </div>
     </div>
 
@@ -101,8 +101,11 @@
         background-color: rgb(0,113,189);
         color: white;
     }
-    button:hover {
+    .clip-board-box-btn:hover {
         background-color: rgb(0,113,189, .8);
+    }
+    .clip-board-box-btn:active {
+        background-color: rgba(4, 83, 136);
     }
 
     #hpo-term-clipboard {
