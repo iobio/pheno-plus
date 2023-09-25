@@ -7,7 +7,7 @@
                 <option value="severe">severe</option>
                 <option value="unknown">unknown</option>
             </select>
-            <svg style="height: 12px; width: 12px; margin-left: 3px;" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" :fill="severityColor[0]" :stroke="severityColor[1]"></circle></svg>
+            <svg v-if="thisHpoItemObj.severity != 'unknown'" style="height: 12px; width: 12px; margin-left: 3px;" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" :fill="severityColor[0]" :stroke="severityColor[1]"></circle></svg>
         </span>
         <span>{{ thisHpoItemObj.getPhenotypeName() }}</span>
         <span>{{ thisHpoItemObj.getHpoId() }}</span>
@@ -86,8 +86,8 @@
 
 <style lang="css" scoped>
     select {
-        border: rgb(176, 176, 176) 1px solid;
-        border-radius: 3px;
+        border: rgb(209, 209, 209) 1px solid;
+        border-radius: 4px;
         padding-top: 2px;
         padding-bottom: 2px;
         cursor: pointer;

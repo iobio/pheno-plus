@@ -44,7 +44,6 @@
 <style scoped lang="css">
     #item-selector {
         overflow-y: scroll;
-        padding: 0px;
     }
 
     .list-item {

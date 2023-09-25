@@ -54,11 +54,14 @@
     #encounter-info {
         width: 100%;
         height: 100%;
-        border: none;
         resize: none;
         overflow: auto;
         font-size: 1em;
         font-family: 'Open Sans', sans-serif;
+
+        border: rgb(215, 215, 215) 1px solid;
+        border-radius: 3px;
+        padding: .5em; 
     }
 
 </style>

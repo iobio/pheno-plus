@@ -109,6 +109,8 @@
         border: rgb(215, 215, 215) 1px solid;
         overflow-y: auto;
         font-size: 1em;
+        resize: none;
+        padding: .5em; 
 
         border-radius: 3px;
     }

@@ -119,8 +119,11 @@
         align-items: center;
         height: auto;
         flex: 1;
+        margin-top: 10px;
+        border-radius: 3px;
 
-        border-bottom: rgb(215, 215, 215) 1px solid;
+        border: rgb(215, 215, 215) 1px solid;
+
     }
 
     #title-row {
