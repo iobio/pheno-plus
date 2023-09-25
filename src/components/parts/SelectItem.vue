@@ -1,13 +1,16 @@
 <template>
-    <p 
-    :class="{'current-selection' : isSelected}"
-    @click="selectEncounter">
-    <div class="select-item-span">{{ encounter.id }}</div>
-    <span class="already-added-sign" v-if="alreadyProcessed.includes(encounter.id)">
-        <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
-        <p class="already-added-tip">Already processed</p>
-    </span>
-    </p>
+    <div class="li-wrapper">
+        <p 
+        :class="{'current-selection' : isSelected}"
+        @click="selectEncounter"
+        class="list-item">
+        <div class="select-item-span">{{ encounter.id }}</div>
+        <span class="already-added-sign" v-if="alreadyProcessed.includes(encounter.id)">
+            <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
+            <p class="already-added-tip">Already processed</p>
+        </span>
+        </p>
+    </div>
 </template>
 
 <script>
@@ -44,8 +47,30 @@
 </script>
 
 <style scoped lang="css">
+    .li-wrapper {
+        width: 100%;
+        padding: 2px;
+        margin: 0px;
+        height: fit-content;
+        border-bottom: #e3e3e3 1px solid;
+    }
+    .list-item {
+        width: 100%;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        padding: .5em;
+        border-radius: 3px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .list-item:hover {
+        background-color: #e1e1e1;
+    }
+
     .current-selection {
-        background-color: #aed5ff;
+        background-color: #c2dbf7;
     }
 
     .select-item-span {
