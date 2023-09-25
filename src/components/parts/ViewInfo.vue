@@ -9,7 +9,7 @@
     </div>
 
     <div class="sub-container" v-if="!encounter" id="view-info">
-        <p>No encounter selected.</p>
+        <p id="encounter-info-p">No encounter selected.</p>
     </div>
 
 </template>
@@ -63,6 +63,19 @@
         border: rgb(215, 215, 215) 1px solid;
         border-radius: 3px;
         padding: .5em; 
+        background-color: white;
+    }
+
+    #encounter-info-p {
+        width: 100%;
+        height: 100%;
+        font-size: 1em;
+        margin-top: 0%;
+
+        border: rgb(215, 215, 215) 1px solid;
+        border-radius: 3px;
+        padding: .5em; 
+        background-color: white;
     }
 
 </style>
