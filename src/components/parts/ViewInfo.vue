@@ -44,6 +44,7 @@
         watch: {
             encounter: function (newVal, oldVal) {
                 this.setText();
+                this.textChanged();
             }
         }
     }
