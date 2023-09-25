@@ -30,7 +30,8 @@
         :hpoItemsObj="hpoItemsObj"
         @removeItem="removeItem"
         @updateItem="updateItem"
-        @sendTerms="formatAndPopulateTerms">
+        @sendTerms="formatAndPopulateTerms"
+        @clearTableTerms="clearAllTableTerms">
       </TermDashboard>
       <ClipBoardBox
         :clipBoardTerms="clipTerms"
@@ -95,6 +96,9 @@
       },
       clearClipTerms () {
         this.clipTerms = [];
+      },
+      clearAllTableTerms () {
+        this.hpoItemsObj = {};
       },
       async processText () {
         //If nothing is selected dont process

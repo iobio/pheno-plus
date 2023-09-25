@@ -23,7 +23,10 @@
             <span>No terms to show.</span>
         </div>
 
-        <div id="send-terms-btn-container"><button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button></div>
+        <div id="send-terms-btn-container">
+            <button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button>
+            <button id="clear-terms-btn" @click="this.$emit('clearTableTerms')">Clear Terms</button>
+        </div>
     </div>
 
 </template>
@@ -78,7 +81,7 @@
     }
 
     #send-terms-btn {
-        width: 25%;
+        width: 20%;
         font-size: .8rem;
 
         height: 30px;
@@ -91,8 +94,26 @@
 
         text-align: center;
     }
-
     #send-terms-btn:hover {
+        background-color: rgb(0,113,189, .8);
+    }
+
+    #clear-terms-btn {
+        width: 10%;
+        font-size: .8rem;
+
+        height: 30px;
+        border: none;
+        border-radius: 3px;
+        box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+
+        background-color: rgb(0,113,189);
+        color: white;
+
+        text-align: center;
+        margin-left: 3px;
+    }
+    #clear-terms-btn:hover {
         background-color: rgb(0,113,189, .8);
     }
 
