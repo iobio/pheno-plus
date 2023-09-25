@@ -83,8 +83,6 @@
         left: -45px;
         z-index: 0;
 
-        transition: visibility .5s ease;
-
         background-color: rgba(32, 236, 32, 0.6);
     }
 

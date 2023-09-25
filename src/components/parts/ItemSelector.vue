@@ -57,7 +57,7 @@
         justify-content: space-between;
     }
     .list-item:hover {
-        background-color: #ccc;
+        background-color: #e1e1e1;
     }
 
 </style>
