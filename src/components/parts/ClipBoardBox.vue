@@ -1,25 +1,68 @@
 <template>
-    <div id="clip-board-box-container"></div>
+    <div id="clip-board-box-container">
+        <div id="hpo-clip-container" v-if="clipBoardTerms && clipBoardTerms.length > 0">
+            <textarea id="hpo-term-clipboard" name="hpo-terms-text" cols="30" rows="10" v-model="clipBoardText"></textarea>
+        </div>
+        <div id="hpo-clip-container" v-else>
+            <p>Nothing to show, select and send terms to populate.</p>
+        </div>
+        <div id="clip-btns-container">
+            <button @click="clearTerms">Clear</button>
+            <button @click="copyToClipboard">Copy List</button>
+        </div>
+    </div>
+
 </template>
 
 <script>
     export default {
         name: 'ClipBoardBox',
         props: {
+            clipBoardTerms: Array,
         },
         data () {
             return {
+                clipBoardText: '',
             }
         }, 
         async mounted () {
+            this.setText();
         },
         methods: {
+            setText() {
+                if (!this.clipBoardTerms || this.clipBoardTerms.length === 0) {
+                    return;
+                }
+                this.clipBoardText = this.clipBoardTerms.join(', ');
+            },
+            clearTerms() {
+                this.clipBoardText = '';
+                this.$emit('clearClipboardTerms');
+            },
+            async copyToClipboard() {
+                try {
+                    await navigator.clipboard.writeText(this.clipBoardText);
+                } catch (error) {
+                    let textArea = document.createElement("textarea");
+                    textArea.textContent = this.clipBoardText;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    //This command is considered obsolete but is the only way to make this work if the iframe doesn't support the clipboard API
+                    document.execCommand('copy');
+                    textArea.remove();      
+                }
+            }
+        },
+        watch: {
+            clipBoardTerms: function (newVal, oldVal) {
+                this.setText();
+            }
         }
     }
 
 </script>
 
-<style>
+<style scoped lang="css">
     #clip-board-box-container {
         width: 100%;   
         height: 20%;
@@ -27,5 +70,46 @@
         padding: 1em;
 
         box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+
+        display: flex;
+        flex-direction: row;
+    }
+    #hpo-clip-container {
+        width: 90%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #clip-btns-container {
+        width: 10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    button {
+        width: 90%;
+        height: 50%;
+        border: none;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        background-color: rgb(0,113,189);
+        color: white;
+    }
+    button:hover {
+        background-color: rgb(0,113,189, .8);
+    }
+
+    #hpo-term-clipboard {
+        width: 100%;
+        height: 95%;
+        border: rgb(215, 215, 215) 1px solid;
+        overflow-y: auto;
+        font-size: 1em;
+
+        border-radius: 3px;
     }
 </style>

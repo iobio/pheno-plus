@@ -85,6 +85,20 @@
 </script>
 
 <style lang="css" scoped>
+    select {
+        border: rgb(176, 176, 176) 1px solid;
+        border-radius: 3px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        cursor: pointer;
+
+        text-align: center;
+    }
+
+    input[type=checkbox] {
+        cursor: pointer;
+    }
+
     .hpo-row-container {
         width: 100%;
         display: grid;

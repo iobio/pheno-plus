@@ -26,9 +26,12 @@
       <TermDashboard
         :hpoItemsObj="hpoItemsObj"
         @removeItem="removeItem"
-        @updateItem="updateItem">
+        @updateItem="updateItem"
+        @sendTerms="formatAndPopulateTerms">
       </TermDashboard>
-      <ClipBoardBox></ClipBoardBox>
+      <ClipBoardBox
+        :clipBoardTerms="clipTerms"
+        @clearClipboardTerms="clearClipTerms"></ClipBoardBox>
     </div>
   </div>
 
@@ -60,6 +63,7 @@
         selectedItemTextContent: null,
         itemsAlreadyProcessed: [],
         hpoItemsObj: {},
+        clipTerms: [],
       }
     }, 
     async mounted () {
@@ -73,6 +77,20 @@
       },
       updateItem (item) {
         this.hpoItemsObj[item.getHpoId()] = item;
+      },
+      formatAndPopulateTerms () {
+        //Needs to populate the clipboard box with the terms
+        let terms = [];
+        for (let key in this.hpoItemsObj) {
+          let item = this.hpoItemsObj[key];
+          if (item.getUse()) {
+            terms.push(item.getHpoId());
+          }
+        }
+        this.clipTerms = terms;
+      },
+      clearClipTerms () {
+        this.clipTerms = [];
       },
       async processText () {
         //If nothing is selected dont process

@@ -23,7 +23,7 @@
             <span>No terms to show.</span>
         </div>
 
-        <div id="send-terms-btn-container"><button id="send-terms-btn">Send Terms</button></div>
+        <div id="send-terms-btn-container"><button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button></div>
     </div>
 
 </template>
@@ -119,6 +119,8 @@
         align-items: center;
         height: auto;
         flex: 1;
+
+        border-bottom: rgb(215, 215, 215) 1px solid;
     }
 
     #title-row {
