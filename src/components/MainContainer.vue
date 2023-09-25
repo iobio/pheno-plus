@@ -5,7 +5,7 @@
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
-        <h3>Item List ({{ encountersNum }})</h3>
+        <h3>EHR Note List ({{ encountersNum }})</h3>
         <ItemSelector class="sub-container" 
         :encountersList="encountersList"
         :selectedEncounter="selectedEncounter"
@@ -16,7 +16,7 @@
 
 
       <div class="content-title-wrapper view-info">
-        <h3>Selected Item Content</h3>
+        <h3>Selected Note Content</h3>
         <ViewInfo
         :encounter="selectedEncounter"
         @textChanged="changeTextContent">

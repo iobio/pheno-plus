@@ -123,7 +123,6 @@
         border-radius: 3px;
 
         border: rgb(215, 215, 215) 1px solid;
-
     }
 
     #title-row {
