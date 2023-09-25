@@ -135,7 +135,7 @@
         align-items: center;
 
         width: 100%;
-        height: 70%;
+        height: 75%;
         border-radius: 3px;
         padding: 1em;
         

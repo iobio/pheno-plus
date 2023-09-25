@@ -147,7 +147,8 @@
 
   #the-main-container {
     height: 100%;
-    padding-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -155,7 +156,7 @@
   }
 
   #selector-view-container {
-    width: 85%;
+    width: 93%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -168,7 +169,7 @@
     justify-content: space-evenly;
     align-items: center;
     height: 58%;
-    width: 85%;
+    width: 93%;
   }
 
   .content-title-wrapper .sub-container {
@@ -193,7 +194,7 @@
   }
 
   .content-title-wrapper.item-selector {
-    width: 42%;
+    width: 43%;
   }
 
   .content-title-wrapper.item-selector .sub-container {
@@ -201,8 +202,7 @@
     border-radius: 3px;
   }
   .content-title-wrapper.view-info {
-    width: 55%;
-    
+    width: 56%;
   }
 
   #process-btn {
@@ -210,7 +210,7 @@
     min-width: 45px;
     font-size: .8rem;
 
-    margin: 5px 2.5% 5px 2.5%;
+    margin: 5px 2.5% 0px 2.5%;
     height: 30px;
     border: none;
     border-radius: 3px;
@@ -231,6 +231,7 @@
   #view-info.sub-container {
     overflow-y: hidden;
     height: 80%;
+    padding-top: 0px;
   }
 
   #loading-overlay.hidden {
@@ -261,7 +262,7 @@
     width: 150px;
     height: 150px;
 
-    animation: dimAndBright 2s infinite;
+    animation: dimAndBright 1.5s infinite;
     text-align: center;
   }
 
