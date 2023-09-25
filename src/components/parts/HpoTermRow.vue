@@ -108,6 +108,9 @@
 
         padding: .25em;
     }
+    .hpo-row-container:hover {
+        background-color: #e2e2e2;
+    }
     .hpo-row-container.disabled {
         opacity: .5;
         color: grey;
