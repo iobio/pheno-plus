@@ -1,4 +1,4 @@
-import Encounter from "./models/encounter"
+import Encounter from "./models/Encounter.js"
 
 export default function constructData() {
     let data = [];
