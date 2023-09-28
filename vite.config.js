@@ -9,9 +9,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     port: 3002,
-    proxy: {
-      '/@vite/client': '/phenoplus/oauth2/redirect/@vite/client',
-    }
+    hmr: {
+      port: 443,
+    },
   },
   plugins: [
     vue(),
