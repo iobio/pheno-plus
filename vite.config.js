@@ -20,7 +20,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      input: ['index.html', 'startVue.html']
+      input: ['launch.html', 'startVue.html']
     }
   },
 })
