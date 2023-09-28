@@ -18,6 +18,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  hmr: {
+    port: 3002,
+  },
   build: {
     rollupOptions: {
       input: ['index.html', 'startVue.html']
