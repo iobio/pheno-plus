@@ -13,7 +13,6 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: '/phenoplus/oauth2/redirect/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
