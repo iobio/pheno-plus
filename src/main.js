@@ -1,7 +1,7 @@
-import '/src/assets/base.css'
+import '/phenoplus/oauth2/redirect/src/assets/base.css'
 
 import { createApp } from 'vue'
-import App from '/src/App.vue'
+import App from '/phenoplus/oauth2/redirect/src/App.vue'
 
 
 createApp(App).mount('#app')
