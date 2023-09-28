@@ -9,9 +9,6 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     port: 3002,
-    hmr: {
-      port: 443,
-    },
   },
   plugins: [
     vue(),
