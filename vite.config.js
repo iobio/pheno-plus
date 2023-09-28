@@ -13,9 +13,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  shared: {
-    base: 'https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect',
-  },
+  base: 'https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
