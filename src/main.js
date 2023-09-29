@@ -14,7 +14,8 @@ if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
         // launch            - Get the launch context
         // openid & fhirUser - Get the current user
         // patient/*.read    - Read patient data
-        scope: "launch openid fhirUser patient/*.read",
+        // scope: "launch openid fhirUser patient/*.read", //this was the fhir default
+        scope: "launch patient/*.* openid user/*.* profile",
     
         // Typically, if your redirectUri points to the root of the current directory
         // (where the launchUri is), you can omit this option because the default value is
