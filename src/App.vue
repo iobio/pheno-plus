@@ -22,7 +22,7 @@
       }
     }, 
     async mounted () {
-      // await this.getInfo();
+      await this.getInfo();
       let list2 = constructData();
       this.encountersList = this.encountersList.concat(list2);
     },
