@@ -13,11 +13,11 @@ getClient().then(client => {
     if (client === null) {
         // Parse the current location and the comparison URLs into URL objects
         const currentLocation = new URL(window.location.href);
-        const stagingLaunchUrl = new URL(STAGING_LAUNCH_URL);
+        const localUri= new URL(LOCAL_REDIRECT_URL);
 
         const redirectUri = (
-            currentLocation.origin === stagingLaunchUrl.origin 
-            ) ? STAGING_REDIRECT_URL : LOCAL_REDIRECT_URL;
+            currentLocation.origin === localUri.origin
+            ) ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
