@@ -2,7 +2,7 @@
     <MainContainer
       :encountersList="encountersList" 
       :encountersNum="encountersNum"
-      :testInformation="testInformation">
+      :testInformation="theClient">
     </MainContainer>
 </template>
 
@@ -20,6 +20,7 @@
         encountersList: [],
         encountersNum: 0,
         testInformation: null,
+        theClient: null,
       }
     }, 
     async mounted () {
@@ -27,6 +28,7 @@
       let list2 = constructData();
       this.encountersList = this.$encounterListGlobal;
       this.encountersNum = this.$encounterNumGlobal;
+      this.theClient = this.$fhirClientGlobal;
 
       this.encountersList = this.encountersList.concat(list2);
     },

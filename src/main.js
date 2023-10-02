@@ -28,7 +28,6 @@ async function initializeApp(fhirClient) {
         const client = fhirClient;
         const encountersList = [];
         const encountersNum = 0;
-
         // const data = await client.request("/Encounter?patient=" + client.patient.id);
 
         // if (!data.entry || !data.entry.length) {
@@ -53,6 +52,7 @@ async function initializeApp(fhirClient) {
         const app = createApp(App);
         app.config.globalProperties.$encounterListGlobal = encountersList;
         app.config.globalProperties.$encounterNumGlobal = encountersNum;
+        app.config.globalProperties.$fhirClientGlobal = client;
         app.mount('#app');
 
     } catch (error) {
