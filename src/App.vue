@@ -1,7 +1,8 @@
 <template>
     <MainContainer
       :encountersList="encountersList" 
-      :encountersNum="encountersNum">
+      :encountersNum="encountersNum"
+      :testInformation="testInformation">
     </MainContainer>
 </template>
 
