@@ -11,7 +11,13 @@ const STAGING_LAUNCH_URL = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth
 
 getClient().then(client => {
     if (client === null) {
-        const redirectUri = window.location.href === STAGING_LAUNCH_URL ? STAGING_REDIRECT_URL : LOCAL_REDIRECT_URL;
+        // Parse the current location and the comparison URLs into URL objects
+        const currentLocation = new URL(window.location.href);
+        const stagingLaunchUrl = new URL(STAGING_LAUNCH_URL);
+
+        const redirectUri = (
+            currentLocation.origin + currentLocation.pathname === stagingLaunchUrl.origin + stagingLaunchUrl.pathname
+            ) ? STAGING_REDIRECT_URL : LOCAL_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
