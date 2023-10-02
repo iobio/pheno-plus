@@ -5,7 +5,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 
-// if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
+if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
     FHIR.oauth2.authorize({
         // The client_id that you should have obtained after registering a client at
         // the EHR.
@@ -25,7 +25,7 @@ import App from './App.vue'
         // redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
         redirect_uri: "http://localhost:3002/phenoplus/oauth2/redirect/",
         });
-// } else {
+} else {
     FHIR.oauth2.ready()
         .then((client) => {
             // Get encounters for the selected patient
@@ -94,4 +94,4 @@ import App from './App.vue'
                 console.log(error.stack);
             });
         }).catch(console.error);
-// }
+}
