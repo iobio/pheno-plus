@@ -10,11 +10,8 @@ const STAGING_REDIRECT_URL = "https://mosaic-staging.chpc.utah.edu/phenoplus/oau
 const STAGING_LAUNCH_URL = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/launch";
 
 getClient().then(client => {
-    if (window.location.href === STAGING_LAUNCH_URL || 
-        (window.location.href === LOCAL_REDIRECT_URL && client === null)) {
-        console.log("authenticating")
-
-        const redirectUri = window.location.href === LOCAL_REDIRECT_URL ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
+    if (client === null) {
+        const redirectUri = window.location.href === STAGING_LAUNCH_URL ? STAGING_REDIRECT_URL : LOCAL_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
@@ -22,7 +19,6 @@ getClient().then(client => {
             redirect_uri: redirectUri,
         });
     } else {
-        console.log(client)
         initializeApp(client);
     }
 });
@@ -30,6 +26,7 @@ getClient().then(client => {
 async function initializeApp(fhirClient) {
     try {
         const client = fhirClient;
+        console.log(client)
         const data = await client.request("/Encounter?patient=" + client.patient.id);
 
         if (!data.entry || !data.entry.length) {
@@ -58,8 +55,6 @@ async function initializeApp(fhirClient) {
         app.mount('#app');
 
     } catch (error) {
-
-
         const app = createApp(App)
         app.config.globalProperties.$encounterListGlobal = [];
         app.config.globalProperties.$encounterNumGlobal = 0;
@@ -74,6 +69,7 @@ async function getClient() {
         const client = await FHIR.oauth2.ready();
         return client;
     } catch (error) {
+        console.error('Error getting client:', error.message);
         return null;
     }
 }
