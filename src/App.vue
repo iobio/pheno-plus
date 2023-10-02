@@ -31,6 +31,13 @@
     methods: {
       async getInfo () {
         this.testInformation = 'loading...before FHIR.oauth2.ready()';
+
+        // BROWSER
+        const client = FHIR.client("https://r4.smarthealthit.org");
+        if (client != null) {
+          this.testInformation = client;
+        }
+
         FHIR.oauth2.ready().then((client) => {
           this.testInformation = 'loading...after FHIR.oauth2.ready()';
           // Get encounters for the selected patient
