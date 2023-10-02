@@ -26,7 +26,6 @@ getClient().then(client => {
 async function initializeApp(fhirClient) {
     try {
         const client = fhirClient;
-        console.log(client)
         const data = await client.request("/Encounter?patient=" + client.patient.id);
 
         if (!data.entry || !data.entry.length) {
@@ -57,7 +56,7 @@ async function initializeApp(fhirClient) {
     } catch (error) {
         const app = createApp(App)
         app.config.globalProperties.$encounterListGlobal = [];
-        app.config.globalProperties.$encounterNumGlobal = 0;
+        app.config.globalProperties.$encounterNumGlobal = 22;
 
         app.mount('#app');
         console.error(error.stack);
