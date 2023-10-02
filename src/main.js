@@ -24,7 +24,7 @@ getClient().then(client => {
         FHIR.oauth2.authorize({
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
             scope: "launch patient/*.* openid user/*.* profile",
-            redirect_uri: redirectUri,
+            redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
         });
     } else {
         initializeApp(client);
