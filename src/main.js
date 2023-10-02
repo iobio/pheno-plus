@@ -15,9 +15,11 @@ getClient().then(client => {
         const currentLocation = new URL(window.location.href);
         const localUri= new URL(LOCAL_REDIRECT_URL);
 
-        const redirectUri = (
-            currentLocation.origin === localUri.origin
-            ) ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
+        // const redirectUri = (
+        //     currentLocation.origin === localUri.origin
+        //     ) ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
+
+        const redirectUri = STAGING_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
