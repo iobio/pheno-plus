@@ -61,7 +61,9 @@
     props: {
       encountersList: Array,
       encountersNum: Number,
-      testInformation: Object,
+      testInformation: {
+        type: null,
+      }
     },
     data () {
       return {
