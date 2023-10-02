@@ -1,6 +1,7 @@
 <template>
   <div id="the-main-container">
-    <div v-if="testInformation">{{ testInformation }}</div>
+    <div v-if="testInformation != null" style="width: 100%; min-height: 50px; overflow-y: scroll;">{{ testInformation }}</div>
+
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>
@@ -61,9 +62,7 @@
     props: {
       encountersList: Array,
       encountersNum: Number,
-      testInformation: {
-        type: null,
-      }
+      testInformation: Object,
     },
     data () {
       return {
