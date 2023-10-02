@@ -5,21 +5,31 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 
-if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
-    FHIR.oauth2.authorize({
-        client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
-        scope: "launch patient/*.* openid user/*.* profile",
-        redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
+const LOCAL_REDIRECT_URL = "http://localhost:3002/phenoplus/oauth2/redirect/";
+const STAGING_REDIRECT_URL = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
+const STAGING_LAUNCH_URL = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/launch";
 
-        // redirect_uri: "http://localhost:3002/phenoplus/oauth2/redirect/",
+getClient().then(client => {
+    if (window.location.href === STAGING_LAUNCH_URL || 
+        (window.location.href === LOCAL_REDIRECT_URL && client === null)) {
+        console.log("authenticating")
+
+        const redirectUri = window.location.href === LOCAL_REDIRECT_URL ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
+
+        FHIR.oauth2.authorize({
+            client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+            scope: "launch patient/*.* openid user/*.* profile",
+            redirect_uri: redirectUri,
         });
-} else {
-    initializeApp();
-}
+    } else {
+        console.log(client)
+        initializeApp(client);
+    }
+});
 
-async function initializeApp() {
+async function initializeApp(fhirClient) {
     try {
-        const client = await FHIR.oauth2.ready();
+        const client = fhirClient;
         const data = await client.request("/Encounter?patient=" + client.patient.id);
 
         if (!data.entry || !data.entry.length) {
@@ -43,12 +53,27 @@ async function initializeApp() {
         }
 
         const app = createApp(App);
-        app.config.globalProperties.$encounterList = encountersList;
-        app.config.globalProperties.$encounterNum = encountersNum;
+        app.config.globalProperties.$encounterListGlobal = encountersList;
+        app.config.globalProperties.$encounterNumGlobal = encountersNum;
         app.mount('#app');
 
     } catch (error) {
-        createApp(App).mount('#app');
+
+
+        const app = createApp(App)
+        app.config.globalProperties.$encounterListGlobal = [];
+        app.config.globalProperties.$encounterNumGlobal = 0;
+
+        app.mount('#app');
         console.error(error.stack);
+    }
+}
+
+async function getClient() {
+    try {
+        const client = await FHIR.oauth2.ready();
+        return client;
+    } catch (error) {
+        return null;
     }
 }

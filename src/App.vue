@@ -25,8 +25,9 @@
     async mounted () {
       await this.getInfo();
       let list2 = constructData();
-      this.encountersList = app.config.globalProperties.$encountersList;
-      this.encountersNum = app.config.globalProperties.$encountersNum;
+      this.encountersList = this.$encounterListGlobal;
+      this.encountersNum = this.$encounterNumGlobal;
+
       this.encountersList = this.encountersList.concat(list2);
     },
     methods: {
