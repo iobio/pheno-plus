@@ -26,27 +26,29 @@ getClient().then(client => {
 async function initializeApp(fhirClient) {
     try {
         const client = fhirClient;
-        const data = await client.request("/Encounter?patient=" + client.patient.id);
-
-        if (!data.entry || !data.entry.length) {
-            throw new Error("No encounters found for the selected patient");
-        }
-
-        const encounters = data.entry;
-        const encountersNum = encounters.length;
         const encountersList = [];
+        const encountersNum = 0;
 
-        for (let encounter of encounters) {
-            const { resource } = encounter;
-            const id = resource.id;
-            const encType = resource.type?.[0]?.text || "No type found.";
-            const reason = resource.reasonCode?.[0]?.coding?.[0]?.display || "No reason found.";
-            const start = resource.period.start || "No start date found.";
-            const end = resource.period.end || "No end date found.";
+        // const data = await client.request("/Encounter?patient=" + client.patient.id);
 
-            const encounterObj = new Encounter(id, encType, reason, start, end);
-            encountersList.push(encounterObj);
-        }
+        // if (!data.entry || !data.entry.length) {
+        //     throw new Error("No encounters found for the selected patient");
+        // }
+
+        // const encounters = data.entry;
+        // const encountersNum = encounters.length;
+
+        // for (let encounter of encounters) {
+        //     const { resource } = encounter;
+        //     const id = resource.id;
+        //     const encType = resource.type?.[0]?.text || "No type found.";
+        //     const reason = resource.reasonCode?.[0]?.coding?.[0]?.display || "No reason found.";
+        //     const start = resource.period.start || "No start date found.";
+        //     const end = resource.period.end || "No end date found.";
+
+        //     const encounterObj = new Encounter(id, encType, reason, start, end);
+        //     encountersList.push(encounterObj);
+        // }
 
         const app = createApp(App);
         app.config.globalProperties.$encounterListGlobal = encountersList;
