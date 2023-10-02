@@ -36,8 +36,8 @@
           // Reject if no encounters are found
           .then(function(data) {
               if (!data.entry || !data.entry.length) {
-                  throw new Error("No encounters found for the selected patient");
                   this.testInformation = 'no encounters found'
+                  throw new Error("No encounters found for the selected patient");
               }
               this.testInformation = data.entry;
               return data.entry;
