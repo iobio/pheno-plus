@@ -16,7 +16,7 @@ getClient().then(client => {
         const stagingLaunchUrl = new URL(STAGING_LAUNCH_URL);
 
         const redirectUri = (
-            currentLocation.origin + currentLocation.pathname === stagingLaunchUrl.origin + stagingLaunchUrl.pathname
+            currentLocation.origin === stagingLaunchUrl.origin 
             ) ? STAGING_REDIRECT_URL : LOCAL_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
