@@ -19,6 +19,7 @@
       return {
         encountersList: [],
         encountersNum: 0,
+        testInformation: null,
       }
     }, 
     async mounted () {
@@ -36,6 +37,7 @@
               if (!data.entry || !data.entry.length) {
                   throw new Error("No encounters found for the selected patient");
               }
+              this.testInformation = data.entry;
               return data.entry;
           })
           // Set the list of encounters & the number of encounters
