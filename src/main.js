@@ -22,8 +22,8 @@ if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
         // (where the launchUri is), you can omit this option because the default value is
         // ".". However, some servers do not support directory indexes so "." and "./"
         // will not automatically map to the "index.html" file in that directory.
-        // redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
-        redirect_uri: "http://localhost:3002/phenoplus/oauth2/redirect/",
+        redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
+        // redirect_uri: "http://localhost:3002/phenoplus/oauth2/redirect/",
         });
 } else {
     FHIR.oauth2.ready()
@@ -94,4 +94,6 @@ if (window.location.pathname === "/phenoplus/oauth2/launch" ) {
                 console.log(error.stack);
             });
         }).catch(console.error);
+
+        // createApp(App).mount('#app')
 }
