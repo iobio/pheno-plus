@@ -1,5 +1,6 @@
 import './assets/base.css'
 import Encounter from '@/models/Encounter';
+import fetchNotes from '@/fetchNotes';
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -15,10 +16,7 @@ getClient().then(client => {
         const currentLocation = new URL(window.location.href);
         const localUri= new URL(LOCAL_REDIRECT_URL);
 
-        // const redirectUri = (
-        //     currentLocation.origin === localUri.origin
-        //     ) ? LOCAL_REDIRECT_URL : STAGING_REDIRECT_URL;
-
+        //const redirectUri = LOCAL_REDIRECT_URL;
         const redirectUri = STAGING_REDIRECT_URL;
 
         FHIR.oauth2.authorize({
@@ -36,8 +34,9 @@ async function initializeApp(fhirClient) {
         const client = fhirClient;
         var encountersList = [];
         var encountersNum = 0;
+        const patientId = client.patient.id;
 
-        const data = await client.request("/Encounter?patient=" + client.patient.id);
+        const data = await client.request("/Encounter?patient=" + patientId);
 
         if (!data.entry || !data.entry.length) {
             throw new Error("No encounters found for the selected patient");
@@ -49,6 +48,7 @@ async function initializeApp(fhirClient) {
         for (let encounter of encounters) {
             let { resource } = encounter;
             let id = resource.id;
+
             let encType = resource.type?.[0]?.text || "No type found.";
             let reason = resource.reasonCode?.[0]?.coding?.[0]?.display || "No reason found.";
             let start = resource.period.start || "No start date found.";
@@ -58,9 +58,24 @@ async function initializeApp(fhirClient) {
             encountersList.push(encounterObj);
         }
 
+        // Notes Logic
+        var notesList = [];
+        var notesNum = 0;
+
+        let notesObj = await fetchNotes(client, patientId);
+
+        notesList = notesObj.notesList;
+        notesNum = notesObj.notesNum;
+
         const app = createApp(App);
+        //Encounters
         app.config.globalProperties.$encounterListGlobal = encountersList;
         app.config.globalProperties.$encounterNumGlobal = encountersNum;
+
+        //Notes
+        app.config.globalProperties.$noteListGlobal = notesList;
+        app.config.globalProperties.$noteNumGlobal = notesNum;
+
         app.config.globalProperties.$fhirClientGlobal = client;
         app.mount('#app');
 
