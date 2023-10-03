@@ -69,12 +69,12 @@ async function initializeApp(fhirClient) {
 
         const app = createApp(App);
         //Encounters
-        app.config.globalProperties.$encounterListGlobal = encountersList;
-        app.config.globalProperties.$encounterNumGlobal = encountersNum;
+        app.config.globalProperties.$encountersListGlobal = encountersList;
+        app.config.globalProperties.$encountersNumGlobal = encountersNum;
 
         //Notes
-        app.config.globalProperties.$noteListGlobal = notesList;
-        app.config.globalProperties.$noteNumGlobal = notesNum;
+        app.config.globalProperties.$notesListGlobal = notesList;
+        app.config.globalProperties.$notesNumGlobal = notesNum;
 
         app.config.globalProperties.$fhirClientGlobal = client;
         app.mount('#app');
