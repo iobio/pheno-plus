@@ -34,3 +34,5 @@ async function fetchNotes(client, patientId) {
     }
     return {notesList: notesList, notesNum: notesNum};
 }
+
+export default fetchNotes;
