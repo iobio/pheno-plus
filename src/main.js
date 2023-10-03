@@ -61,11 +61,13 @@ async function initializeApp(fhirClient) {
         // Notes Logic
         var notesList = [];
         var notesNum = 0;
+        var justSearchData = null;
 
         let notesObj = await fetchNotes(client, patientId);
 
         notesList = notesObj.notesList;
         notesNum = notesObj.notesNum;
+        justSearchData = notesObj.justSearchData;
 
         const app = createApp(App);
         //Encounters
@@ -76,7 +78,7 @@ async function initializeApp(fhirClient) {
         app.config.globalProperties.$notesListGlobal = notesList;
         app.config.globalProperties.$notesNumGlobal = notesNum;
 
-        app.config.globalProperties.$fhirClientGlobal = client;
+        app.config.globalProperties.$fhirClientGlobal = justSearchData;
         app.mount('#app');
 
     } catch (error) {

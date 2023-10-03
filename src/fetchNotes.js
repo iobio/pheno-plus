@@ -18,7 +18,11 @@ async function fetchNotes(client, patientId) {
     const notes = noteSearchData.entry;
 
     var notesList = [];
-    var notesNum = noteSearchData.total;
+    var notesNum = 0;
+
+    if (notes.total) {
+        notesNum = notes.total;
+    }
 
     for (let note in notes) {
         let noteId = note.id;
@@ -32,7 +36,7 @@ async function fetchNotes(client, patientId) {
         let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
         notesList.push(noteObj);
     }
-    return {notesList: notesList, notesNum: notesNum};
+    return {notesList: notesList, notesNum: notesNum, justSearchData: noteSearchData};
 }
 
 export default fetchNotes;

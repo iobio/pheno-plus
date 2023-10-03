@@ -3,7 +3,8 @@
       :encountersList="encountersList" 
       :encountersNum="encountersNum"
       :notesList="notesList"
-      :notesNum="notesNum">
+      :notesNum="notesNum"
+      :theClient="theClient">
     </MainContainer>
 </template>
 

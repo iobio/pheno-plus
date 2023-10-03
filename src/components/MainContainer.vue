@@ -1,6 +1,6 @@
 <template>
   <div id="the-main-container">
-    <div id="testing-div">{{ notesList + '\n' + notesNum }}</div>
+    <div id="testing-div">{{ theClient }}</div>
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>
@@ -63,6 +63,7 @@
       encountersNum: Number,
       notesList: Array,
       notesNum: Number,
+      theClient: Object,
     },
     data () {
       return {
