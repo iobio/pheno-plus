@@ -10,15 +10,13 @@ import ClinicalNote from '@/models/ClinicalNote';
 
 async function fetchNotes(client, patientId) {
     const noteSearchData = await client.request("/DocumentReference?patient=" + patientId + "&category=clinical-note");
-
-    if (!noteSearchData.entry || !noteSearchData.entry.length) {
-        throw new Error("No notes found for the selected patient");
-    }
-
-    const notes = noteSearchData.entry;
-
     var notesList = [];
     var notesNum = 0;
+    var notes = {};
+
+    if (noteSearchData.entry || noteSearchData.entry.length) {
+        notes = noteSearchData.entry;
+    }
 
     if (notes.total) {
         notesNum = notes.total;
