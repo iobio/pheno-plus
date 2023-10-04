@@ -25,7 +25,7 @@
     async mounted () {
       //Demo Data
       let list2 = constructData();
-
+      //Check to see if the notes list contains anything
       if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
         this.notesList = this.$notesListGlobal;
         //Combine with the demo data

@@ -15,11 +15,10 @@ async function fetchNotes(client, patientId) {
     } catch (error) {
         console.error("Error fetching note search data:", error);
         // Return early with empty result if the initial request fails
-        return {notesList: [], notesNum: 0, justSearchData: null};
+        return {notesList: []};
     }
 
     var notesList = [];
-    var notesNum = 0;
     var notes = {};
 
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
@@ -44,7 +43,6 @@ async function fetchNotes(client, patientId) {
             try {
                 noteContent = await client.request(String(noteUrlBinary));
                 noteText = pullTextContent(noteContent);
-                notesNum++;
             } catch (error) {
                 continue;
             }
@@ -54,7 +52,7 @@ async function fetchNotes(client, patientId) {
         }
     }
 
-    return {notesList: notesList, notesNum: notesNum};
+    return {notesList: notesList};
 }
 
 function pullTextContent(html) {

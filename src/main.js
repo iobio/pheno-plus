@@ -6,50 +6,58 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 getClient().then(client => {
+    //If the client is null, we need to authorize
     if (client === null) {
         FHIR.oauth2.authorize({
+            //Our application's ID
             client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+            //Initial scope
             scope: "launch patient/*.* openid user/*.* profile",
+            //Our redirect URL
             redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
         });
     } else {
+        //Call the initializeApp function with the client if it exists
         initializeApp(client);
     }
 });
 
 async function initializeApp(fhirClient) {
     try {
+        //Get the client
         const client = fhirClient;
+        //Get the patient ID
         const patientId = client.patient.id;
-        
-        // Notes Logic
+        //Initialize the notes list
         var notesList = [];
-        var notesNum = 0;
-
+        //Get the notes from the EMR
         let notesObj = await fetchNotes(client, patientId);
-
+        //Set the notes list to the notes pulled from the EMR
         notesList = notesObj.notesList;
-        notesNum = notesObj.notesNum;
-
+        //Create the app
         const app = createApp(App);
+        //Set the notes list as a global property
         app.config.globalProperties.$notesListGlobal = notesList;
-        app.config.globalProperties.$notesNumGlobal = notesNum;
+        //Mount the app
         app.mount('#app');
     } catch (error) {
+        //If there is an error, create the app with an empty notes list
         const app = createApp(App)
+        //Set the notes list as a global property just to empty
         app.config.globalProperties.$notesListGlobal = [];
-        app.config.globalProperties.$notesNumGlobal = 707;
+        //Mount the app
         app.mount('#app');
-        console.error(error.stack);
     }
 }
 
 async function getClient() {
     try {
+        //Try to get the client
         const client = await FHIR.oauth2.ready();
+        //Return it if it works
         return client;
     } catch (error) {
-        console.error('Error getting client:', error.message);
+        //If there is an error, return null
         return null;
     }
 }
