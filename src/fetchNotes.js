@@ -36,6 +36,7 @@ async function fetchNotes(client, patientId) {
                 noteContent = await client.request(noteUrlBinary);
             } catch (error) {
                 console.error(`Error fetching note content for note ${noteId}:`, error); // just coninue 
+                noteContent = null;
             }
 
             let noteText;
