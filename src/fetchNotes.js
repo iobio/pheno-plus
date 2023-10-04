@@ -26,10 +26,10 @@ async function fetchNotes(client, patientId) {
         notes = noteSearchData.entry;
 
         for (let note of notes) {
-            let noteId = note.id;
-            let noteDate = note.date;
-            let noteUrlBinary = note.content[0].attachment.url;
-            let noteEncounterId = note.context.encounter[0].reference;
+            let noteId = note.id || null;
+            let noteDate = note.date || null;
+            let noteUrlBinary = note.content && note.content[0] && note.content[0].attachment && note.content[0].attachment.url || null;
+            let noteEncounterId = note.context && note.context.encounter && note.context.encounter[0] && note.context.encounter[0].reference || null;
 
             let noteContent;
             try {
@@ -51,8 +51,8 @@ async function fetchNotes(client, patientId) {
             notesList.push(noteObj);
         }
 
-        if ('total' in notes) {
-            notesNum = notes.total;
+        if ('total' in noteSearchData) {
+            notesNum = noteSearchData.total;
         }
     }
 
