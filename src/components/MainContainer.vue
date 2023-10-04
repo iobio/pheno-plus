@@ -1,5 +1,6 @@
 <template>
   <div id="the-main-container">
+    <div id="test-div"> {{ theClient }}</div>
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>
@@ -134,6 +135,15 @@
 </script>
 
 <style lang="css">
+  #test-div {
+    width: 100%;
+    height: 90px;
+    background-color: white;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   h3 {
     width: 100%;
     border-radius: 3px 3px 0px 0px;
