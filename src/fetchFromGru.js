@@ -8,15 +8,6 @@ export default async function fetchFromGru(data) {
     return {clinPhenData: clinPhenData}
 }
 
-async function fetchFromPhenotypeExtractor(gruBaseUrl, data) {
-
-    return fetch(gruBaseUrl + 'phenotypeExtractor?notes=' + data)
-    .then(response => response.text())
-    .then((data) => {
-        return data;
-    });
-}
-
 async function fetchFromClinPhen(gruBaseUrl, data) {
     var theText = '';
 
