@@ -60,9 +60,6 @@
     props: {
       encountersList: Array,
       encountersNum: Number,
-      notesList: Array,
-      notesNum: Number,
-      theClient: Object,
     },
     data () {
       return {

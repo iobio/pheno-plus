@@ -33,6 +33,7 @@ async function fetchNotes(client, patientId) {
             let noteUrlBinary = note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
+            // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
             if (noteCode == null || noteCode != "clinical-note") {
                 continue;
             }
@@ -53,7 +54,7 @@ async function fetchNotes(client, patientId) {
         }
     }
 
-    return {notesList: notesList, notesNum: notesNum, justSearchData: noteSearchData};
+    return {notesList: notesList, notesNum: notesNum};
 }
 
 function pullTextContent(html) {

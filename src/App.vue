@@ -1,10 +1,7 @@
 <template>
     <MainContainer
-      :encountersList="encountersList" 
-      :encountersNum="encountersNum"
-      :notesList="notesList"
-      :notesNum="notesNum"
-      :theClient="theClient">
+      :encountersList="notesList" 
+      :encountersNum="notesNum">
     </MainContainer>
 </template>
 
@@ -19,8 +16,6 @@
     },
     data () {
       return {
-        encountersList: [],
-        encountersNum: 0,
         notesList: [],
         notesNum: 0,
         testInformation: null,
@@ -28,26 +23,19 @@
       }
     }, 
     async mounted () {
+      //Demo Data
       let list2 = constructData();
 
       if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
-        //Encounters
-        this.encountersList = this.$notesListGlobal;
+        this.notesList = this.$notesListGlobal;
+        //Combine with the demo data
+        this.notesList = this.notesList.concat(list2);
+        //Set the number of notes
+        this.notesNum = this.notesList.length;
       } else {
-        //Encounters
-        this.encountersList = this.$encountersListGlobal;
+        //Just demo data will be loaded
+        this.notesList = this.notesList.concat(list2);
       }
-
-      //Notes
-      // this.notesList = this.$notesListGlobal;
-      // this.notesNum = this.$notesNumGlobal;
-
-      this.theClient = this.$fhirClientGlobal;
-
-      //Combine with the demo data
-      this.encountersList = this.encountersList.concat(list2);
-      this.encountersNum = this.encountersList.length;
-      this.notesList = this.notesList.concat(list2);
     },
     methods: {
     }
