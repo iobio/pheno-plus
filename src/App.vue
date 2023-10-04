@@ -30,9 +30,17 @@
     async mounted () {
       await this.getInfo();
       let list2 = constructData();
-      //Encounters
-      this.encountersList = this.$notesListGlobal;
-      this.encountersNum = this.$notesNumGlobal;
+
+      if (this.$notesListGlobal != 0 && this.$notesListGlobal.lenght != 0) {
+        //Encounters
+        this.encountersList = this.$notesListGlobal;
+        this.encountersNum = this.$notesNumGlobal;
+      } else {
+        //Encounters
+        this.encountersList = this.$encountersListGlobal;
+        this.encountersNum = this.$encountersNumGlobal;
+      }
+
       //Notes
       this.notesList = this.$notesListGlobal;
       this.notesNum = this.$notesNumGlobal;
