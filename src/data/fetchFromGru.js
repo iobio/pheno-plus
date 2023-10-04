@@ -14,15 +14,21 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
     return fetch(gruBaseUrl + 'clinphen?notes=' + data)
     .then(response => response.text())
     .then((data) => {
+        
         theText = data;
+
         //split the text on the new lines to get the rows
         var theTextArray = theText.split('\n');
+
         //first part is the header row
         var headerRow = theTextArray[0];
+
         //remove the header row from the array
         theTextArray.shift();
+
         //split the header row on the tabs
         var headerRowArray = headerRow.split('\t');
+
         //Iterate over the text array and split each row on the tabs, then create an object for each row with the header row as the keys
         var theObject = {};
         theTextArray.forEach((row, index) => {
@@ -33,8 +39,10 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
             });
             theObject[rowArray[0]] = tempObject;
         });
+
         //remove any empty objects
         delete theObject[''];
+
         return theObject;
     });
 
