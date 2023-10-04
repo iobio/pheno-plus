@@ -62,6 +62,6 @@ function pullTextContent(html) {
     var text = doc.body.textContent || "";
 
     var textClean = text.replace(/\n+/g, '\n').trim();
-    return ;
+    return textClean;
 }
 export default fetchNotes;
