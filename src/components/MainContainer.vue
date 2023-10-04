@@ -46,7 +46,7 @@
   import ItemSelector from './parts/ItemSelector.vue'
   import TermDashboard from './parts/TermDashboard.vue'
   import ClipBoardBox from './parts/ClipBoardBox.vue'
-  import fetchFromGru from '../fetchFromGru'
+  import fetchFromGru from '../data/fetchFromGru'
   import ChartItem from '../models/ChartItem.js'
 
   export default {
