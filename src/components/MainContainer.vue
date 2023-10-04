@@ -1,6 +1,6 @@
 <template>
   <div id="the-main-container">
-    <div id="test-div"> {{ theClient }}</div>
+    <div id="test-div"> {{ JSON.stringify(theClient, null, 2) }}</div>
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>
@@ -137,7 +137,7 @@
 <style lang="css">
   #test-div {
     width: 100%;
-    height: 90px;
+    height: 200px;
     background-color: white;
 
     overflow-y: auto;
