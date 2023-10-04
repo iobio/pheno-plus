@@ -83,8 +83,8 @@ async function initializeApp(fhirClient) {
 
     } catch (error) {
         const app = createApp(App)
-        app.config.globalProperties.$encounterListGlobal = [];
-        app.config.globalProperties.$encounterNumGlobal = 707;
+        app.config.globalProperties.$encountersListGlobal = [];
+        app.config.globalProperties.$encountersNumGlobal = 707;
 
         app.mount('#app');
         console.error(error.stack);
