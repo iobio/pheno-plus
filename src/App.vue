@@ -7,7 +7,7 @@
 
 <script>
   import MainContainer from '@/components/MainContainer.vue';
-  import constructData from './constructData';
+  import constructData from './data/constructData';
 
   export default {
     name: 'App',

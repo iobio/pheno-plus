@@ -1,4 +1,4 @@
-import ClinicalNote from "./models/ClinicalNote.js"
+import ClinicalNote from "../models/ClinicalNote.js"
 
 export default function constructData() {
     let data = [];
