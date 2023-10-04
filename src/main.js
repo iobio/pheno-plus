@@ -1,6 +1,5 @@
-import './assets/base.css'
-import Encounter from '@/models/Encounter';
-import fetchNotes from './fetchNotes.js';
+import './assets/base.css';
+import fetchNotes from './data/fetchNotes.js';
 
 import { createApp } from 'vue'
 import App from './App.vue'
