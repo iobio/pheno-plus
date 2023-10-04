@@ -42,7 +42,7 @@ async function fetchNotes(client, patientId) {
 
             try {
                 noteContent = await client.request(String(noteUrlBinary));
-                noteText = noteContent;
+                noteText = pullTextContent(noteContent);
                 notesNum++;
             } catch (error) {
                 continue;
@@ -56,4 +56,9 @@ async function fetchNotes(client, patientId) {
     return {notesList: notesList, notesNum: notesNum, justSearchData: noteSearchData};
 }
 
+function pullTextContent(html) {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+}
 export default fetchNotes;
