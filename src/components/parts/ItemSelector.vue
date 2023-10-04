@@ -1,11 +1,11 @@
 <template>
     <div id="item-selector">
         <SelectItem 
-        v-for="item in encountersList"
-        :encounter="item"
-        :selectedEncounter="selectedEncounter"
+        v-for="note in notesList"
+        :encounter="note"
+        :selectedEncounter="selectedNote"
         :alreadyProcessed="alreadyProcessed"
-        @click="selectEncounter">
+        @click="selectNote">
         </SelectItem>
     </div>
 </template>
@@ -19,8 +19,8 @@
             SelectItem
         },
         props: {
-            encountersList: Array,
-            selectedEncounter: Object,
+            notesList: Array,
+            selectedNote: Object,
             alreadyProcessed: Array,
         },
         data () {
@@ -31,8 +31,8 @@
         async mounted () {
         },
         methods: {
-            selectEncounter (encounter) {
-                this.$emit('selectEncounter', encounter)
+            selectNote (note) {
+                this.$emit('selectNote', note)
             }
         },
     }

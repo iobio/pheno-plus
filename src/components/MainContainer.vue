@@ -7,10 +7,10 @@
       <div class="content-title-wrapper item-selector">
         <h3>EHR Note List ({{ notesNum }})</h3>
         <ItemSelector class="sub-container" 
-        :encountersList="notesList"
-        :selectedEncounter="selectedNote"
+        :notesList="notesList"
+        :selectedNote="selectedNote"
         :alreadyProcessed="notesAlreadyProcessed"
-        @selectEncounter="selectNote">
+        @selectNote="selectNote">
         </ItemSelector>
       </div>
 
