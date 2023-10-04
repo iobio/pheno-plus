@@ -18,7 +18,7 @@ async function fetchNotes(client, patientId) {
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
         notes = noteSearchData.entry;
 
-        for (let note in notes) {
+        for (let note of notes) {
             let noteId = note.id;
             let noteDate = note.date;
             let noteUrlBinary = note.content[0].attachment.url;
