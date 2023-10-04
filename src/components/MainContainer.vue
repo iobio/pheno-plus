@@ -5,9 +5,9 @@
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
-        <h3>EHR Note List ({{ encountersNum }})</h3>
+        <h3>EHR Note List ({{ notesNum }})</h3>
         <ItemSelector class="sub-container" 
-        :encountersList="encountersList"
+        :encountersList="notesList"
         :selectedEncounter="selectedEncounter"
         :alreadyProcessed="itemsAlreadyProcessed"
         @selectEncounter="selectEncounter">
@@ -58,8 +58,8 @@
       ClipBoardBox,
     },
     props: {
-      encountersList: Array,
-      encountersNum: Number,
+      notesList: Array,
+      notesNum: Number,
     },
     data () {
       return {
