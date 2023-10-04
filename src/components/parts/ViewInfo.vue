@@ -36,7 +36,10 @@
                 if (!this.encounter) {
                     return;
                 }
-                this.textInputText = this.encounter.date + '\n' + this.encounter.text // encounter text is going to be the reason
+                for (let item in this.encounter) {
+                    this.textInputText += item + ': ' + this.encounter[item] + '\n';
+                }
+                //this.textInputText = this.encounter.date + '\n' + this.encounter.text 
             }
         },
         computed: {
