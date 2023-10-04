@@ -10,11 +10,12 @@ import ClinicalNote from '@/models/ClinicalNote';
 
 async function fetchNotes(client, patientId) {
     const noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+
     var notesList = [];
     var notesNum = 0;
     var notes = {};
 
-    if (noteSearchData.entry && noteSearchData.entry.length) {
+    if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
         notes = noteSearchData.entry;
 
         for (let note in notes) {
@@ -29,10 +30,10 @@ async function fetchNotes(client, patientId) {
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
             notesList.push(noteObj);
         }
-    }
 
-    if (notes.total) {
-        notesNum = notes.total;
+        if ('total' in notes) {
+            notesNum = notes.total;
+        }
     }
 
     return {notesList: notesList, notesNum: notesNum, justSearchData: noteSearchData};
