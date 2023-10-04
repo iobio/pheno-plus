@@ -8,9 +8,9 @@
         <h3>EHR Note List ({{ notesNum }})</h3>
         <ItemSelector class="sub-container" 
         :encountersList="notesList"
-        :selectedEncounter="selectedEncounter"
-        :alreadyProcessed="itemsAlreadyProcessed"
-        @selectEncounter="selectEncounter">
+        :selectedEncounter="selectedNote"
+        :alreadyProcessed="notesAlreadyProcessed"
+        @selectEncounter="selectNote">
         </ItemSelector>
       </div>
 
@@ -18,7 +18,7 @@
       <div class="content-title-wrapper view-info">
         <h3>Selected Note Content</h3>
         <ViewInfo
-        :encounter="selectedEncounter"
+        :encounter="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
         <button id="process-btn" @click="processText">Process Into HPO Terms</button>
@@ -27,9 +27,9 @@
 
     <div id="full-width-box-container">
       <TermDashboard
-        :hpoItemsObj="hpoItemsObj"
-        @removeItem="removeItem"
-        @updateItem="updateItem"
+        :hpoItemsObj="hpoTermsObj"
+        @removeItem="removeHpoTerm"
+        @updateItem="updateHpoTerm"
         @sendTerms="formatAndPopulateTerms"
         @clearTableTerms="clearAllTableTerms">
       </TermDashboard>
@@ -63,10 +63,10 @@
     },
     data () {
       return {
-        selectedEncounter: null,
-        selectedItemTextContent: null,
-        itemsAlreadyProcessed: [],
-        hpoItemsObj: {},
+        selectedNote: null,
+        selectedNoteTextContent: null,
+        notesAlreadyProcessed: [],
+        hpoTermsObj: {},
         clipTerms: [],
         hideOverlay: true,
       }
@@ -74,20 +74,20 @@
     async mounted () {
     },
     methods: {
-      selectEncounter (encounter) {
-        this.selectedEncounter = encounter;
+      selectNote (note) {
+        this.selectedNote = note;
       },
-      removeItem (id) {
-        delete this.hpoItemsObj[id];
+      removeHpoTerm (id) {
+        delete this.hpoTermsObj[id];
       },
-      updateItem (item) {
-        this.hpoItemsObj[item.getHpoId()] = item;
+      updateHpoTerm (item) {
+        this.hpoTermsObj[item.getHpoId()] = item;
       },
       formatAndPopulateTerms () {
         //Needs to populate the clipboard box with the terms
         let terms = [];
-        for (let key in this.hpoItemsObj) {
-          let item = this.hpoItemsObj[key];
+        for (let key in this.hpoTermsObj) {
+          let item = this.hpoTermsObj[key];
           if (item.getUse()) {
             terms.push(item.getHpoId());
           }
@@ -98,33 +98,33 @@
         this.clipTerms = [];
       },
       clearAllTableTerms () {
-        this.hpoItemsObj = {};
+        this.hpoTermsObj = {};
       },
       async processText () {
         //If nothing is selected dont process
-        if (this.selectedEncounter === null) {
+        if (this.selectedNote === null) {
           return;
         }
 
         //If the item has already been processed dont add it to the list again
-        if (!this.itemsAlreadyProcessed.includes(this.selectedEncounter.id)) {
-          this.itemsAlreadyProcessed.push(this.selectedEncounter.id);
+        if (!this.notesAlreadyProcessed.includes(this.selectedNote.id)) {
+          this.notesAlreadyProcessed.push(this.selectedNote.id);
         }
 
         //Show the loading overlay
         this.hideOverlay = false;
-        let gru_data = await fetchFromGru(this.selectedItemTextContent);
+        let gru_data = await fetchFromGru(this.selectedNoteTextContent);
         let clinPhen = gru_data.clinPhenData;
 
         //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
         for (let key in clinPhen) {
           let item = new ChartItem(clinPhen[key]);
-          this.hpoItemsObj[key] = item;
+          this.hpoTermsObj[key] = item;
         }
         this.hideOverlay = true;
       }, 
       changeTextContent (textContent) {
-        this.selectedItemTextContent = textContent;
+        this.selectedNoteTextContent = textContent;
       }
     },
   }
