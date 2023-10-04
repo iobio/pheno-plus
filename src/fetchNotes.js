@@ -61,7 +61,7 @@ function pullTextContent(html) {
     var doc = parser.parseFromString(html, 'text/html');
     var text = doc.body.textContent || "";
 
-    var textClean = text.replace(/[ \n\r]+/g, '\n');
+    var textClean = text.replace(/[\n\r]+/g, '\n');
     textClean = textClean.replace(/[ \t\f\v]+/g, ' ');
     return textClean;
 }
