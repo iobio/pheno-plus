@@ -5,7 +5,7 @@ export default async function fetchFromGru(data) {
     // let phenotypeExData = await fetchFromPhenotypeExtractor(chpcGruURL, data);
     let clinPhenData = await fetchFromClinPhen(chpcGruURL, data);
 
-    return {phenotypeExData: phenotypeExData, clinPhenData: clinPhenData}
+    return {clinPhenData: clinPhenData}
 }
 
 async function fetchFromPhenotypeExtractor(gruBaseUrl, data) {
