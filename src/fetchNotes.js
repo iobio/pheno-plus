@@ -35,23 +35,15 @@ async function fetchNotes(client, patientId) {
             let noteText = 'None pulled';
             try {
                 noteContent = await client.request(String(noteUrlBinary));
-                noteText = noteContent;
             } catch (error) {
-                //Continue
+                continue;
             }
-
-            try {
-                // noteText = atob(noteContent.data);
-            } catch (error) {
-                //Continue
-            }
+            
+            noteText = noteContent;
+            notesNum++;
 
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
             notesList.push(noteObj);
-        }
-
-        if ('total' in noteSearchData) {
-            notesNum = noteSearchData.total;
         }
     }
 
