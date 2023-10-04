@@ -33,20 +33,20 @@ async function fetchNotes(client, patientId) {
             let noteUrlBinary = note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
-            if (noteCode != "clinical-note") {
+            if (noteCode == null || noteCode != "clinical-note") {
                 continue;
             }
 
             let noteContent = null
             let noteText = 'None pulled';
+
             try {
                 noteContent = await client.request(String(noteUrlBinary));
+                noteText = noteContent;
+                notesNum++;
             } catch (error) {
                 continue;
             }
-
-            noteText = noteContent;
-            notesNum++;
 
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
             notesList.push(noteObj);
