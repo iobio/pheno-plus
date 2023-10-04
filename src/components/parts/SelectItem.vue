@@ -4,7 +4,7 @@
         :class="{'current-selection' : isSelected}"
         @click="selectEncounter"
         class="list-item">
-        <div class="select-item-span">{{ encounter.id }}</div>
+        <div class="select-item-span">{{"NoteID: " + encounter.id }}</div>
         <span class="already-added-sign" v-if="alreadyProcessed.includes(encounter.id)">
             <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
             <p class="already-added-tip">Already processed</p>
