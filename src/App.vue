@@ -28,7 +28,6 @@
       }
     }, 
     async mounted () {
-      await this.getInfo();
       let list2 = constructData();
 
       if (this.$notesListGlobal != 0 && this.$notesListGlobal.length != 0) {
@@ -42,8 +41,8 @@
       }
 
       //Notes
-      this.notesList = this.$notesListGlobal;
-      this.notesNum = this.$notesNumGlobal;
+      // this.notesList = this.$notesListGlobal;
+      // this.notesNum = this.$notesNumGlobal;
 
       this.theClient = this.$fhirClientGlobal;
 
@@ -52,9 +51,6 @@
       this.notesList = this.notesList.concat(list2);
     },
     methods: {
-      async getInfo () {
-        this.testInformation = 'testing...';
-      }
     }
   }
 </script>

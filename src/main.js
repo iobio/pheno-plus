@@ -63,11 +63,11 @@ async function initializeApp(fhirClient) {
         var notesNum = 0;
         var justSearchData = null;
 
-        let notesObj = await fetchNotes(client, patientId);
+        // let notesObj = await fetchNotes(client, patientId);
 
-        notesList = notesObj.notesList;
-        notesNum = notesObj.notesNum;
-        justSearchData = notesObj.justSearchData;
+        // notesList = notesObj.notesList;
+        // notesNum = notesObj.notesNum;
+        // justSearchData = notesObj.justSearchData;
 
         const app = createApp(App);
         //Encounters
