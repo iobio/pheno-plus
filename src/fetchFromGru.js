@@ -2,7 +2,7 @@
 export default async function fetchFromGru(data) {
     var chpcGruURL = 'https://mosaic.chpc.utah.edu/gru/api/v1/';
 
-    let phenotypeExData = await fetchFromPhenotypeExtractor(chpcGruURL, data);
+    // let phenotypeExData = await fetchFromPhenotypeExtractor(chpcGruURL, data);
     let clinPhenData = await fetchFromClinPhen(chpcGruURL, data);
 
     return {phenotypeExData: phenotypeExData, clinPhenData: clinPhenData}
