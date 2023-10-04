@@ -11,7 +11,7 @@ import ClinicalNote from '@/models/ClinicalNote';
 async function fetchNotes(client, patientId) {
     let noteSearchData;
     try {
-        noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+        noteSearchData = await client.request("/DocumentReference?patient=" + patientId + "&category=clinical-note");
     } catch (error) {
         console.error("Error fetching note search data:", error);
         // Return early with empty result if the initial request fails
