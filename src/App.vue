@@ -33,11 +33,9 @@
       if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
         //Encounters
         this.encountersList = this.$notesListGlobal;
-        this.encountersNum = this.$notesNumGlobal;
       } else {
         //Encounters
         this.encountersList = this.$encountersListGlobal;
-        this.encountersNum = this.$encountersNumGlobal;
       }
 
       //Notes
@@ -48,6 +46,7 @@
 
       //Combine with the demo data
       this.encountersList = this.encountersList.concat(list2);
+      this.encountersNum = this.encountersList.length;
       this.notesList = this.notesList.concat(list2);
     },
     methods: {
