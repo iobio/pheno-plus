@@ -28,8 +28,8 @@ async function fetchNotes(client, patientId) {
         for (let note of notes) {
             let noteId = note.resource && note.resource.id || null;
             let noteDate = note.resource && note.resource.date || null;
-            let noteUrlBinary = note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
-            let noteEncounterId = note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
+            let noteUrlBinary = null; //note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
+            let noteEncounterId = null; //note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
             let noteContent;
             try {
