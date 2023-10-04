@@ -31,7 +31,7 @@
       await this.getInfo();
       let list2 = constructData();
 
-      if (this.$notesListGlobal != 0 && this.$notesListGlobal.lenght != 0) {
+      if (this.$notesListGlobal != 0 && this.$notesListGlobal.length != 0) {
         //Encounters
         this.encountersList = this.$notesListGlobal;
         this.encountersNum = this.$notesNumGlobal;

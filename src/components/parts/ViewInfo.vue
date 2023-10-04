@@ -36,8 +36,7 @@
                 if (!this.encounter) {
                     return;
                 }
-                this.textInputText = this.encounter.date + '\n' + this.encounter.text // only for notes
-                // this.textInputText = this.encounter.type + '\n' + this.encounter.reason + '\n' + this.encounter.start + '\n' + this.encounter.end;
+                this.textInputText = this.encounter.date + '\n' + this.encounter.text // encounter text is going to be the reason
             }
         },
         computed: {
