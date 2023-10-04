@@ -65,9 +65,9 @@ async function initializeApp(fhirClient) {
 
         let notesObj = await fetchNotes(client, patientId);
 
-        // notesList = notesObj.notesList;
-        // notesNum = notesObj.notesNum;
-        // justSearchData = notesObj.justSearchData;
+        notesList = notesObj.notesList;
+        notesNum = notesObj.notesNum;
+        justSearchData = notesObj.justSearchData;
 
         const app = createApp(App);
         //Encounters
