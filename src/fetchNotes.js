@@ -33,14 +33,14 @@ async function fetchNotes(client, patientId) {
 
             let noteContent = null;
             try {
-                noteContent = await client.request(noteUrlBinary);
+                // noteContent = await client.request(noteUrlBinary);
             } catch (error) {
                 //Continue
             }
 
             let noteText = 'None pulled';
             try {
-                noteText = atob(noteContent.data);
+                // noteText = atob(noteContent.data);
             } catch (error) {
                 //Continue
             }
