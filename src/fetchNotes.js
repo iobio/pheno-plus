@@ -9,7 +9,14 @@
 import ClinicalNote from '@/models/ClinicalNote';
 
 async function fetchNotes(client, patientId) {
-    const noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+    let noteSearchData;
+    try {
+        noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+    } catch (error) {
+        console.error("Error fetching note search data:", error);
+        // Return early with empty result if the initial request fails
+        return {notesList: [], notesNum: 0, justSearchData: null};
+    }
 
     var notesList = [];
     var notesNum = 0;
@@ -23,10 +30,23 @@ async function fetchNotes(client, patientId) {
             let noteDate = note.date;
             let noteUrlBinary = note.content[0].attachment.url;
             let noteEncounterId = note.context.encounter[0].reference;
-    
-            let noteContent = await client.request(noteUrlBinary);
-            let noteText = atob(noteContent.data);
-    
+
+            let noteContent;
+            try {
+                noteContent = await client.request(noteUrlBinary);
+            } catch (error) {
+                console.error(`Error fetching note content for note ${noteId}:`, error);
+                continue;  // Skip to the next note
+            }
+
+            let noteText;
+            try {
+                noteText = atob(noteContent.data);
+            } catch (error) {
+                console.error(`Error decoding note content for note ${noteId}:`, error);
+                continue;  // Skip to the next note
+            }
+
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
             notesList.push(noteObj);
         }
