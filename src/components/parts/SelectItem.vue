@@ -18,7 +18,6 @@
         name: 'SelectItem',
         props: {
             encounter: Object,
-            color: Boolean,
             selectedEncounter: Object,
             alreadyProcessed: Array,
         },

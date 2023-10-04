@@ -3,7 +3,6 @@
         <SelectItem 
         v-for="item in encountersList"
         :encounter="item"
-        :color="item.reason !== 'No reason found.' ? true : false"
         :selectedEncounter="selectedEncounter"
         :alreadyProcessed="alreadyProcessed"
         @click="selectEncounter">
