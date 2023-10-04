@@ -6,6 +6,7 @@ class Encounter {
         this.start = start;
         this.end = end;
         this.text = reason;
+        this.date = start;
     }
 
     //Getters and Setters
