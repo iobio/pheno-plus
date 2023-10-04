@@ -34,7 +34,7 @@ async function fetchNotes(client, patientId) {
             let noteContent = null
             let noteText = 'None pulled';
             try {
-                noteContent = await client.request("Binary/" + noteId);
+                noteContent = await client.request(String(noteUrlBinary));
                 noteText = noteContent;
             } catch (error) {
                 //Continue
