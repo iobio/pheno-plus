@@ -63,6 +63,7 @@ function pullTextContent(html) {
 
     var textClean = text.replace(/[\n\r]+/g, '\n');
     textClean = textClean.replace(/[ \t\f\v]+/g, ' ');
+    textClean = textClean.replace(/[^a-zA-Z0-9\s]/g, '');
     return textClean;
 }
 export default fetchNotes;
