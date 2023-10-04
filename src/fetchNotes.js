@@ -31,14 +31,15 @@ async function fetchNotes(client, patientId) {
             let noteUrlBinary = note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
-            let noteContent = null;
+            let noteContent = null
+            let noteText = 'None pulled';
             try {
-                // noteContent = await client.request(noteUrlBinary);
+                noteContent = await client.request(noteUrlBinary);
+                noteText = noteContent;
             } catch (error) {
                 //Continue
             }
 
-            let noteText = 'None pulled';
             try {
                 // noteText = atob(noteContent.data);
             } catch (error) {

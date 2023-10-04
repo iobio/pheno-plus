@@ -36,6 +36,7 @@
                 if (!this.encounter) {
                     return;
                 }
+                this.textInputText = '';
                 for (let item in this.encounter) {
                     this.textInputText += item + ': ' + this.encounter[item] + '\n';
                 }
