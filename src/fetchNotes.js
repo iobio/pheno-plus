@@ -9,31 +9,32 @@
 import ClinicalNote from '@/models/ClinicalNote';
 
 async function fetchNotes(client, patientId) {
-    const noteSearchData = await client.request("/DocumentReference?patient=" + patientId + "&category=clinical-note");
+    const noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
     var notesList = [];
     var notesNum = 0;
     var notes = {};
 
-    if (noteSearchData.entry || noteSearchData.entry.length) {
+    if (noteSearchData.entry && noteSearchData.entry.length) {
         notes = noteSearchData.entry;
+
+        for (let note in notes) {
+            let noteId = note.id;
+            let noteDate = note.date;
+            let noteUrlBinary = note.content[0].attachment.url;
+            let noteEncounterId = note.context.encounter[0].reference;
+    
+            let noteContent = await client.request(noteUrlBinary);
+            let noteText = atob(noteContent.data);
+    
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
+            notesList.push(noteObj);
+        }
     }
 
     if (notes.total) {
         notesNum = notes.total;
     }
 
-    for (let note in notes) {
-        let noteId = note.id;
-        let noteDate = note.date;
-        let noteUrlBinary = note.content[0].attachment.url;
-        let noteEncounterId = note.context.encounter[0].reference;
-
-        let noteContent = await client.request(noteUrlBinary);
-        let noteText = atob(noteContent.data);
-
-        let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
-        notesList.push(noteObj);
-    }
     return {notesList: notesList, notesNum: notesNum, justSearchData: noteSearchData};
 }
 
