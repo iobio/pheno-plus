@@ -35,8 +35,7 @@ async function fetchNotes(client, patientId) {
             try {
                 noteContent = await client.request(noteUrlBinary);
             } catch (error) {
-                console.error(`Error fetching note content for note ${noteId}:`, error);
-                continue;  // Skip to the next note
+                console.error(`Error fetching note content for note ${noteId}:`, error); // just coninue 
             }
 
             let noteText;
@@ -44,7 +43,7 @@ async function fetchNotes(client, patientId) {
                 noteText = atob(noteContent.data);
             } catch (error) {
                 console.error(`Error decoding note content for note ${noteId}:`, error);
-                continue;  // Skip to the next note
+                noteText = 'None pulled'
             }
 
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);

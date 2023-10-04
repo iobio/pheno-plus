@@ -30,7 +30,7 @@
     async mounted () {
       let list2 = constructData();
 
-      if (this.$notesListGlobal != 0 && this.$notesListGlobal.length != 0) {
+      if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
         //Encounters
         this.encountersList = this.$notesListGlobal;
         this.encountersNum = this.$notesNumGlobal;
