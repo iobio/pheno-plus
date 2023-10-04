@@ -21,11 +21,10 @@ async function initializeApp(fhirClient) {
     try {
         const client = fhirClient;
         const patientId = client.patient.id;
-
+        
         // Notes Logic
         var notesList = [];
         var notesNum = 0;
-        var justSearchData = null;
 
         let notesObj = await fetchNotes(client, patientId);
 
