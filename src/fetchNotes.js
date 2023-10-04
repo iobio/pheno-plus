@@ -59,6 +59,9 @@ async function fetchNotes(client, patientId) {
 function pullTextContent(html) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
+    var text = doc.body.textContent || "";
+
+    var textClean = text.replace(/\n+/g, '\n').trim();
+    return ;
 }
 export default fetchNotes;
