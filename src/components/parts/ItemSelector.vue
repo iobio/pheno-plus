@@ -2,8 +2,8 @@
     <div id="item-selector">
         <SelectItem 
         v-for="note in notesList"
-        :encounter="note"
-        :selectedEncounter="selectedNote"
+        :note="note"
+        :selectedNote="selectedNote"
         :alreadyProcessed="alreadyProcessed"
         @click="selectNote">
         </SelectItem>
