@@ -1,5 +1,6 @@
 <template>
     <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}]">
+        <span v-if="baseInformationOnly"></span>
         <span v-if="!baseInformationOnly">
             <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
                 <option value="mild">mild</option>
@@ -110,7 +111,7 @@
         padding: .25em;
     }
     .hpo-row-container.base {
-        grid-template-columns: 2fr 1.5fr .25fr .25fr;
+        grid-template-columns: .25fr 2fr 1.25fr .25fr .25fr;
     }
     .hpo-row-container:hover {
         background-color: #e2e2e2;

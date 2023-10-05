@@ -1,6 +1,7 @@
 <template>
     <div id="term-dashboard-container">
         <h4 id="title-row" :class="{ base: baseInformationOnly}">
+            <span v-if="baseInformationOnly"></span>
             <span v-if="!baseInformationOnly">Severity</span>
             <span>Phenotype / Disorder</span>
             <span>HPO Term</span>
@@ -173,7 +174,7 @@
     }
 
     #title-row.base {
-        grid-template-columns: 2fr 1.5fr .25fr .25fr;
+        grid-template-columns: .25fr 2fr 1.25fr .25fr .25fr;
     }
 
 </style>
