@@ -110,7 +110,7 @@
         padding: .25em;
     }
     .hpo-row-container.base {
-        grid-template-columns: 3fr .5fr .25fr .25fr;
+        grid-template-columns: 2fr 1.5fr .25fr .25fr;
     }
     .hpo-row-container:hover {
         background-color: #e2e2e2;
