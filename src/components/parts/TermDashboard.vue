@@ -1,12 +1,12 @@
 <template>
     <div id="term-dashboard-container">
-        <h4 id="title-row">
-            <span>Severity</span>
+        <h4 id="title-row" :class="{ base: baseInformationOnly}">
+            <span v-if="!baseInformationOnly">Severity</span>
             <span>Phenotype / Disorder</span>
             <span>HPO Term</span>
-            <span>Inheritance</span>
-            <span>Mother</span>
-            <span>Father</span>
+            <span v-if="!baseInformationOnly">Inheritance</span>
+            <span v-if="!baseInformationOnly">Mother</span>
+            <span v-if="!baseInformationOnly">Father</span>
             <span>Use</span>
             <span></span>
         </h4>
@@ -14,6 +14,7 @@
             <HpoTermRow
                 v-for="hpoItem in hpoItemsObj"
                 :hpoItemObj="hpoItem"
+                :baseInformationOnly="baseInformationOnly"
                 @deleteItem="removeItem"
                 @updateItem="updateItem"></HpoTermRow>
         </div>
@@ -41,6 +42,7 @@
         },
         props: {
             hpoItemsObj: Object,
+            baseInformationOnly: Boolean,
         },
         data () {
             return {
@@ -168,6 +170,10 @@
         color: rgb(0,113,189);
         padding-left: .25em;
         padding-right: 16px;
+    }
+
+    #title-row.base {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
 </style>

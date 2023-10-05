@@ -1,6 +1,6 @@
 <template>
-    <div class="hpo-row-container" :class="this.thisHpoItemObj.use ? '' : 'disabled'">
-        <span>
+    <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}]">
+        <span v-if="!baseInformationOnly">
             <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
                 <option value="mild">mild</option>
                 <option value="moderate">moderate</option>
@@ -11,7 +11,7 @@
         </span>
         <span>{{ thisHpoItemObj.getPhenotypeName() }}</span>
         <span>{{ thisHpoItemObj.getHpoId() }}</span>
-        <span>
+        <span v-if="!baseInformationOnly">
             <select name="inheritance" id="" v-model="thisHpoItemObj.inheritance" @change="updateItem">
                 <option value="unknown">unknown</option>
                 <option value="autosomal dominant">autosomal dominant</option>
@@ -22,8 +22,8 @@
                 <option value="mitochondrial">mitochondrial</option>
             </select>
         </span>
-        <span><input type="checkbox" name="mother" v-model="thisHpoItemObj.mother" @change="updateItem"></span>
-        <span><input type="checkbox" name="father" v-model="thisHpoItemObj.father" @change="updateItem"></span>
+        <span v-if="!baseInformationOnly"><input type="checkbox" name="mother" v-model="thisHpoItemObj.mother" @change="updateItem"></span>
+        <span v-if="!baseInformationOnly"><input type="checkbox" name="father" v-model="thisHpoItemObj.father" @change="updateItem"></span>
         <span class="delete-btn-span"><input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateItem"></span>
         <span class="delete-btn-span" @click="deleteFromList"><img class="delete-btn-img" alt="remove" src="../../assets/backspace.svg"></span>
     </div>
@@ -34,6 +34,7 @@
         name: 'HpoTermRow',
         props: {
             hpoItemObj: Object,
+            baseInformationOnly: Boolean,
         },
         data () {
             return {
@@ -107,6 +108,9 @@
         align-items: center;
 
         padding: .25em;
+    }
+    .hpo-row-container.base {
+        grid-template-columns: 1fr 1fr 1fr 1fr ;
     }
     .hpo-row-container:hover {
         background-color: #e2e2e2;

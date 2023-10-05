@@ -28,6 +28,7 @@
     <div id="full-width-box-container">
       <TermDashboard
         :hpoItemsObj="hpoTermsObj"
+        :baseInformationOnly="baseInformationOnly"
         @removeItem="removeHpoTerm"
         @updateItem="updateHpoTerm"
         @sendTerms="formatAndPopulateTerms"
@@ -69,6 +70,7 @@
         hpoTermsObj: {},
         clipTerms: [],
         hideOverlay: true,
+        baseInformationOnly: true,
       }
     }, 
     async mounted () {
