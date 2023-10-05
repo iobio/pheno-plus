@@ -1,12 +1,11 @@
 <template>
     <div id="item-selector">
         <SelectItem 
-        v-for="item in encountersList"
-        :encounter="item"
-        :color="item.reason !== 'No reason found.' ? true : false"
-        :selectedEncounter="selectedEncounter"
+        v-for="note in notesList"
+        :note="note"
+        :selectedNote="selectedNote"
         :alreadyProcessed="alreadyProcessed"
-        @click="selectEncounter">
+        @click="selectNote">
         </SelectItem>
     </div>
 </template>
@@ -20,8 +19,8 @@
             SelectItem
         },
         props: {
-            encountersList: Array,
-            selectedEncounter: Object,
+            notesList: Array,
+            selectedNote: Object,
             alreadyProcessed: Array,
         },
         data () {
@@ -32,8 +31,8 @@
         async mounted () {
         },
         methods: {
-            selectEncounter (encounter) {
-                this.$emit('selectEncounter', encounter)
+            selectNote (note) {
+                this.$emit('selectNote', note)
             }
         },
     }
@@ -44,5 +43,6 @@
     #item-selector {
         overflow-y: scroll;
         background-color: white;
+        height: 100%;
     }
 </style>

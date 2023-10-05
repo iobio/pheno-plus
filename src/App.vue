@@ -1,14 +1,13 @@
 <template>
     <MainContainer
-      :encountersList="encountersList" 
-      :encountersNum="encountersNum">
+      :notesList="notesList" 
+      :notesNum="notesNum">
     </MainContainer>
 </template>
 
 <script>
-  import Encounter from '@/models/Encounter';
   import MainContainer from '@/components/MainContainer.vue';
-  import constructData from './constructData';
+  import constructData from './data/constructData';
 
   export default {
     name: 'App',
@@ -17,76 +16,34 @@
     },
     data () {
       return {
-        encountersList: [],
-        encountersNum: 0,
+        notesList: [],
+        notesNum: 0,
+        testInformation: null,
+        theClient: null,
       }
     }, 
     async mounted () {
-      await this.getInfo();
+      //Demo Data setup
       let list2 = constructData();
-      this.encountersList = this.encountersList.concat(list2);
+      
+      if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
+
+        //If there is data in the global notes list, use it
+        this.notesList = this.$notesListGlobal;
+
+        //Combine with the demo data
+        this.notesList = this.notesList.concat(list2);
+
+        //Set the number of notes
+        this.notesNum = this.notesList.length;
+
+      } else { //if there isnt any data in the global notes list just load demo data
+
+        //Just demo data will be loaded
+        this.notesList = this.notesList.concat(list2);
+      }
     },
     methods: {
-      async getInfo () {
-        FHIR.oauth2.ready().then((client) => {
-          // Get encounters for the selected patient
-          client.request("/Encounter?patient=" + client.patient.id)
-          // Reject if no encounters are found
-          .then(function(data) {
-              if (!data.entry || !data.entry.length) {
-                  throw new Error("No encounters found for the selected patient");
-              }
-              return data.entry;
-          })
-          // Set the list of encounters & the number of encounters
-          .then(
-              (encounters) => {
-                  this.encountersNum = encounters.length;
-
-                  for (let encounter of encounters) {
-                      var id = encounter.resource.id;
-                      var encType = null;
-                      var reason = null;
-                      var start = null;
-                      var end = null;
-
-                      //Make sure the encounter has the required fields if not note that
-                      if (encounter.resource.type && encounter.resource.type[0] && encounter.resource.type[0].text) {
-                          encType = encounter.resource.type[0].text;
-                      } else {
-                          encType = "No type found.";
-                      }
-
-                      if (encounter.resource.reasonCode && encounter.resource.reasonCode[0].coding[0].display) {
-                          reason = encounter.resource.reasonCode[0].coding[0].display;
-                      } else {
-                          reason = "No reason found.";
-                      }
-
-                      if (encounter.resource.period.start) {
-                          start = encounter.resource.period.start;
-                      } else {
-                          start = "No start date found.";
-                      }
-
-                      if (encounter.resource.period.end) {
-                          end = encounter.resource.period.end;
-                      } else {
-                          end = "No end date found.";
-                      }
-
-                    //Create the encounter object
-                    var encounterObj = new Encounter(id, encType, reason, start, end);
-                    //Add the encounter to the list of encounters
-                    this.encountersList.push(encounterObj);
-                  };
-              },
-              (error) => {
-                  console.log(error.stack);
-              }
-          );
-        }).catch(console.error);
-      }
     }
   }
 </script>

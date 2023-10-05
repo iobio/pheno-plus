@@ -2,10 +2,10 @@
     <div class="li-wrapper">
         <p 
         :class="{'current-selection' : isSelected}"
-        @click="selectEncounter"
+        @click="selectNote"
         class="list-item">
-        <div class="select-item-span">{{ encounter.id }}</div>
-        <span class="already-added-sign" v-if="alreadyProcessed.includes(encounter.id)">
+        <div class="select-item-span">{{"NoteID: " + note.id }}</div>
+        <span class="already-added-sign" v-if="alreadyProcessed.includes(note.id)">
             <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
             <p class="already-added-tip">Already processed</p>
         </span>
@@ -17,30 +17,29 @@
     export default {
         name: 'SelectItem',
         props: {
-            encounter: Object,
-            color: Boolean,
-            selectedEncounter: Object,
+            note: Object,
+            selectedNote: Object,
             alreadyProcessed: Array,
         },
         data () {
             return {
-                itemEncounter: this.encounter,
+                itemNote: this.note,
             }
         }, 
         async mounted () {
         },
         emits: ['click'],
         methods: {
-            selectEncounter () {
-                this.$emit('click', this.itemEncounter)
+            selectNote () {
+                this.$emit('click', this.itemNote)
             }
         },
         computed: {
             isSelected() {
-                if (this.selectedEncounter === null) {
+                if (this.selectedNote === null) {
                     return false;
                 } 
-                return this.selectedEncounter.id === this.itemEncounter.id;
+                return this.selectedNote.id === this.itemNote.id;
             }
         }
     }
