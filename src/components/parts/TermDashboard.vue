@@ -174,7 +174,7 @@
     }
 
     #title-row.base {
-        grid-template-columns: .25fr 2fr 1.25fr .25fr .25fr;
+        grid-template-columns: .25fr 1.75fr 1.5fr .25fr .25fr;
     }
 
 </style>
