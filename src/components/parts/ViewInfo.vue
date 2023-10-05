@@ -1,15 +1,15 @@
 <template>
-    <div v-if="encounter" id="view-info" class="sub-container">
+    <div v-if="note" id="view-info" class="sub-container">
         <textarea
             @change="textChanged"
             @input="textChanged"
-            id="encounter-info" 
+            id="note-info" 
             type="text" 
             v-model="textInputText"></textarea>
     </div>
 
-    <div class="sub-container" v-if="!encounter" id="view-info">
-        <p id="encounter-info-p">No encounter selected.</p>
+    <div class="sub-container" v-if="!note" id="view-info">
+        <p id="note-info-p">No note selected.</p>
     </div>
 
 </template>
@@ -19,7 +19,7 @@
         name: 'ViewInfo',
         emits: ['textChanged'],
         props: {
-            encounter: Object,
+            note: Object,
         },
         data () {
             return {
@@ -33,16 +33,16 @@
                 this.$emit('textChanged', this.textInputText);
             }, 
             setText() {
-                if (!this.encounter) {
+                if (!this.note) {
                     return;
                 }
-                this.textInputText = this.encounter.text 
+                this.textInputText = this.note.text 
             }
         },
         computed: {
         }, 
         watch: {
-            encounter: function (newVal, oldVal) {
+            note: function (newVal, oldVal) {
                 this.setText();
                 this.textChanged();
             }
@@ -52,7 +52,7 @@
 </script>
 
 <style scoped lang="css">
-    #encounter-info {
+    #note-info {
         width: 100%;
         height: 100%;
         resize: none;
@@ -66,7 +66,7 @@
         background-color: white;
     }
 
-    #encounter-info-p {
+    #note-info-p {
         width: 100%;
         height: 100%;
         font-size: 1em;

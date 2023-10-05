@@ -18,7 +18,7 @@
       <div class="content-title-wrapper view-info">
         <h3>Selected Note Content</h3>
         <ViewInfo
-        :encounter="selectedNote"
+        :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
         <button id="process-btn" @click="processText">Process Into HPO Terms</button>
@@ -136,13 +136,6 @@
     border-radius: 3px 3px 0px 0px;
     margin-top: 0px;
     margin-bottom: 0px;
-  }
-
-  #num-encounters {
-    font-size: 20px;
-    font-weight: bold;
-    margin-left: 20px;
-    margin-top: 20px;
   }
 
   #the-main-container {
