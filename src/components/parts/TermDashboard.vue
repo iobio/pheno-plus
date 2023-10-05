@@ -173,7 +173,7 @@
     }
 
     #title-row.base {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 3fr .5fr .25fr .25fr;
     }
 
 </style>
