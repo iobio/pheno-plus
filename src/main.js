@@ -4,22 +4,28 @@ import fetchNotes from './data/fetchNotes.js';
 import { createApp } from 'vue'
 import App from './App.vue'
 
-getClient().then(client => {
-    //If the client is null, we need to authorize
-    if (client === null) {
-        FHIR.oauth2.authorize({
-            //Our application's ID
-            client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
-            //Initial scope
-            scope: "launch patient/*.* openid user/*.* profile",
-            //Our redirect URL
-            redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
-        });
-    } else {
-        //Call the initializeApp function with the client if it exists
-        initializeApp(client);
-    }
-});
+//if we are on local host then skip all of this and mount the app
+if (window.location.hostname === "localhost") {
+    const app = createApp(App);
+    app.mount('#app');
+} else {
+    getClient().then(client => {
+        //If the client is null, we need to authorize
+        if (client === null) {
+            FHIR.oauth2.authorize({
+                //Our application's ID
+                client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+                //Initial scope
+                scope: "launch patient/*.* openid user/*.* profile",
+                //Our redirect URL
+                redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
+            });
+        } else {
+            //Call the initializeApp function with the client if it exists
+            initializeApp(client);
+        }
+    });
+}
 
 async function initializeApp(fhirClient) {
     try {
