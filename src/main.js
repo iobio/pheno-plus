@@ -6,7 +6,12 @@ import App from './App.vue'
 
 //if we are on local host then skip all of this and mount the app
 if (window.location.hostname === "localhost") {
-    const app = createApp(App);
+    //If there is an error, create the app with an empty notes list
+    const app = createApp(App)
+    //Set the notes list as a global property just to empty
+    app.config.globalProperties.$notesListGlobal = [];
+    app.config.globalProperties.$isTestingEnvironment = true;
+    //Mount the app
     app.mount('#app');
 } else {
     getClient().then(client => {
