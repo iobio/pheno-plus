@@ -116,14 +116,20 @@
         //Show the loading overlay
         this.hideOverlay = false;
         let gru_data = await fetchFromGru(this.selectedNoteTextContent);
-        let clinPhen = gru_data.clinPhenData;
 
-        //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
-        for (let key in clinPhen) {
-          let item = new ChartItem(clinPhen[key]);
-          this.hpoTermsObj[key] = item;
+        if (gru_data) {
+          var clinPhen = gru_data.clinPhenData;
+
+          //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
+          for (let key in clinPhen) {
+            let item = new ChartItem(clinPhen[key]);
+            this.hpoTermsObj[key] = item;
+          }
+          this.hideOverlay = true;
+        } else {
+          this.hideOverlay = true;
         }
-        this.hideOverlay = true;
+
       }, 
       changeTextContent (textContent) {
         this.selectedNoteTextContent = textContent;

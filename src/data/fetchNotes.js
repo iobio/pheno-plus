@@ -74,10 +74,27 @@ function pullTextContent(html) {
     var doc = parser.parseFromString(html, 'text/html');
     var text = doc.body.textContent || "";
 
-    // Clean up the text
-    var textClean = text.replace(/[\n\r]+/g, '\n'); // Replace all new lines with a single new line
-    textClean = textClean.replace(/[ \t\f\v]+/g, ' '); // Replace all whitespace with a single space
-    textClean = textClean.replace(/[^a-zA-Z0-9\s]/g, ''); // Remove all non-alphanumeric characters
+    // Clean up the text remove number and special characters
+    var textClean = textClean.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
+    textClean = textClean.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
+    textClean = textClean.replace(/[|]/g, ''); // No improvement from keeping
+    textClean = textClean.replace(/°F/g, ''); 
+    textClean = textClean.replace(/°C/g, ''); 
+    textClean = textClean.replace(/\( ?\)/g, '');
+
+    // Characters that explicitly cause issues with sending via URL
+    textClean = textClean.replace(/\?/g, '');
+    textClean = textClean.replace(/\!/g, '');
+    textClean = textClean.replace(/\%/g, '');
+    textClean = textClean.replace(/\#/g, '');
+    textClean = textClean.replace(/\=/g, '');
+    textClean = textClean.replace(/\&/g, '');
+    textClean = textClean.replace(/\@/g, '');
+    textClean = textClean.replace(/[\'\"]+/g, '');
+
+    // Standardize whitespace
+    textClean = textClean.replace(/\u200B/g, ''); // Zero-width space
+    textClean = textClean.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
 
     return textClean;
 }
