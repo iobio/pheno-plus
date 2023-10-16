@@ -75,7 +75,7 @@ function pullTextContent(html) {
     var text = doc.body.textContent || "";
 
     // Clean up the text remove number and special characters
-    var textClean = textClean.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
+    var textClean = text.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
     textClean = textClean.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
     textClean = textClean.replace(/[|]/g, ''); // No improvement from keeping
     textClean = textClean.replace(/°F/g, ''); 
