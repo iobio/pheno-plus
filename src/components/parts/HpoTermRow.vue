@@ -10,7 +10,7 @@
             </select>
             <svg v-if="thisHpoItemObj.severity != 'unknown'" style="height: 12px; width: 12px; margin-left: 3px;" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" :fill="severityColor[0]" :stroke="severityColor[1]"></circle></svg>
         </span>
-        <span>{{ thisHpoItemObj.getPhenotypeName() }}</span>
+        <span><i class="small-italic">({{ thisHpoItemObj.getNumOccurrences() }})</i> {{ thisHpoItemObj.getPhenotypeName() }}</span>
         <span>{{ thisHpoItemObj.getHpoId() }}</span>
         <span v-if="!baseInformationOnly">
             <select name="inheritance" id="" v-model="thisHpoItemObj.inheritance" @change="updateItem">

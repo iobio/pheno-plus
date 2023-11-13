@@ -154,6 +154,9 @@
 </script>
 
 <style lang="css">
+  .small-italic {
+    font-size: small;
+  }
   h3 {
     width: 100%;
     border-radius: 3px 3px 0px 0px;
