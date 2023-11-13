@@ -28,6 +28,7 @@
     <div id="full-width-box-container">
       <TermDashboard
         :hpoItemsObj="hpoTermsObj"
+        :sortedHpoList="sortedHpoList"
         :baseInformationOnly="baseInformationOnly"
         @removeItem="removeHpoTerm"
         @updateItem="updateHpoTerm"
@@ -71,6 +72,7 @@
         clipTerms: [],
         hideOverlay: true,
         baseInformationOnly: true,
+        sortedHpoList: [],
       }
     }, 
     async mounted () {
@@ -122,9 +124,22 @@
 
           //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
           for (let key in clinPhen) {
+            if (this.hpoTermsObj[key]) {
+              //If it already exists add the new instance factors to the item
+              this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
+              this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
+              this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+              continue;
+            }
+            //otherwise just add it to the list we haven't seen it before
             let item = new ChartItem(clinPhen[key]);
             this.hpoTermsObj[key] = item;
           }
+          let sortedTerms = Object.values(this.hpoTermsObj)
+            .sort((a, b) => b.numOccurrences - a.numOccurrences)
+            .map(item => [item.hpoId, item.numOccurrences]);
+
+          this.sortedHpoList = sortedTerms;
           this.hideOverlay = true;
         } else {
           this.hideOverlay = true;

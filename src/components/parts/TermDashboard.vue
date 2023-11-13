@@ -11,10 +11,10 @@
             <span>Use</span>
             <span></span>
         </h4>
-        <div v-if="Object.keys(hpoItemsObj).length > 0" id="table-container">
+        <div v-if="sortedHpoList.length > 0" id="table-container">
             <HpoTermRow
-                v-for="hpoItem in hpoItemsObj"
-                :hpoItemObj="hpoItem"
+                v-for="hpoPair in sortedHpoList"
+                :hpoItemObj="hpoItemsObj[hpoPair[0]]"
                 :baseInformationOnly="baseInformationOnly"
                 @deleteItem="removeItem"
                 @updateItem="updateItem"></HpoTermRow>
@@ -43,6 +43,7 @@
         },
         props: {
             hpoItemsObj: Object,
+            sortedHpoList: Array,
             baseInformationOnly: Boolean,
         },
         data () {

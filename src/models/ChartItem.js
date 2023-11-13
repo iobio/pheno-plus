@@ -2,9 +2,9 @@ class ChartItem{
     constructor(ClinPhenResult) {
         this.hpoId = ClinPhenResult["HPO ID"];
         this.phenotypeName = ClinPhenResult["Phenotype name"];
-        this.numOccurrences = ClinPhenResult["No. occurrences"];
-        this.earliness = ClinPhenResult["Earliness (lower = earlier)"];
-        this.exampleSentence = ClinPhenResult["Example sentence"];
+        this.numOccurrences = parseInt(ClinPhenResult["No. occurrences"]);
+        this.earliness = [ClinPhenResult["Earliness (lower = earlier)"]];
+        this.exampleSentence = [ClinPhenResult["Example sentence"]];
 
         // These are the default values for the other chart elements
         this.severity = 'unknown';
@@ -71,11 +71,21 @@ class ChartItem{
     setNumOccurrences(numOccurrences) {
         this.numOccurrences = numOccurrences;
     }
+    addToNumOccurrences(numOccurrences) {
+        numOccurrences = parseInt(numOccurrences)
+        this.numOccurrences += numOccurrences;
+    }
     setEarliness(earliness) {
         this.earliness = earliness;
     }
+    addToEarliness(earliness) {
+        this.earliness.push(earliness);
+    }
     setExampleSentence(exampleSentence) {
         this.exampleSentence = exampleSentence;
+    }
+    addToExampleSentence(exampleSentence) {
+        this.exampleSentence.push(exampleSentence);
     }
 }
 export default ChartItem;
