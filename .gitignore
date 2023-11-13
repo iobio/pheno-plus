@@ -29,3 +29,6 @@ coverage
 
 # ignore testing folder
 testing
+
+#Any files named notes
+notes.txt

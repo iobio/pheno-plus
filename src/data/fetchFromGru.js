@@ -19,10 +19,28 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         var chunkSize = 7000;
         var concatClinPhenResponseArray = [];
         var headerRowArray = [];
+        var negatedEnd = null; //to take care of negated phrases that are split between chunks
 
         //Break the note text into 7000 char chunks
         for (let i = 0; i < noteLength; i += chunkSize) {
-            noteChunks.push(noteText.substring(i, i + chunkSize));
+            let chunk = noteText.substring(i, i + chunkSize);
+            if (negatedEnd) {
+                chunk = negatedEnd + ' ' + chunk;
+                negatedEnd = null;
+            }
+
+            //Check to make sure the last 5 words arent 'no' or 'not'
+            var chunkArray = chunk.split(' ');// split the chunk on the spaces to check
+
+            //iterate backwards for the last 5 words, if one of those is 'no' or 'not' slice the chunk there to the end and make that the negatedEnd
+            for (let i = chunkArray.length - 1; i > chunkArray.length - 6; i--) {
+                if (chunkArray[i].toLowerCase() == 'no' || chunkArray[i].toLowerCase() == 'not') {
+                    negatedEnd = chunkArray.slice(i).join(' ');
+                    chunk = chunk.slice(0, chunk.length - negatedEnd.length); //We just want the chunk up to the negatedEnd we found
+                    break;
+                } 
+            }
+            noteChunks.push(chunk);
         }
 
         //Iterate over the chunks and send them to clinphen
