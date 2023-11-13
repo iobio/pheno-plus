@@ -3,12 +3,12 @@
         <h4 id="title-row" :class="{ base: baseInformationOnly}">
             <span v-if="baseInformationOnly"></span>
             <span v-if="!baseInformationOnly">Severity</span>
-            <span><i class="small-italic">(#Occ)</i> Phenotype / Disorder</span>
+            <span><i class="small-italic">(#Occ)</i> Phenotype</span>
             <span>HPO Term</span>
             <span v-if="!baseInformationOnly">Inheritance</span>
             <span v-if="!baseInformationOnly">Mother</span>
             <span v-if="!baseInformationOnly">Father</span>
-            <span>Use</span>
+            <span>Relevant</span>
             <span></span>
         </h4>
         <div v-if="sortedHpoList.length > 0" id="table-container">
