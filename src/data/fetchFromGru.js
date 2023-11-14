@@ -80,12 +80,28 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
             headerRowArray.forEach((header, index) => {
                 tempObject[header] = rowArray[index];
             });
-            theObject[rowArray[0]] = tempObject;
+            if (theObject[rowArray[0]]) {
+                let obj = theObject[rowArray[0]];
+                //earliness should become an array if it isnt already
+                if (!Array.isArray(obj['Earliness (lower = earlier)'])) {
+                    obj['Earliness (lower = earlier)'] = [obj['Earliness (lower = earlier)']];
+                    obj['Earliness (lower = earlier)'].push(tempObject['Earliness (lower = earlier)']);
+                }
+                // example sentence should become an array
+                if (!Array.isArray(obj['Example sentence'])) {
+                    obj['Example sentence'] = [obj['Example sentence']];
+                    obj['Example sentence'].push(tempObject['Example sentence']);
+                }
+                //No. occurrences should be added together
+                obj['No. occurrences'] = parseInt(obj['No. occurrences']) + parseInt(tempObject['No. occurrences']);
+            } else {
+                theObject[rowArray[0]] = tempObject;
+            }
         });
 
         //remove any empty objects
         delete theObject[''];
-
+        console.log(theObject);
         return theObject;
 
     } else {

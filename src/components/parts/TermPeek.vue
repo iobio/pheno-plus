@@ -29,6 +29,7 @@
         padding: 5px;
         transition: all 0.45s ease-in-out;
         overflow: hidden;
+        color: rgb(72, 71, 71);
     }
     #term-peek-div.visible {
         width: 20%;
@@ -44,6 +45,11 @@
 
     #term-peek-div div {
         text-align: center;
+        border-bottom: 1px solid rgb(209, 209, 209);
+        padding-bottom: 5px;
+        padding-top: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
 

@@ -3,8 +3,18 @@ class ChartItem{
         this.hpoId = ClinPhenResult["HPO ID"];
         this.phenotypeName = ClinPhenResult["Phenotype name"];
         this.numOccurrences = parseInt(ClinPhenResult["No. occurrences"]);
-        this.earliness = [ClinPhenResult["Earliness (lower = earlier)"]];
-        this.exampleSentence = [ClinPhenResult["Example sentence"]];
+        this.earliness = []
+        if (!Array.isArray(ClinPhenResult["Earliness (lower = earlier)"])) {
+            this.earliness.push(ClinPhenResult["Earliness (lower = earlier)"]);
+        } else {
+            this.earliness = this.earliness.concat(ClinPhenResult["Earliness (lower = earlier)"]);
+        }
+        this.exampleSentence = []
+        if (!Array.isArray(ClinPhenResult["Example sentence"])) {
+            this.exampleSentence.push(ClinPhenResult["Example sentence"]);
+        } else {
+            this.exampleSentence = this.exampleSentence.concat(ClinPhenResult["Example sentence"]);
+        }
 
         // These are the default values for the other chart elements
         this.severity = 'unknown';
