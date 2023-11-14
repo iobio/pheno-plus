@@ -16,8 +16,10 @@
                 v-for="hpoPair in sortedHpoList"
                 :hpoItemObj="hpoItemsObj[hpoPair[0]]"
                 :baseInformationOnly="baseInformationOnly"
+                :selectedTerm="selectedTerm"
                 @deleteItem="removeItem"
-                @updateItem="updateItem"></HpoTermRow>
+                @updateItem="updateItem"
+                @selectTerm="handleTermSelected"></HpoTermRow>
         </div>
 
         <!-- only if there is no content to be rendered yet -->
@@ -45,6 +47,7 @@
             hpoItemsObj: Object,
             sortedHpoList: Array,
             baseInformationOnly: Boolean,
+            selectedTerm: Object,
         },
         data () {
             return {
@@ -60,6 +63,10 @@
             updateItem (item) {
                 this.$emit('updateItem', item);
             },
+            handleTermSelected(term) {
+                console.log('term selected', term);
+                this.$emit('selectTerm', term);
+            }
         }, 
         watch: {
             hpoItemsObj: {
@@ -138,8 +145,8 @@
         justify-content: flex-start;
         align-items: center;
 
-        width: 100%;
-        height: 75%;
+        flex-grow: 1;
+        height: 100%;
         border-radius: 3px;
         padding: 1em;
         

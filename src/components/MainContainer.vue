@@ -26,15 +26,21 @@
     </div>
 
     <div id="full-width-box-container">
-      <TermDashboard
-        :hpoItemsObj="hpoTermsObj"
-        :sortedHpoList="sortedHpoList"
-        :baseInformationOnly="baseInformationOnly"
-        @removeItem="removeHpoTerm"
-        @updateItem="updateHpoTerm"
-        @sendTerms="formatAndPopulateTerms"
-        @clearTableTerms="clearAllTableTerms">
-      </TermDashboard>
+      <div id="term-table">
+        <TermDashboard
+          :hpoItemsObj="hpoTermsObj"
+          :sortedHpoList="sortedHpoList"
+          :baseInformationOnly="baseInformationOnly"
+          :selectedTerm="selectedTerm"
+          @removeItem="removeHpoTerm"
+          @updateItem="updateHpoTerm"
+          @sendTerms="formatAndPopulateTerms"
+          @clearTableTerms="clearAllTableTerms"
+          @selectTerm="selectTerm">
+        </TermDashboard>
+        <TermPeek
+          :hpoItemObj="selectedTerm"></TermPeek>
+      </div>
       <ClipBoardBox
         :clipBoardTerms="clipTerms"
         @clearClipboardTerms="clearClipTerms"></ClipBoardBox>
@@ -50,6 +56,7 @@
   import ClipBoardBox from './parts/ClipBoardBox.vue'
   import fetchFromGru from '../data/fetchFromGru'
   import ChartItem from '../models/ChartItem.js'
+  import TermPeek from './parts/TermPeek.vue'
 
   export default {
     name: 'MainContainer',
@@ -58,6 +65,7 @@
       ItemSelector,
       TermDashboard,
       ClipBoardBox,
+      TermPeek,
     },
     props: {
       notesList: Array,
@@ -73,11 +81,25 @@
         hideOverlay: true,
         baseInformationOnly: true,
         sortedHpoList: [],
+        selectedTerm: null,
       }
     }, 
     async mounted () {
     },
     methods: {
+      selectTerm (term) {
+        if (this.selectedTerm === null) {
+          this.selectedTerm = term;
+          return;
+        }
+
+        if (this.selectedTerm.hpoId === term.hpoId) {
+          this.selectedTerm = null;
+          return;
+        }
+
+        this.selectedTerm = term;
+      },
       selectNote (note) {
         this.selectedNote = note;
       },
@@ -155,8 +177,9 @@
 
 <style lang="css">
   .small-italic {
-    font-size: small;
+    font-size: small; 
   }
+  
   h3 {
     width: 100%;
     border-radius: 3px 3px 0px 0px;
@@ -189,6 +212,18 @@
     align-items: center;
     height: 58%;
     width: 93%;
+  }
+
+  #full-width-box-container #term-table {
+    width: 100%;
+    height: 75%;
+    border-radius: 3px;
+    padding: 1em;
+    margin: 0%;
+    padding: 0%;
+
+    display: flex;
+    flex-direction: row;
   }
 
   .content-title-wrapper .sub-container {

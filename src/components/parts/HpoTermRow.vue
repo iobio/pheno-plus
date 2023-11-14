@@ -1,5 +1,5 @@
 <template>
-    <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}]">
+    <div @click="$emit('selectTerm', thisHpoItemObj)" class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}, {selected: selectedTerm == hpoItemObj}]">
         <span v-if="baseInformationOnly"></span>
         <span v-if="!baseInformationOnly">
             <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
@@ -36,6 +36,7 @@
         props: {
             hpoItemObj: Object,
             baseInformationOnly: Boolean,
+            selectedTerm: Object,
         },
         data () {
             return {
@@ -95,6 +96,10 @@
         cursor: pointer;
 
         text-align: center;
+    }
+    .selected {
+        background-color: #c2dbf7;
+        border-radius: 4px;
     }
 
     input[type=checkbox] {
