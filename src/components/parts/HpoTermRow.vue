@@ -27,8 +27,8 @@
         <span v-if="!baseInformationOnly"><input type="checkbox" name="father" v-model="thisHpoItemObj.father" @change="updateItem"></span>
         <span class="delete-btn-span"><input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateItem"></span>
         <span class="delete-btn-span" @click="deleteFromList"><img class="delete-btn-img" alt="remove" src="../../assets/backspace.svg"></span>
-        <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-outline.svg"></span>
-        <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-off-outline.svg"></span>
+        <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-off-outline.svg"></span>
+        <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-outline.svg"></span>
     </div>
 </template>
 
