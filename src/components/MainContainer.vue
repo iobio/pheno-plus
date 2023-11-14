@@ -127,6 +127,8 @@
       },
       clearAllTableTerms () {
         this.hpoTermsObj = {};
+        this.sortedHpoList = [];
+        this.selectedTerm = null;
       },
       async processText () {
         //If nothing is selected dont process
