@@ -1,5 +1,5 @@
 <template>
-    <div @click="$emit('selectTerm', thisHpoItemObj)" class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}, {selected: selectedTerm == hpoItemObj}]">
+    <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}, {selected: selectedTerm == hpoItemObj}]">
         <span v-if="baseInformationOnly"></span>
         <span v-if="!baseInformationOnly">
             <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
@@ -27,6 +27,8 @@
         <span v-if="!baseInformationOnly"><input type="checkbox" name="father" v-model="thisHpoItemObj.father" @change="updateItem"></span>
         <span class="delete-btn-span"><input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateItem"></span>
         <span class="delete-btn-span" @click="deleteFromList"><img class="delete-btn-img" alt="remove" src="../../assets/backspace.svg"></span>
+        <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-outline.svg"></span>
+        <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-off-outline.svg"></span>
     </div>
 </template>
 
@@ -44,7 +46,7 @@
                 severityColor: [],
             }
         }, 
-        async mounted () {
+        mounted () {
             this.setColor();
         },
         methods: {
@@ -53,6 +55,9 @@
                 this.updateItem();
             },
             deleteFromList() {
+                if (this.selectedTerm == this.hpoItemObj) {
+                    this.$emit('selectTerm', null);
+                }
                 this.$emit('deleteItem', this.hpoItemObj.getHpoId());
             },
             updateItem() {
@@ -109,14 +114,14 @@
     .hpo-row-container {
         width: 100%;
         display: grid;
-        grid-template-columns: .75fr 1.5fr 1fr 1fr .5fr .5fr .25fr .25fr;
+        grid-template-columns: .75fr 1.30fr 1fr 1fr .5fr .5fr .25fr .25fr .20fr;
         justify-items: start;
         align-items: center;
 
         padding: .25em;
     }
     .hpo-row-container.base {
-        grid-template-columns: .25fr 1.75fr 1.5fr .25fr .25fr;
+        grid-template-columns: .25fr 1.75fr 1.30fr .25fr .25fr .20fr;
     }
     .hpo-row-container:hover {
         background-color: #e2e2e2;
@@ -131,6 +136,13 @@
         display: flex;
         cursor: pointer;
         justify-content: center;
+    }
+    .show-btn-span {
+        display: flex;
+        cursor: pointer;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
     }
     .delete-btn-img {
         border-radius: 30%;

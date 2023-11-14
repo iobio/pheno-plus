@@ -88,22 +88,24 @@
     },
     methods: {
       selectTerm (term) {
-        if (this.selectedTerm === null) {
+        if (this.selectedTerm === null && term !== null) {
           this.selectedTerm = term;
           return;
-        }
-
-        if (this.selectedTerm.hpoId === term.hpoId) {
+        } else if (term == null || this.selectedTerm.hpoId === term.hpoId) {
           this.selectedTerm = null;
           return;
+        } else {
+          this.selectedTerm = term;
         }
-
-        this.selectedTerm = term;
       },
       selectNote (note) {
         this.selectedNote = note;
       },
       removeHpoTerm (id) {
+        if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
+          this.selectedTerm = null;
+        }
+        this.sortedHpoList = this.sortedHpoList.filter(item => item[0] !== id);
         delete this.hpoTermsObj[id];
       },
       updateHpoTerm (item) {
@@ -179,7 +181,7 @@
   .small-italic {
     font-size: small; 
   }
-  
+
   h3 {
     width: 100%;
     border-radius: 3px 3px 0px 0px;

@@ -101,7 +101,6 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
 
         //remove any empty objects
         delete theObject[''];
-        console.log(theObject);
         return theObject;
 
     } else {

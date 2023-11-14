@@ -64,7 +64,6 @@
                 this.$emit('updateItem', item);
             },
             handleTermSelected(term) {
-                console.log('term selected', term);
                 this.$emit('selectTerm', term);
             }
         }, 
