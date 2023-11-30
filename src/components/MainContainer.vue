@@ -50,6 +50,7 @@
 </template>
 
 <script>
+  import NoteSelectPane from './parts/NoteSelectPane.vue'
   import ViewInfo from './parts/ViewInfo.vue'
   import ItemSelector from './parts/ItemSelector.vue'
   import TermDashboard from './parts/TermDashboard.vue'
@@ -61,6 +62,7 @@
   export default {
     name: 'MainContainer',
     components: {
+      NoteSelectPane,
       ViewInfo,
       ItemSelector,
       TermDashboard,
