@@ -10,7 +10,12 @@
         :notesList="notesList"
         :selectedNote="selectedNote"
         :alreadyProcessed="notesAlreadyProcessed"
-        @selectNote="selectNote">
+        :isCheckedMap="isCheckedMap"
+        :allChecked="allChecked"
+        @selectNote="selectNote"
+        @updateIsCheckedMap="updateIsCheckedMap"
+        @uncheckAll="uncheckAll"
+        @checkAll="checkAll">
         </ItemSelector>
       </div>
 
@@ -21,7 +26,10 @@
         :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
-        <button id="process-btn" @click="processText">Process Into HPO Terms</button>
+        <div id="process-btn-container">
+          <button class="process-btn" @click="processText">Process Selected Note</button>
+          <button class="process-btn all" @click="processTextAll">Process All Checked</button>
+        </div>
       </div>
     </div>
 
@@ -84,6 +92,7 @@
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
+        allChecked: true,
       }
     }, 
     async mounted () {
@@ -130,6 +139,7 @@
       clearAllTableTerms () {
         this.hpoTermsObj = {};
         this.sortedHpoList = [];
+        this.notesAlreadyProcessed = [];
         this.selectedTerm = null;
       },
       async processText () {
@@ -173,10 +183,61 @@
           this.hideOverlay = true;
         }
 
-      }, 
+      },
+      async processTextAll(){
+        //For each of the notes in the notes list process the text
+        for (let note of this.notesList) {
+          //Call the process text function
+          
+          if (this.isCheckedMap[note.id] == false) {
+            continue;
+          } else {
+            this.selectedNote = note;
+            this.selectedNoteTextContent = note.text;
+            await this.processText();
+          }
+        }
+      },
       changeTextContent (textContent) {
         this.selectedNoteTextContent = textContent;
+      },
+      updateIsCheckedMap (noteId) {
+        this.isCheckedMap[noteId] = !this.isCheckedMap[noteId];
+
+        if (this.isCheckedMap[noteId] == false) {
+          this.allChecked = false;
+        } else {
+          let allChecked = true;
+          for (let note of this.notesList) {
+            if (this.isCheckedMap[note.id] == false) {
+              allChecked = false;
+              break;
+            }
+          }
+          this.allChecked = allChecked;
+        }
+      },
+      checkAll() {
+        for (let note of this.notesList) {
+          this.isCheckedMap[note.id] = true;
+        }
+        this.allChecked = true;
+      },
+      uncheckAll() {
+        for (let note of this.notesList) {
+          this.isCheckedMap[note.id] = false;
+        }
+        this.allChecked = false;
       }
+    },
+    computed: {
+      isCheckedMap () {
+          let map = {};
+          for (let note of this.notesList) {
+            map[note.id] = true;
+          }
+          return map;
+      },
     },
   }
 </script>
@@ -239,7 +300,7 @@
     overflow-y: auto;
     box-sizing: border-box;
 
-    padding: 10px;
+    padding: 0px 10px 10px 10px;
 
   }
 
@@ -264,9 +325,17 @@
   .content-title-wrapper.view-info {
     width: 56%;
   }
+  
+  #process-btn-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 
-  #process-btn {
-    width: 95%;
+  .process-btn {
+    width: 40%;
     min-width: 45px;
     font-size: .8rem;
 
@@ -281,10 +350,10 @@
 
     text-align: center;
   }
-  #process-btn:hover {
+  .process-btn:hover {
     background-color: rgb(0,113,189, .8);
   }
-  #process-btn:active {
+  .process-btn:active {
     background-color: rgba(4, 83, 136);
   }
 

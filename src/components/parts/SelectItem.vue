@@ -1,5 +1,6 @@
 <template>
     <div class="li-wrapper">
+        <input type="checkbox" v-model="checked" @change="toggleCheck">
         <p 
         :class="{'current-selection' : isSelected}"
         @click="selectNote"
@@ -20,18 +21,23 @@
             note: Object,
             selectedNote: Object,
             alreadyProcessed: Array,
+            isChecked: Boolean,
         },
         data () {
             return {
                 itemNote: this.note,
+                checked: this.isChecked,
             }
         }, 
-        async mounted () {
+        mounted () {
         },
-        emits: ['click'],
+        emits: ['click', 'toggle-checked'],
         methods: {
-            selectNote () {
+            selectNote() {
                 this.$emit('click', this.itemNote)
+            },
+            toggleCheck() {
+                this.$emit('toggle-checked', this.itemNote.id);
             }
         },
         computed: {
@@ -41,6 +47,11 @@
                 } 
                 return this.selectedNote.id === this.itemNote.id;
             }
+        },
+        watch: {
+            isChecked: function (val) {
+                this.checked = val;
+            }
         }
     }
 </script>
@@ -48,6 +59,12 @@
 <style scoped lang="css">
     .li-wrapper {
         width: 100%;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
         padding: 2px;
         margin: 0px;
         height: fit-content;
