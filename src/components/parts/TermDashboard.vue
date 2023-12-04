@@ -24,7 +24,7 @@
 
         <!-- only if there is no content to be rendered yet -->
         <div v-else id="table-container">
-            <span id="no-terms-alt-msg">No terms to show.</span>
+            <span id="no-terms-alt-msg">No terms to show. Process notes to populate terms.</span>
         </div>
 
         <div id="send-terms-btn-container">

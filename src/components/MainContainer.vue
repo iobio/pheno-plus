@@ -21,7 +21,10 @@
         :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
-        <button id="process-btn" @click="processText">Process Into HPO Terms</button>
+        <div id="process-btn-container">
+          <button class="process-btn" @click="processText">Process Selected</button>
+          <button class="process-btn all" @click="processTextAll">Process All</button>
+        </div>
       </div>
     </div>
 
@@ -173,7 +176,15 @@
           this.hideOverlay = true;
         }
 
-      }, 
+      },
+      async processTextAll(){
+        //For each of the notes in the notes list process the text
+        for (let note of this.notesList) {
+          //Call the process text function
+          this.selectedNote = note;
+          await this.processText();
+        }
+      },
       changeTextContent (textContent) {
         this.selectedNoteTextContent = textContent;
       }
@@ -264,9 +275,17 @@
   .content-title-wrapper.view-info {
     width: 56%;
   }
+  
+  #process-btn-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 
-  #process-btn {
-    width: 95%;
+  .process-btn {
+    width: 40%;
     min-width: 45px;
     font-size: .8rem;
 
@@ -281,10 +300,10 @@
 
     text-align: center;
   }
-  #process-btn:hover {
+  .process-btn:hover {
     background-color: rgb(0,113,189, .8);
   }
-  #process-btn:active {
+  .process-btn:active {
     background-color: rgba(4, 83, 136);
   }
 
