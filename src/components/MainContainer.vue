@@ -28,7 +28,7 @@
         </ViewInfo>
         <div id="process-btn-container">
           <button class="process-btn" @click="processText">Process Selected Note</button>
-          <button class="process-btn all" @click="processTextAll">Process All Checked</button>
+          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked()">Process All Checked</button>
         </div>
       </div>
     </div>
@@ -93,6 +93,7 @@
         sortedHpoList: [],
         selectedTerm: null,
         allChecked: true,
+        isCheckedMap: this.isCheckedMapStart || {},
       }
     }, 
     async mounted () {
@@ -228,10 +229,21 @@
           this.isCheckedMap[note.id] = false;
         }
         this.allChecked = false;
+      }, 
+      checkForChecked() {
+        for (let note of this.notesList) {
+          if (Object.keys(this.isCheckedMap).length == 0) {
+            return true;
+          }
+          if (this.isCheckedMap[note.id] == true) {
+            return false;
+          }
+        }
+        return true;
       }
     },
     computed: {
-      isCheckedMap () {
+      isCheckedMapStart() {
           let map = {};
           for (let note of this.notesList) {
             map[note.id] = true;
@@ -239,6 +251,11 @@
           return map;
       },
     },
+    watch: {
+      isCheckedMapStart: function (val) {
+        this.isCheckedMap = val;
+      }
+    }
   }
 </script>
 
@@ -356,7 +373,10 @@
   .process-btn:active {
     background-color: rgba(4, 83, 136);
   }
-
+  .process-btn:disabled {
+    background-color: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+  }
   #view-info.sub-container {
     overflow-y: hidden;
     height: 80%;
