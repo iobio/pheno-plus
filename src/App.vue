@@ -38,7 +38,7 @@
       } else if (this.$isTestingEnvironment == true) {
         //Load demo data because we are in testing
         this.notesList = this.notesList.concat(list2);
-        
+
       } else { //if there isnt any data in the global notes list just load demo data
         //Notes List is empty
         this.notesList = [];
