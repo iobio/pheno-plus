@@ -10,7 +10,12 @@
         :notesList="notesList"
         :selectedNote="selectedNote"
         :alreadyProcessed="notesAlreadyProcessed"
-        @selectNote="selectNote">
+        :isCheckedMap="isCheckedMap"
+        :allChecked="allChecked"
+        @selectNote="selectNote"
+        @updateIsCheckedMap="updateIsCheckedMap"
+        @uncheckAll="uncheckAll"
+        @checkAll="checkAll">
         </ItemSelector>
       </div>
 
@@ -22,8 +27,8 @@
         @textChanged="changeTextContent">
         </ViewInfo>
         <div id="process-btn-container">
-          <button class="process-btn" @click="processText">Process Selected</button>
-          <button class="process-btn all" @click="processTextAll">Process All</button>
+          <button class="process-btn" @click="processText">Process Selected Note</button>
+          <button class="process-btn all" @click="processTextAll">Process All Checked</button>
         </div>
       </div>
     </div>
@@ -87,6 +92,7 @@
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
+        allChecked: true,
       }
     }, 
     async mounted () {
@@ -181,13 +187,56 @@
         //For each of the notes in the notes list process the text
         for (let note of this.notesList) {
           //Call the process text function
-          this.selectedNote = note;
-          await this.processText();
+          
+          if (this.isCheckedMap[note.id] == false) {
+            continue;
+          } else {
+            this.selectedNote = note;
+            this.selectedNoteTextContent = note.text;
+            await this.processText();
+          }
         }
       },
       changeTextContent (textContent) {
         this.selectedNoteTextContent = textContent;
+      },
+      updateIsCheckedMap (noteId) {
+        this.isCheckedMap[noteId] = !this.isCheckedMap[noteId];
+
+        if (this.isCheckedMap[noteId] == false) {
+          this.allChecked = false;
+        } else {
+          let allChecked = true;
+          for (let note of this.notesList) {
+            if (this.isCheckedMap[note.id] == false) {
+              allChecked = false;
+              break;
+            }
+          }
+          this.allChecked = allChecked;
+        }
+      },
+      checkAll() {
+        for (let note of this.notesList) {
+          this.isCheckedMap[note.id] = true;
+        }
+        this.allChecked = true;
+      },
+      uncheckAll() {
+        for (let note of this.notesList) {
+          this.isCheckedMap[note.id] = false;
+        }
+        this.allChecked = false;
       }
+    },
+    computed: {
+      isCheckedMap () {
+          let map = {};
+          for (let note of this.notesList) {
+            map[note.id] = true;
+          }
+          return map;
+      },
     },
   }
 </script>
@@ -250,7 +299,7 @@
     overflow-y: auto;
     box-sizing: border-box;
 
-    padding: 10px;
+    padding: 0px 10px 10px 10px;
 
   }
 
