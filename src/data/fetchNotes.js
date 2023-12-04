@@ -49,7 +49,7 @@ export default async function fetchNotes(client, patientId) {
 
             // Build the components of the note title
             let type = note.resource && note.resource.type && note.resource.type.text || null;
-            let category = note.resource && note.resource.category && note.resource.category.text || null; //not useing right now
+            let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let titleDate = noteDate.slice(0, 10);
 
