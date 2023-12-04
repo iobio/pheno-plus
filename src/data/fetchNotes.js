@@ -39,13 +39,28 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Get the id of the note
-            let noteId = note.resource && note.resource.id || null;
+            let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
             let noteDate = note.resource && note.resource.date || null;
             // Get the url of the note for the binary lookup
             let noteUrlBinary = note.resource && note.resource.content && note.resource.content[0] && note.resource.content[0].attachment && note.resource.content[0].attachment.url || null;
             // Get the encounter id of the note
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
+
+            // Build the components of the note title
+            let type = note.resource && note.resource.type && note.resource.type.text || null;
+            let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
+            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
+            let titleDate = noteDate.slice(0, 10);
+
+            // Build the note title
+            if (type && author && titleDate) {
+                // If all the components are present then build the note title
+                var noteTitle = `[${titleDate}] ${type} ${author} (${category})`;
+            } else {
+                // If any of the components are missing then set the note title to null
+                var noteTitle = 'No title.';
+            }
 
             let noteContent = null
             let noteText = 'None pulled';
@@ -61,11 +76,11 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
             notesList.push(noteObj);
         }
     }
-    return {notesList: notesList};
+    return {notesList: notesList, rawResponse: notes};
 }
 
 function pullTextContent(html) {

@@ -40,10 +40,13 @@ async function initializeApp(fhirClient) {
         const patientId = client.patient.id;
         //Initialize the notes list
         var notesList = [];
+        var rawResponse = null;
         //Get the notes from the EMR
         let notesObj = await fetchNotes(client, patientId);
         //Set the notes list to the notes pulled from the EMR
         notesList = notesObj.notesList;
+        //Set the raw response to the raw response from the EMR
+        rawResponse = notesObj.rawResponse;
         //Create the app
         const app = createApp(App);
         //Set the notes list as a global property
