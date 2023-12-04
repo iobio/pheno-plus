@@ -3,9 +3,7 @@
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>
-    <div style="width: 100%; height: 200px;">
-      {{ this.$rawResponse  }}
-    </div>
+    <div id="testing" style="width: 100%; height: 200px; overflow-y: scroll;">{{ this.$rawResponse  }}</div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
         <h3>EHR Note List ({{ notesNum }})</h3>
