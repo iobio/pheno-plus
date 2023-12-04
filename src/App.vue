@@ -32,15 +32,16 @@
         //If there is data in the global notes list, use it
         this.notesList = this.$notesListGlobal;
 
-        //Combine with the demo data
-        this.notesList = this.notesList.concat(list2);
-
         //Set the number of notes
         this.notesNum = this.notesList.length;
 
-      } else { //if there isnt any data in the global notes list just load demo data
-        //Just demo data will be loaded
+      } else if (this.$isTestingEnvironment == true) {
+        //Load demo data because we are in testing
         this.notesList = this.notesList.concat(list2);
+        
+      } else { //if there isnt any data in the global notes list just load demo data
+        //Notes List is empty
+        this.notesList = [];
       }
 
       if (this.$isTestingEnvironment == true) {
