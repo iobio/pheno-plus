@@ -139,6 +139,7 @@
       clearAllTableTerms () {
         this.hpoTermsObj = {};
         this.sortedHpoList = [];
+        this.notesAlreadyProcessed = [];
         this.selectedTerm = null;
       },
       async processText () {
