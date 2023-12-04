@@ -73,7 +73,7 @@
     }
 
     .select-item-span {
-        width: 70%;
+        width: 80%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
