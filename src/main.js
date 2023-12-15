@@ -4,6 +4,17 @@ import fetchNotes from './data/fetchNotes.js';
 import { createApp } from 'vue'
 import App from './App.vue'
 
+//get the url parameters and get the userId
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('userId');
+
+//whitelist of userIds that are allowed to access the app
+const userIdWhitelist = {
+    "u1069837": "emerson lebleu",
+    "u0029928": "Tristani",
+    "u0969254": "Sabrina"
+};
+
 //if we are on local host then skip all of this and mount the app
 if (window.location.hostname === "localhost") {
     //If there is an error, create the app with an empty notes list
@@ -13,6 +24,11 @@ if (window.location.hostname === "localhost") {
     app.config.globalProperties.$isTestingEnvironment = true;
     //Mount the app
     app.mount('#app');
+
+//If the userId is not one on our whitelist then they are not authorized
+} else if ( !(userId in userIdWhitelist) ) {
+    //Do nothing dont mount the app
+    //send a message to the user that they are not authorized
 } else {
     getClient().then(client => {
         //If the client is null, we need to authorize
