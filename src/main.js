@@ -10,7 +10,7 @@ const userId = urlParams.get('userId');
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    // "u1069837": "emerson lebleu",
+    "u1069837": "emerson lebleu",
     "u0029928": "Tristani",
     "u0969254": "Sabrina"
 };
