@@ -25,10 +25,10 @@ if (window.location.hostname === "localhost") {
     //Mount the app
     app.mount('#app');
 
-//If the userId is not one on our whitelist then they are not authorized
-} else if ( !(userId in userIdWhitelist) ) {
-    //Do nothing dont mount the app
-    //send a message to the user that they are not authorized
+// //If the userId is not one on our whitelist then they are not authorized
+// } else if ( !(userId in userIdWhitelist) ) {
+//     //Do nothing dont mount the app
+//     //send a message to the user that they are not authorized
 } else {
     getClient().then(client => {
         //If the client is null, we need to authorize
