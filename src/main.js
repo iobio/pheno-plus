@@ -10,9 +10,11 @@ const userId = urlParams.get('userId');
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    "U1069837": "emerson lebleu",
-    "U0029928": "Tristani",
-    "U0969254": "Sabrina"
+    "U1069837": "Emerson Lebleu",
+    "U0029928": "Martin Tristani-Firouzi",
+    "U0969254": "Sabrina", 
+    "U0770443": "Kensaku Kawamoto", 
+    "U0770371": "Phillip Warner"
 };
 
 //if we are on local host then skip all of this and mount the app
