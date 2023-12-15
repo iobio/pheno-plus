@@ -67,6 +67,7 @@ async function initializeApp(fhirClient) {
         const app = createApp(App);
         //Set the notes list as a global property
         app.config.globalProperties.$notesListGlobal = notesList;
+        app.config.globalProperties.$userId = userId;
         //Mount the app
         app.mount('#app');
     } catch (error) {
