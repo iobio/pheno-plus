@@ -1,6 +1,6 @@
 <template>
     <div v-if="this.$userNotAuthorized" id="alt-msg">
-      <span>This app is available to specific users only. For inquiries and access, please contact Emerson Lebleu at <b>emerson.lebleu@genetics.utah.edu</b> or members of the re-imagine team at <b>ReImagineEHR@utah.edu</b></span>
+      <span>This app is available to specific users only. For inquiries and access, please contact Emerson Lebleu at <b>emerson.lebleu@genetics.utah.edu</b> or members of the re-imagine EHR team at <b>ReImagineEHR@utah.edu</b></span>
     </div>
     <MainContainer v-else
       :notesList="notesList" 
