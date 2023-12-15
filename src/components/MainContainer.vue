@@ -1,6 +1,5 @@
 <template>
   <div id="the-main-container">
-    <div>User id{{ this.$userId }}</div>
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <p>Loading <br> HPO <br> Terms...</p>
     </div>

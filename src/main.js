@@ -10,9 +10,9 @@ const userId = urlParams.get('userId');
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    "u1069837": "emerson lebleu",
-    "u0029928": "Tristani",
-    "u0969254": "Sabrina"
+    // "U1069837": "emerson lebleu",
+    "U0029928": "Tristani",
+    "U0969254": "Sabrina"
 };
 
 //if we are on local host then skip all of this and mount the app
@@ -25,10 +25,10 @@ if (window.location.hostname === "localhost") {
     //Mount the app
     app.mount('#app');
 
-// //If the userId is not one on our whitelist then they are not authorized
-// } else if ( !(userId in userIdWhitelist) ) {
-//     //Do nothing dont mount the app
-//     //send a message to the user that they are not authorized
+//If the userId is not one on our whitelist then they are not authorized
+} else if ( !(userId in userIdWhitelist) ) {
+    //Do nothing dont mount the app
+    //send a message to the user that they are not authorized
 } else {
     getClient().then(client => {
         //If the client is null, we need to authorize
@@ -67,7 +67,6 @@ async function initializeApp(fhirClient) {
         const app = createApp(App);
         //Set the notes list as a global property
         app.config.globalProperties.$notesListGlobal = notesList;
-        app.config.globalProperties.$userId = userId;
         //Mount the app
         app.mount('#app');
     } catch (error) {
