@@ -80,12 +80,15 @@
 
 <style lang="css">
   #alt-msg {
-    width: 50%;
-    height: 50%;
+    width: 100%;
+    height: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+  }
+  #alt-msg span {
+    width: 50%;
   }
 
 </style>
