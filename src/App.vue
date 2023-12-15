@@ -1,5 +1,8 @@
 <template>
-    <MainContainer
+    <div v-if="this.$userNotAuthorized" id="alt-msg">
+      <span>This app is available to specific users only. For inquiries and access, please contact Emerson Lebleu at <a href="#">emerson.lebleu@genetics.utah.edu</a> or members of the re-imagine team at <a href="#">ReImagineEHR@utah.edu</a></span>
+    </div>
+    <MainContainer v-else
       :notesList="notesList" 
       :notesNum="notesNum">
     </MainContainer>
@@ -76,5 +79,13 @@
 </script>
 
 <style lang="css">
+  #alt-msg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
 
 </style>

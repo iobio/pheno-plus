@@ -10,7 +10,7 @@ const userId = urlParams.get('userId');
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    "U1069837": "Emerson Lebleu",
+    // "U1069837": "Emerson Lebleu",
     "U0029928": "Martin Tristani-Firouzi",
     "U0969254": "Sabrina", 
     "U0770443": "Kensaku Kawamoto", 
@@ -26,11 +26,6 @@ if (window.location.hostname === "localhost") {
     app.config.globalProperties.$isTestingEnvironment = true;
     //Mount the app
     app.mount('#app');
-
-//If the userId is not one on our whitelist then they are not authorized
-} else if ( !(userId in userIdWhitelist) ) {
-    //Do nothing dont mount the app
-    //send a message to the user that they are not authorized
 } else {
     getClient().then(client => {
         //If the client is null, we need to authorize
@@ -44,8 +39,18 @@ if (window.location.hostname === "localhost") {
                 redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
             });
         } else {
-            //Call the initializeApp function with the client if it exists
-            initializeApp(client);
+            if (!(userId in userIdWhitelist)) {
+                //If there is an error, create the app with an empty notes list
+                const app = createApp(App)
+                //Set the notes list as a global property just to empty
+                app.config.globalProperties.$notesListGlobal = [];
+                app.config.globalProperties.$userNotAuthorized = true;
+                //Mount the app
+                app.mount('#app');
+            } else {
+                //Call the initializeApp function with the client if it exists
+                initializeApp(client);
+            }
         }
     });
 }
@@ -69,6 +74,7 @@ async function initializeApp(fhirClient) {
         const app = createApp(App);
         //Set the notes list as a global property
         app.config.globalProperties.$notesListGlobal = notesList;
+        app.config.globalProperties.$userNotAuthorized = false;
         //Mount the app
         app.mount('#app');
     } catch (error) {
@@ -76,6 +82,7 @@ async function initializeApp(fhirClient) {
         const app = createApp(App)
         //Set the notes list as a global property just to empty
         app.config.globalProperties.$notesListGlobal = [];
+        app.config.globalProperties.$userNotAuthorized = false;
         //Mount the app
         app.mount('#app');
     }
