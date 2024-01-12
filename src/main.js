@@ -4,10 +4,6 @@ import fetchNotes from './data/fetchNotes.js';
 import { createApp } from 'vue'
 import App from './App.vue'
 
-//get the url parameters and get the userId
-const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get('userId');
-
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
     "U1069837": "Emerson Lebleu",
@@ -16,6 +12,20 @@ const userIdWhitelist = {
     "U0770443": "Kensaku Kawamoto", 
     "U0770371": "Phillip Warner"
 };
+
+//if the url is the /launch then get the user off the params otherwise it won't be there anyway
+if (window.location.pathname === "/phenoplus/oauth2/launch") {
+    //clear out local storage in case there is anything there
+    localStorage.clear();
+    //clear session storage in case there is anything there
+    sessionStorage.clear();
+
+    //get the url parameters and get the userId
+    let urlParams = new URLSearchParams(window.location.search);
+    let user = urlParams.get('userId');
+    //cache the userId in local storage
+    localStorage.setItem('userId', user);
+}
 
 //if we are on local host then skip all of this and mount the app
 if (window.location.hostname === "localhost") {
@@ -39,7 +49,15 @@ if (window.location.hostname === "localhost") {
                 redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
             });
         } else {
-            if (!(userId in userIdWhitelist)) {
+            //get the userId from the local storage
+            try {
+                let userId = localStorage.getItem('userId');
+            } catch (error) {
+                //just make userid null so we can handle it below
+                let userId = null;
+            }
+
+            if (!userId || !(userId in userIdWhitelist)) {
                 //If there is an error, create the app with an empty notes list
                 const app = createApp(App)
                 //Set the notes list as a global property just to empty
