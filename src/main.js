@@ -17,14 +17,13 @@ const userIdWhitelist = {
 if (window.location.pathname === "/phenoplus/oauth2/launch/") {
     //clear out local storage in case there is anything there
     localStorage.clear();
-    // sessionStorage.clear();
+    sessionStorage.clear();
 
     //get the url parameters and get the userId
     let urlParams = new URLSearchParams(window.location.search);
     let user = urlParams.get('userId');
     //cache the userId in local storage
     localStorage.setItem('userId', user);
-    console.log("userId: " + user);
 }
 
 //if we are on local host then skip all of this and mount the app
@@ -57,7 +56,6 @@ if (window.location.hostname === "localhost") {
                 //just make userid null so we can handle it below
                 userId = null;
             }
-            console.log("new user id: " + userId);
             if (!userId || !(userId in userIdWhitelist)) {
                 //If there is an error, create the app with an empty notes list
                 const app = createApp(App)
