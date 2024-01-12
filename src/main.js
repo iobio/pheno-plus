@@ -17,8 +17,6 @@ const userIdWhitelist = {
 if (window.location.pathname === "/phenoplus/oauth2/launch") {
     //clear out local storage in case there is anything there
     localStorage.clear();
-    //clear session storage in case there is anything there
-    sessionStorage.clear();
 
     //get the url parameters and get the userId
     let urlParams = new URLSearchParams(window.location.search);
