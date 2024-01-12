@@ -46,6 +46,7 @@ if (window.location.hostname === "localhost") {
                 scope: "launch patient/*.* openid user/*.* profile",
                 //Our redirect URL
                 redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
+                completeInTarget: true,
             });
         } else {
             //get the userId from the local storage
