@@ -50,11 +50,12 @@ if (window.location.hostname === "localhost") {
             });
         } else {
             //get the userId from the local storage
+            let userId = null;
             try {
-                let userId = localStorage.getItem('userId');
+                userId = localStorage.getItem('userId');
             } catch (error) {
                 //just make userid null so we can handle it below
-                let userId = null;
+                userId = null;
             }
             console.log("new user id: " + userId);
             if (!userId || !(userId in userIdWhitelist)) {
