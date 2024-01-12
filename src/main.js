@@ -13,6 +13,7 @@ const userIdWhitelist = {
     "U0770371": "Phillip Warner"
 };
 
+console.log("pathname: " + window.location.pathname);
 //if the url is the /launch then get the user off the params otherwise it won't be there anyway
 if (window.location.pathname === "/phenoplus/oauth2/launch") {
     //clear out local storage in case there is anything there
