@@ -1,8 +1,13 @@
 <template>
   <div id="the-main-container">
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
-      <p v-if="hideOverlayFromApp">Loading <br> HPO <br> Terms...</p>
-      <p v-else>Pulling <br> Notes <br> ...</p>
+      <div id="spinner-container">
+        <svg id="spinner" width="185" height="185" viewBox="-4 -4 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 50,5 A 50,50 0 0,1 85.36,35.36" fill="none" stroke="#1B5590" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <p v-if="hideOverlayFromApp">Loading <br> HPO <br> Terms...</p>
+        <p v-else>Pulling <br> Notes <br> ...</p>        
+      </div>
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
@@ -90,7 +95,8 @@
         notesAlreadyProcessed: [],
         hpoTermsObj: {},
         clipTerms: [],
-        hideOverlay: this.hideOverlayFromApp,
+        // hideOverlay: this.hideOverlayFromApp,
+        hideOverlay: false,
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
@@ -408,40 +414,37 @@
 
   #loading-overlay p {
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: bolder;
 
-    padding: 1em;
+    padding: 20px;
     border-radius: 50%;
-    border: gray 1px solid;
     width: 150px;
     height: 150px;
-
-    animation: dimAndBright 1.5s infinite;
+    background-color: rgba(183, 205, 228, 0.8);
+    
     text-align: center;
   }
 
-  @keyframes dimAndBright {
-    0% {
-      background-color: white;
-    }
-    50% {
-      background-color: rgba(112, 181, 227, 0.9);
-    }
-    100% {
-      background-color: white;
-    }
+  #spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
   }
 
-  @keyframes showAndHide {
-    0% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
+  #spinner {
+    animation: spin 2s infinite ease-out;
+    position: absolute;
+    top: 5px;
+    left: -15px;
+    z-index: 100;
   }
 
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>
