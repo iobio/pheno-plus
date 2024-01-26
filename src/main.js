@@ -61,15 +61,21 @@ if (window.location.hostname === "localhost") {
     getClient().then(client => {
         //If the client is null, we need to try to authorize
         if (client === null) {
-            FHIR.oauth2.authorize({
-                //Our application's ID
-                client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
-                //Initial scope
-                scope: "launch patient/*.* openid user/*.* profile",
-                //Our redirect URL
-                redirect_uri: redirect_uri,
-                completeInTarget: true,
-            });
+            try {
+                FHIR.oauth2.authorize({
+                    //Our application's ID
+                    client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+                    //Initial scope
+                    scope: "launch patient/*.* openid user/*.* profile",
+                    //Our redirect URL
+                    redirect_uri: redirect_uri,
+                    completeInTarget: true,
+                });
+            } catch (error) {
+                //If there is an error, just show a simple error in the console that says "Error authorizing"
+                console.error("Error authorizing");
+            }
+
         //If we have a client, we need to check if the user is authorized to use the app
         } else {
             let userId = null;
@@ -91,8 +97,8 @@ if (window.location.hostname === "localhost") {
             }
         }
     }).catch(error => {
-    //Just show a simple error in the console if we cannot get the client that just says "Error getting client"
-    console.error("Error getting client");
+        //Just show a simple error in the console if we cannot get the client that just says "Error getting client"
+        console.error("Error getting client");
     });
 }
 
