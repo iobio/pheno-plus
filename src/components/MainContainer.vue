@@ -1,7 +1,8 @@
 <template>
   <div id="the-main-container">
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
-      <p>Loading <br> HPO <br> Terms...</p>
+      <p v-if="hideOverlayFromApp">Loading <br> HPO <br> Terms...</p>
+      <p v-else>Pulling <br> Notes <br> ...</p>
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
@@ -89,7 +90,7 @@
         notesAlreadyProcessed: [],
         hpoTermsObj: {},
         clipTerms: [],
-        hideOverlay: true,
+        hideOverlay: this.hideOverlayFromApp,
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
