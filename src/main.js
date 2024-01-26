@@ -58,11 +58,11 @@ if (window.location.hostname === "localhost") {
     app.mount('#app');
 } else {
     //Try to get the FHIR client if we can
-    getClient().then(client => {
+    getClient().then(async (client) => {
         //If the client is null, we need to try to authorize
         if (client === null) {
             try {
-                FHIR.oauth2.authorize({
+                await FHIR.oauth2.authorize({
                     //Our application's ID
                     client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
                     //Initial scope
