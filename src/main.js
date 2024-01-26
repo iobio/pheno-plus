@@ -6,7 +6,7 @@ import App from './App.vue'
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    "U1069837": "Emerson Lebleu",
+    // "U1069837": "Emerson Lebleu",
     "U0029928": "Martin Tristani-Firouzi",
     "U0969254": "Sabrina", 
     "U0770443": "Kensaku Kawamoto", 
