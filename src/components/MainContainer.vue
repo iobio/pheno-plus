@@ -96,7 +96,7 @@
         hpoTermsObj: {},
         clipTerms: [],
         // hideOverlay: this.hideOverlayFromApp,
-        hideOverlay: false,
+        hideOverlay: true,
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
