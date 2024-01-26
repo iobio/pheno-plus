@@ -2,8 +2,8 @@
   <div id="the-main-container">
     <div id="loading-overlay" :class="{ hidden: hideOverlay}">
       <div id="spinner-container">
-        <svg id="spinner" width="185" height="185" viewBox="-4 -4 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 50,5 A 50,50 0 0,1 85.36,35.36" fill="none" stroke="#1B5590" stroke-width="8" stroke-linecap="round"/>
+        <svg id="spinner" width="195" height="195" viewBox="-4 -4 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 50,6 A 50,50 0 0,1 85.36,35.36" fill="none" stroke="#1B5590" stroke-width="9"/>
         </svg>
         <p v-if="hideOverlayFromApp">Loading <br> HPO <br> Terms...</p>
         <p v-else>Pulling <br> Notes <br> ...</p>        
@@ -416,7 +416,7 @@
     font-size: 1.5em;
     font-weight: bolder;
 
-    padding: 20px;
+    padding: 1em;
     border-radius: 50%;
     width: 150px;
     height: 150px;
@@ -432,16 +432,19 @@
   }
 
   #spinner {
-    animation: spin 2s infinite ease-out;
+    animation: spin 1.25s infinite ease-in-out;
     position: absolute;
-    top: 5px;
-    left: -15px;
+    top: 0px;
+    left: -20px;
     z-index: 100;
   }
 
   @keyframes spin {
     0% {
       transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
     }
     100% {
       transform: rotate(360deg);
