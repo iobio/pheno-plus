@@ -4,7 +4,8 @@
     </div>
     <MainContainer v-else
       :notesList="notesList" 
-      :notesNum="notesNum">
+      :notesNum="notesNum"
+      :hideOverlayFromApp="hideOverlay">
     </MainContainer>
 </template>
 
@@ -25,24 +26,25 @@
         notesNum: 0,
         testInformation: null,
         theClient: null,
+        hideOverlay: true,
       }
     }, 
     async mounted () {
       //Demo Data setup
       let list2 = constructData();
 
-      let appNotesObj = await fetchNotes(this.$client, this.$patientId);
-      let appNotes = appNotesObj.notesList;
-
-      console.log(appNotes);
+      this.hideOverlay = false;
+      const appNotesObj = await fetchNotes(this.$client, this.$patientId);
+      this.hideOverlay = true;
       
-      if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
+      const appNotes = appNotesObj.notesList;
+      if (appNotes != null && appNotes.length != 0) {
 
         //If there is data in the global notes list, use it
-        this.notesList = this.$notesListGlobal;
+        this.notesList = appNotes;
 
         //Set the number of notes
-        this.notesNum = this.notesList.length;
+        this.notesNum = appNotes.length;
 
       } else if (this.$isTestingEnvironment == true) {
         //Load demo data because we are in testing

@@ -80,6 +80,7 @@
     props: {
       notesList: Array,
       notesNum: Number,
+      hideOverlayFromApp: Boolean,
     },
     data () {
       return {
