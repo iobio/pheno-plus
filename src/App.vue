@@ -12,6 +12,7 @@
   import MainContainer from '@/components/MainContainer.vue';
   import constructData from './data/constructData';
   import ClinicalNote from './models/ClinicalNote';
+  import fetchNotes from './data/fetchNotes';
 
   export default {
     name: 'App',
@@ -29,6 +30,11 @@
     async mounted () {
       //Demo Data setup
       let list2 = constructData();
+
+      let appNotesObj = await fetchNotes(this.$theClient, this.$patientId);
+      let appNotes = appNotesObj.notesList;
+
+      console.log(appNotes);
       
       if (this.$notesListGlobal != null && this.$notesListGlobal.length != 0) {
 

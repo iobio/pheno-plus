@@ -90,6 +90,11 @@ async function initializeApp(fhirClient) {
         //Set the notes list as a global property
         app.config.globalProperties.$notesListGlobal = notesList;
         app.config.globalProperties.$userNotAuthorized = false;
+
+        //set up the client and patientId as global properties
+        app.config.globalProperties.$client = client;
+        app.config.globalProperties.$patientId = patientId;
+
         //Mount the app
         app.mount('#app');
     } catch (error) {
