@@ -2,6 +2,7 @@ import './assets/base.css';
 import fetchNotes from './data/fetchNotes.js';
 
 import { createApp } from 'vue'
+import { reactive } from 'vue'
 import App from './App.vue'
 
 //whitelist of userIds that are allowed to access the app
@@ -84,10 +85,15 @@ async function initializeApp(fhirClient) {
 
         //Create the app
         const app = createApp(App);
-        //Set the notes list as a global property
-        app.config.globalProperties.$notesListGlobal = notesList;
-        app.config.globalProperties.$userNotAuthorized = false;
-        app.config.globalProperties.$pendingNotes = true;
+
+        const globalProperties = reactive({
+            $notesListGlobal: [],
+            $pendingNotes: true,
+            $userNotAuthorized: false,
+        });
+
+        app.config.globalProperties.$globalState = globalProperties;
+
         //Mount the app
         app.mount('#app');
 
@@ -95,10 +101,10 @@ async function initializeApp(fhirClient) {
         let notesObj = await fetchNotes(client, patientId);
         //Set the notes list to the notes pulled from the EMR
         notesList = notesObj.notesList;
-        
+
         //Set the notes list as a global property
-        app.config.globalProperties.$notesListGlobal = notesList;
-        app.config.globalProperties.$pendingNotes = false;
+        globalProperties.$notesListGlobal = notesList;
+        globalProperties.$pendingNotes = false;
     } catch (error) {
         //If there is an error, create the app with an empty notes list
         const app = createApp(App)
