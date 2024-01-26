@@ -99,7 +99,6 @@
       }
     }, 
     async mounted () {
-      console.log(this.hideOverlayFromApp);
     },
     methods: {
       selectTerm (term) {
