@@ -1,12 +1,10 @@
 import './assets/base.css';
-import fetchNotes from './data/fetchNotes.js';
-
 import { createApp } from 'vue'
 import App from './App.vue'
 
 //whitelist of userIds that are allowed to access the app
 const userIdWhitelist = {
-    // "U1069837": "Emerson Lebleu",
+    "U1069837": "Emerson Lebleu",
     "U0029928": "Martin Tristani-Firouzi",
     "U0969254": "Sabrina", 
     "U0770443": "Kensaku Kawamoto", 
@@ -24,20 +22,20 @@ if (window.location.pathname === "/phenoplus/oauth2/launch/") {
     //get the url parameters and get the userId
     let urlParams = new URLSearchParams(window.location.search);
     let user = urlParams.get('userId');
+
     //cache the userId in local storage
     localStorage.setItem('userId', user);
 }
 
-//if we are on local host then skip all of this and mount the app
+//if we are on local host then skip all of this and mount the app with the testing environment flag
 if (window.location.hostname === "localhost") {
-    //If there is an error, create the app with an empty notes list
     const app = createApp(App)
     app.config.globalProperties.$isTestingEnvironment = true;
-    //Mount the app
     app.mount('#app');
 } else {
+    //Try to get the FHIR client if we can
     getClient().then(client => {
-        //If the client is null, we need to authorize
+        //If the client is null, we need to try to authorize
         if (client === null) {
             FHIR.oauth2.authorize({
                 //Our application's ID
@@ -48,24 +46,23 @@ if (window.location.hostname === "localhost") {
                 redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
                 completeInTarget: true,
             });
+        //If we have a client, we need to check if the user is authorized to use the app
         } else {
-            //get the userId from the local storage
             let userId = null;
             try {
+                //Try to get the userId from local storage
                 userId = localStorage.getItem('userId');
             } catch (error) {
-                //just make userid null so we can handle it below
-                userId = null;
+                //If that fails then do nothing and userId will be null
             }
 
             if (!userId || !(userId in userIdWhitelist)) {
-                //If there is an error, create the app with an empty notes list
+                //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
                 const app = createApp(App)
                 app.config.globalProperties.$userNotAuthorized = true;
-                //Mount the app
                 app.mount('#app');
             } else {
-                //Call the initializeApp function with the client if it exists
+                //Call the initializeApp function with the client if it exists & the user is authorized to use the app
                 initializeApp(client);
             }
         }
@@ -73,20 +70,20 @@ if (window.location.hostname === "localhost") {
 }
 
 async function initializeApp(fhirClient) {
-    //Get the client
+    //Set the client
     const client = fhirClient;
-    //Get the patient ID
+    //Set the patientId
     const patientId = client.patient.id;
 
-    //Create the app
-    const app = createApp(App);
 
+    const app = createApp(App);
     //Set the properties needed for the app
     app.config.globalProperties.$userNotAuthorized = false;
+    app.config.globalProperties.$isTestingEnvironment = false;
+    
     app.config.globalProperties.$client = client;
     app.config.globalProperties.$patientId = patientId;
 
-    //Mount the app
     app.mount('#app');
 }
 

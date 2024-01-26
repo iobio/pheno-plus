@@ -12,7 +12,6 @@
 <script>
   import MainContainer from '@/components/MainContainer.vue';
   import constructData from './data/constructData';
-  import ClinicalNote from './models/ClinicalNote';
   import fetchNotes from './data/fetchNotes';
 
   export default {
@@ -39,12 +38,11 @@
       }
 
       this.hideOverlay = false;
-
+      //Fetch the notes from the server
       const appNotesObj = await fetchNotes(this.$client, this.$patientId);
+      const appNotes = appNotesObj.notesList;
 
       this.hideOverlay = true;
-
-      const appNotes = appNotesObj.notesList;
 
       if (appNotes != null && appNotes.length != 0) {
         this.notesList = appNotes;
@@ -54,7 +52,7 @@
         //Load demo data because we are in testing
         this.notesList = this.notesList.concat(list2);
 
-      } else { //if there isnt any data in the global notes list just load demo data
+      } else { //if we are not in testing and there are no notes
         //Notes List is empty
         this.notesList = [];
       }
