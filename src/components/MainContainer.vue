@@ -421,7 +421,7 @@
     width: 150px;
     height: 150px;
     background-color: rgba(183, 205, 228, 0.8);
-    
+    z-index: 101;
     text-align: center;
   }
 
