@@ -10,7 +10,9 @@ const userIdWhitelist = {
     "U0029928": "Martin Tristani-Firouzi",
     "U0969254": "Sabrina", 
     "U0770443": "Kensaku Kawamoto", 
-    "U0770371": "Phillip Warner"
+    "U0770371": "Phillip Warner",
+    "U0059678": "Dave Tille",
+    "U0827583": "Bryce Covey"
 };
 
 //if the url is the /launch then get the user off the params otherwise it won't be there anyway
@@ -86,7 +88,7 @@ async function initializeApp(fhirClient) {
 
         //Set the notes list to the notes pulled from the EMR
         //notesList = notesObj.notesList;
-        
+
         //Create the app
         const app = createApp(App);
         //Set the notes list as a global property
