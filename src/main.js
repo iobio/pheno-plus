@@ -73,7 +73,7 @@ if (window.location.hostname === "localhost") {
                 });
             } catch (error) {
                 //If there is an error, just show a simple error in the console that says "Error authorizing"
-                console.error("Error authorizing");
+                console.error("Error authorizing, there was an error following the authorization flow.");
             }
 
         //If we have a client, we need to check if the user is authorized to use the app
