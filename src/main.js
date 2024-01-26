@@ -32,8 +32,6 @@ if (window.location.pathname === "/phenoplus/oauth2/launch/") {
 if (window.location.hostname === "localhost") {
     //If there is an error, create the app with an empty notes list
     const app = createApp(App)
-    //Set the notes list as a global property just to empty
-    app.config.globalProperties.$notesListGlobal = [];
     app.config.globalProperties.$isTestingEnvironment = true;
     //Mount the app
     app.mount('#app');
@@ -59,11 +57,10 @@ if (window.location.hostname === "localhost") {
                 //just make userid null so we can handle it below
                 userId = null;
             }
+
             if (!userId || !(userId in userIdWhitelist)) {
                 //If there is an error, create the app with an empty notes list
                 const app = createApp(App)
-                //Set the notes list as a global property just to empty
-                app.config.globalProperties.$notesListGlobal = [];
                 app.config.globalProperties.$userNotAuthorized = true;
                 //Mount the app
                 app.mount('#app');
@@ -76,40 +73,21 @@ if (window.location.hostname === "localhost") {
 }
 
 async function initializeApp(fhirClient) {
-    try {
-        //Get the client
-        const client = fhirClient;
-        //Get the patient ID
-        const patientId = client.patient.id;
-        //Initialize the notes list
-        var notesList = [];
-        //Get the notes from the EMR
-        //let notesObj = await fetchNotes(client, patientId);
+    //Get the client
+    const client = fhirClient;
+    //Get the patient ID
+    const patientId = client.patient.id;
 
-        //Set the notes list to the notes pulled from the EMR
-        //notesList = notesObj.notesList;
+    //Create the app
+    const app = createApp(App);
 
-        //Create the app
-        const app = createApp(App);
-        //Set the notes list as a global property
-        app.config.globalProperties.$notesListGlobal = notesList;
-        app.config.globalProperties.$userNotAuthorized = false;
+    //Set the properties needed for the app
+    app.config.globalProperties.$userNotAuthorized = false;
+    app.config.globalProperties.$client = client;
+    app.config.globalProperties.$patientId = patientId;
 
-        //set up the client and patientId as global properties
-        app.config.globalProperties.$client = client;
-        app.config.globalProperties.$patientId = patientId;
-
-        //Mount the app
-        app.mount('#app');
-    } catch (error) {
-        //If there is an error, create the app with an empty notes list
-        const app = createApp(App)
-        //Set the notes list as a global property just to empty
-        app.config.globalProperties.$notesListGlobal = [];
-        app.config.globalProperties.$userNotAuthorized = false;
-        //Mount the app
-        app.mount('#app');
-    }
+    //Mount the app
+    app.mount('#app');
 }
 
 async function getClient() {

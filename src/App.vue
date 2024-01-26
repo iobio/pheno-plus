@@ -33,18 +33,21 @@
       //Demo Data setup
       let list2 = constructData();
 
+      if (this.$userNotAuthorized == true) {
+        //If the user is not authorized, do not load any data
+        return;
+      }
+
       this.hideOverlay = false;
+
       const appNotesObj = await fetchNotes(this.$client, this.$patientId);
-      //set a timeout to show the overlay for at least 1 second
+
       this.hideOverlay = true;
 
       const appNotes = appNotesObj.notesList;
+
       if (appNotes != null && appNotes.length != 0) {
-
-        //If there is data in the global notes list, use it
         this.notesList = appNotes;
-
-        //Set the number of notes
         this.notesNum = appNotes.length;
 
       } else if (this.$isTestingEnvironment == true) {
@@ -54,32 +57,6 @@
       } else { //if there isnt any data in the global notes list just load demo data
         //Notes List is empty
         this.notesList = [];
-      }
-
-      if (this.$isTestingEnvironment == true) {
-        let patientId = '1'; //Set this manually to the patient id you want to test
-        //get the html document from Documents/Data/Pheno+PHI/patientFolders/patientId
-        try {
-          var response = await fetch('http://localhost:9111/?patientID=' + patientId);
-          var noteObjects = await response.json();
-        } catch (error) {
-          var noteObjects = [];
-        }
-
-        for (let noteObj of noteObjects) {
-
-          //clean the note object text and create a new ClinicalNote object
-          var parser = new DOMParser(); //Use the DOMParser to parse the html because the source is the trusted FHIR server
-
-          var doc = parser.parseFromString(noteObj.fileContent, 'text/html');
-          var text = doc.body.textContent || "";
-
-          // Clean up the text
-          var textClean = text.replace(/[\s\n\r]+/g, ' '); // Replace all new lines with a single new line
-
-          let note = new ClinicalNote(noteObj.fileName, '01/01/1111', 'testEncoutnerID', 'testBinaryURL', noteObj.fileContent);
-          this.notesList.push(note);
-        }
       }
     },
     methods: {
