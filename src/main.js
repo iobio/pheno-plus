@@ -16,8 +16,8 @@ const userIdWhitelist = {
 let prod = false;
 let redirect_uri = "";
 
-//if the full url is prod then set the prod flag to true
-if (window.location.href === "https://pheno-plus.iobio.chpc.utah.edu/") {
+//if the base url is the production url then set the prod flag to true
+if (window.location.hostname === "pheno-plus.iobio.chpc.utah.edu") {
     prod = true;
 }
 
