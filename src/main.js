@@ -37,7 +37,7 @@ if (window.location.pathname === "/phenoplus/oauth2/launch/") {
 }
 
 //if the url is the production launch then get the user off the params
-if (prod == true && window.location.pathname === "/launch") {
+if (prod == true && window.location.pathname === "/launch/") {
     //clear out local storage in case there is anything there
     localStorage.clear();
     sessionStorage.clear();
