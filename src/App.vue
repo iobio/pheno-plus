@@ -38,7 +38,7 @@
       //set a timeout to show the overlay for at least 1 second
       setTimeout(() => {
         this.hideOverlay = true;
-      }, 1000);
+      }, 3000);
       // this.hideOverlay = true;
 
       const appNotes = appNotesObj.notesList;

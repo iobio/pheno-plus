@@ -257,6 +257,9 @@
     watch: {
       isCheckedMapStart: function (val) {
         this.isCheckedMap = val;
+      },
+      hideOverlayFromApp: function (val) {
+        this.hideOverlay = val;
       }
     }
   }
