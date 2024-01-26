@@ -31,7 +31,7 @@
       //Demo Data setup
       let list2 = constructData();
 
-      let appNotesObj = await fetchNotes(this.$theClient, this.$patientId);
+      let appNotesObj = await fetchNotes(this.$client, this.$patientId);
       let appNotes = appNotesObj.notesList;
 
       console.log(appNotes);
