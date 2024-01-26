@@ -13,7 +13,15 @@ const userIdWhitelist = {
     "U0827583": "Bryce Covey"
 };
 
-//if the url is the /launch then get the user off the params otherwise it won't be there anyway
+let prod = false;
+let redirect_uri = "";
+
+//if the full url is prod then set the prod flag to true
+if (window.location.href === "https://pheno-plus.iobio.chpc.utah.edu/") {
+    prod = true;
+}
+
+//if the url is the staging launch then get the user off the params 
 if (window.location.pathname === "/phenoplus/oauth2/launch/") {
     //clear out local storage in case there is anything there
     localStorage.clear();
@@ -25,6 +33,22 @@ if (window.location.pathname === "/phenoplus/oauth2/launch/") {
 
     //cache the userId in local storage
     localStorage.setItem('userId', user);
+    redirect_uri = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
+}
+
+//if the url is the production launch then get the user off the params
+if (prod == true && window.location.pathname === "/launch") {
+    //clear out local storage in case there is anything there
+    localStorage.clear();
+    sessionStorage.clear();
+
+    //get the url parameters and get the userId
+    let urlParams = new URLSearchParams(window.location.search);
+    let user = urlParams.get('userId');
+
+    //cache the userId in local storage
+    localStorage.setItem('userId', user);
+    redirect_uri = "https://pheno-plus.iobio.chpc.utah.edu/redirect";
 }
 
 //if we are on local host then skip all of this and mount the app with the testing environment flag
@@ -43,7 +67,7 @@ if (window.location.hostname === "localhost") {
                 //Initial scope
                 scope: "launch patient/*.* openid user/*.* profile",
                 //Our redirect URL
-                redirect_uri: "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect",
+                redirect_uri: redirect_uri,
                 completeInTarget: true,
             });
         //If we have a client, we need to check if the user is authorized to use the app
