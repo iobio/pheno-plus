@@ -36,10 +36,7 @@
       this.hideOverlay = false;
       const appNotesObj = await fetchNotes(this.$client, this.$patientId);
       //set a timeout to show the overlay for at least 1 second
-      setTimeout(() => {
-        this.hideOverlay = true;
-      }, 3000);
-      // this.hideOverlay = true;
+      this.hideOverlay = true;
 
       const appNotes = appNotesObj.notesList;
       if (appNotes != null && appNotes.length != 0) {
