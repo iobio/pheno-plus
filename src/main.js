@@ -15,6 +15,7 @@ const userIdWhitelist = {
 
 let prod = false;
 let redirect_uri = "";
+let client_id = "";
 
 //if the base url is the production url then set the prod flag to true
 if (window.location.hostname === "pheno-plus.iobio.chpc.utah.edu") {
@@ -34,6 +35,7 @@ if (window.location.pathname === "/phenoplus/oauth2/launch/") {
     //cache the userId in local storage
     localStorage.setItem('userId', user);
     redirect_uri = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
+    client_id = "48f100f1-2599-444b-85f8-5d86b4415453";
 }
 
 //if the url is the production launch then get the user off the params
@@ -49,6 +51,7 @@ if (prod == true && window.location.pathname === "/launch/") {
     //cache the userId in local storage
     localStorage.setItem('userId', user);
     redirect_uri = "https://pheno-plus.iobio.chpc.utah.edu/redirect";
+    client_id = "27876148-f01d-46ec-b1e9-763bf338b255";
 }
 
 //if we are on local host then skip all of this and mount the app with the testing environment flag
@@ -64,7 +67,7 @@ if (window.location.hostname === "localhost") {
             try {
                 await FHIR.oauth2.authorize({
                     //Our application's ID
-                    client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+                    client_id: client_id,
                     //Initial scope
                     scope: "launch patient/*.* openid user/*.* profile",
                     //Our redirect URL
