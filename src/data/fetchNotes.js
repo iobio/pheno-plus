@@ -25,7 +25,6 @@ export default async function fetchNotes(client, patientId) {
 
     //Check to make sure the noteSearchData is not null and that there are entries
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
-        console.log(noteSearchData);
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
 
@@ -37,8 +36,8 @@ export default async function fetchNotes(client, patientId) {
             if (noteCode == null || noteCode != "clinical-note") {
                 continue; // Skip this note if it is not a clinical note
             }
+            console.log(note);
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
-
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
