@@ -36,8 +36,38 @@ export default async function fetchNotes(client, patientId) {
             if (noteCode == null || noteCode != "clinical-note") {
                 continue; // Skip this note if it is not a clinical note
             }
-            console.log(note);
-            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
+            let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
+
+            if (customExts == null) {
+                //it is okay to just proccess this note
+            } else {
+                //if it does exist look for a url
+                customExts.forEach(ext => {
+                    //get url
+                    let url = ext.url;
+                    let urlEnd = url.split('/').pop();
+                    //if the urlEnd is linical-note-author-provider-type
+                    if (urlEnd == "clinical-note-author-provider-type") {
+                        //get the valueCodeableConcept
+                        let valueCodeableConcept = ext.valueCodeableConcept;
+                        let text = valueCodeableConcept.text || null; //try text
+                        let value = valueCodeableConcept.value || null; //try value
+
+                        if (text) {
+                            //if the text is RN rn or Registered Nurse or registered nurse then skip this note
+                            if (text == "RN" || text == "rn" || text == "Registered Nurse" || text == "registered nurse") {
+                                return;
+                            }
+                        } else if (value) {
+                            //if the value is RN rn or Registered Nurse or registered nurse then skip this note
+                            if (value == "RN" || value == "rn" || value == "Registered Nurse" || value == "registered nurse") {
+                                return;
+                            }
+                        }
+                    }
+                });
+            }
+
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -48,6 +78,7 @@ export default async function fetchNotes(client, patientId) {
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
             // Build the components of the note title
+            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
             let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
             let titleDate = noteDate.slice(0, 10);
