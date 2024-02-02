@@ -28,7 +28,7 @@ export default async function fetchNotes(client, patientId) {
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
 
-        for (let note of notes) {
+        outer: for (let note of notes) {
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
 
@@ -36,36 +36,27 @@ export default async function fetchNotes(client, patientId) {
             if (noteCode == null || noteCode != "clinical-note") {
                 continue; // Skip this note if it is not a clinical note
             }
-            let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
 
+            let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
             if (customExts == null) {
                 //it is okay to just proccess this note
             } else {
-                //if it does exist look for a url
-                customExts.forEach(ext => {
-                    //get url
+            // Check if the note is authored by a nurse or if we can see that info at all
+                for (let ext of customExts) {
                     let url = ext.url;
                     let urlEnd = url.split('/').pop();
-                    //if the urlEnd is linical-note-author-provider-type
-                    if (urlEnd == "clinical-note-author-provider-type") {
-                        //get the valueCodeableConcept
-                        let valueCodeableConcept = ext.valueCodeableConcept;
-                        let text = valueCodeableConcept.text || null; //try text
-                        let value = valueCodeableConcept.value || null; //try value
 
-                        if (text) {
-                            //if the text is RN rn or Registered Nurse or registered nurse then skip this note
-                            if (text == "RN" || text == "rn" || text == "Registered Nurse" || text == "registered nurse") {
-                                return;
-                            }
-                        } else if (value) {
-                            //if the value is RN rn or Registered Nurse or registered nurse then skip this note
-                            if (value == "RN" || value == "rn" || value == "Registered Nurse" || value == "registered nurse") {
-                                return;
-                            }
+                    if (urlEnd == "clinical-note-author-provider-type") {
+                        let valueCodeableConcept = ext.valueCodeableConcept;
+                        let text = valueCodeableConcept.text || null;
+                        let value = valueCodeableConcept.value || null;
+
+                        if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "registered nurse")) ||
+                            (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "registered nurse"))) {
+                            continue outer; // Skip to the next note
                         }
                     }
-                });
+                }
             }
 
             // Get the id of the note
