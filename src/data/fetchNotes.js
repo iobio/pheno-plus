@@ -41,12 +41,12 @@ export default async function fetchNotes(client, patientId) {
             if (customExts == null) {
                 //it is okay to just proccess this note
             } else {
-                console.log(customExts);
             // Check if the note is authored by a nurse or if we can see that info at all
                 for (let ext of customExts) {
+                    console.log(ext);
                     let url = ext.url;
                     let urlEnd = url.split('/').pop();
-
+                    console.log(urlEnd);
                     if (urlEnd == "clinical-note-author-provider-type") {
                         let valueCodeableConcept = ext.valueCodeableConcept;
                         let text = valueCodeableConcept.text || null;
