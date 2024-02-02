@@ -41,6 +41,7 @@ export default async function fetchNotes(client, patientId) {
             if (customExts == null) {
                 //it is okay to just proccess this note
             } else {
+                console.log(customExts);
             // Check if the note is authored by a nurse or if we can see that info at all
                 for (let ext of customExts) {
                     let url = ext.url;
