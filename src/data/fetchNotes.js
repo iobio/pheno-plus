@@ -39,8 +39,6 @@ export default async function fetchNotes(client, patientId) {
                 continue; // Skip this note if it is not a clinical note
             }
 
-            console.log(note);
-
             let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
             if (customExts == null) {
                 //it is okay to just proccess this note
