@@ -50,13 +50,13 @@ export default async function fetchNotes(client, patientId) {
                     let url = ext.url;
                     let urlEnd = url.split('/').pop();
                     console.log(urlEnd);
-                    if (urlEnd == "clinical-note-service") {
+                    if (urlEnd == "clinical-note-author-provider-type") {
                         let valueCodeableConcept = ext.valueCodeableConcept;
                         let text = valueCodeableConcept.text || null;
                         let value = valueCodeableConcept.value || null;
 
-                        if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "neonatology")) ||
-                            (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "neonatology"))) {
+                        if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "registered nurse")) ||
+                            (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "registered nurse"))) {
                                 skippedNotesNurse++;
                                 continue outer; // Skip to the next note
                         }
