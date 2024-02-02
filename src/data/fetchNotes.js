@@ -25,7 +25,7 @@ export default async function fetchNotes(client, patientId) {
 
     //Check to make sure the noteSearchData is not null and that there are entries
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
-
+        console.log(noteSearchData);
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
 
@@ -38,19 +38,6 @@ export default async function fetchNotes(client, patientId) {
                 continue; // Skip this note if it is not a clinical note
             }
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
-            if (author) {
-                let authorRef = note.resource.author[0].reference;
-                //Take the Practitioner/ off the front of the reference
-                authorRef = authorRef.replace('Practitioner/', '');
-                try {
-                    author = await client.request('/PractitionerRole/' + authorRef);
-                    console.log("Author from request");
-                    console.log(author);
-                } catch (error) {
-                    console.log("Error getting author");
-                    console.log(error);
-                }
-            }
 
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
