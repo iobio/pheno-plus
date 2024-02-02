@@ -37,6 +37,8 @@ export default async function fetchNotes(client, patientId) {
             if (noteCode == null || noteCode != "clinical-note") {
                 continue; // Skip this note if it is not a clinical note
             }
+            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
+            console.log("Author: ", author);
 
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
@@ -50,7 +52,6 @@ export default async function fetchNotes(client, patientId) {
             // Build the components of the note title
             let type = note.resource && note.resource.type && note.resource.type.text || null;
             let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
-            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let titleDate = noteDate.slice(0, 10);
 
             // Build the note title
