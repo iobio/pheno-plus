@@ -43,7 +43,7 @@ export default async function fetchNotes(client, patientId) {
                 //Take the Practitioner/ off the front of the reference
                 authorRef = authorRef.replace('Practitioner/', '');
                 try {
-                    author = await client.request('/PractitionerRole?practitioner=' + authorRef);
+                    author = await client.request('/PractitionerRole/' + authorRef);
                     console.log("Author from request");
                     console.log(author);
                 } catch (error) {
