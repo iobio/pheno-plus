@@ -38,7 +38,7 @@ export default async function fetchNotes(client, patientId) {
                 continue; // Skip this note if it is not a clinical note
             }
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
-            console.log("Author: ", author);
+            console.log("Author: ", note.resource.author[0]);
 
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
