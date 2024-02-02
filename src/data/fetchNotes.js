@@ -34,10 +34,10 @@ export default async function fetchNotes(client, patientId) {
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
 
             // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
-            if (noteCode == null || noteCode != "clinical-note") {
-                skippedNotesCode++;
-                continue; // Skip this note if it is not a clinical note
-            }
+            // if (noteCode == null || noteCode != "clinical-note") {
+            //     skippedNotesCode++;
+            //     continue; // Skip this note if it is not a clinical note
+            // }
 
             let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
             if (customExts == null) {
