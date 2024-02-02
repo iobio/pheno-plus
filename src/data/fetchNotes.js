@@ -102,7 +102,7 @@ export default async function fetchNotes(client, patientId) {
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
             notesList.push(noteObj);
         }
-        console.log("Skipped " + skippedNotesCode + " notes because of code");
+        console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
         console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, rawResponse: notes};
