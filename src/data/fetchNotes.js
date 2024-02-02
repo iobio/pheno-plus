@@ -40,10 +40,10 @@ export default async function fetchNotes(client, patientId) {
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             if (author) {
                 let authorRef = note.resource.author[0].reference;
-                console.log("Author reference");
-                console.log(authorRef);
+                //Take the Practitioner/ off the front of the reference
+                authorRef = authorRef.replace('Practitioner/', '');
                 try {
-                    author = await client.request(authorRef);
+                    author = await client.request('/PractitionerRole?practitioner=' + authorRef);
                     console.log("Author from request");
                     console.log(author);
                 } catch (error) {
