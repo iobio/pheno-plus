@@ -49,6 +49,7 @@ export default async function fetchNotes(client, patientId) {
                 for (let ext of customExts) {
                     let url = ext.url;
                     let urlEnd = url.split('/').pop();
+                    console.log(urlEnd);
                     if (urlEnd == "clinical-note-service") {
                         let valueCodeableConcept = ext.valueCodeableConcept;
                         let text = valueCodeableConcept.text || null;
