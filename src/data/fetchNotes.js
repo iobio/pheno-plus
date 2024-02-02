@@ -39,7 +39,7 @@ export default async function fetchNotes(client, patientId) {
             }
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             if (author) {
-                let authorRef = author[0].reference;
+                let authorRef = author.reference;
                 console.log("Author reference");
                 console.log(authorRef);
                 try {
