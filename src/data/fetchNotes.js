@@ -43,10 +43,8 @@ export default async function fetchNotes(client, patientId) {
             } else {
             // Check if the note is authored by a nurse or if we can see that info at all
                 for (let ext of customExts) {
-                    console.log(ext);
                     let url = ext.url;
                     let urlEnd = url.split('/').pop();
-                    console.log(urlEnd);
                     if (urlEnd == "clinical-note-author-provider-type") {
                         let valueCodeableConcept = ext.valueCodeableConcept;
                         let text = valueCodeableConcept.text || null;
@@ -54,7 +52,8 @@ export default async function fetchNotes(client, patientId) {
 
                         if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "registered nurse")) ||
                             (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "registered nurse"))) {
-                            continue outer; // Skip to the next note
+                                console.log("Skipping note authored by a nurse");
+                                continue outer; // Skip to the next note
                         }
                     }
                 }
