@@ -27,13 +27,15 @@ export default async function fetchNotes(client, patientId) {
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
-
+        let skippedNotesCode = 0;
+        let skippedNotesNurse = 0;
         outer: for (let note of notes) {
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
 
             // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
             if (noteCode == null || noteCode != "clinical-note") {
+                skippedNotesCode++;
                 continue; // Skip this note if it is not a clinical note
             }
 
@@ -52,7 +54,7 @@ export default async function fetchNotes(client, patientId) {
 
                         if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "registered nurse")) ||
                             (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "registered nurse"))) {
-                                console.log("Skipping note authored by a nurse");
+                                skippedNotesNurse++;
                                 continue outer; // Skip to the next note
                         }
                     }
@@ -101,6 +103,8 @@ export default async function fetchNotes(client, patientId) {
             notesList.push(noteObj);
         }
     }
+    console.log("Skipped " + skippedNotesCode + " notes because of code");
+    console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     return {notesList: notesList, rawResponse: notes};
 }
 
