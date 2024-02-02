@@ -40,10 +40,14 @@ export default async function fetchNotes(client, patientId) {
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             if (author) {
                 let authorRef = author[0].reference;
+                console.log("Author reference");
+                console.log(authorRef);
                 try {
                     author = await client.request(authorRef);
+                    console.log("Author from request");
                     console.log(author);
                 } catch (error) {
+                    console.log("Error getting author");
                     console.log(error);
                 }
             }
