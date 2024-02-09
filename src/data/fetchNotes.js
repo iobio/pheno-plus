@@ -13,7 +13,7 @@ export default async function fetchNotes(client, patientId) {
     
     try { 
         //Try to get notes on a particular patient
-        noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+        noteSearchData = await client.request("/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2");
     } catch (error) {
         // Return early with empty result if the initial request fails
         return {notesList: []};
