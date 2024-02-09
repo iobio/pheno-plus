@@ -30,6 +30,8 @@ export default async function fetchNotes(client, patientId) {
         let skippedNotesCode = 0;
         let skippedNotesNurse = 0;
         outer: for (let note of notes) {
+            console.log(note);
+
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
 
