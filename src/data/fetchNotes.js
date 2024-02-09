@@ -54,8 +54,6 @@ export default async function fetchNotes(client, patientId) {
                 continue; // Skip this note if it is not a clinical note
             }
 
-            console.log(note);
-
             let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
             if (customExts == null) {
                 //it is okay to just proccess this note
@@ -119,9 +117,9 @@ export default async function fetchNotes(client, patientId) {
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
             notesList.push(noteObj);
         }
-        console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
-        console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
-        console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
+        // console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
+        // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
+        // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, rawResponse: notes};
 }
