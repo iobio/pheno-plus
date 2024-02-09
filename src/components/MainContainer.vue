@@ -34,7 +34,7 @@
         </ViewInfo>
         <div id="process-btn-container">
           <!-- <button class="process-btn" @click="processText">Process Selected Note</button> -->
-          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked()">Process Selected Notes</button>
+          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button>
         </div>
       </div>
     </div>
@@ -258,6 +258,9 @@
           }
           return map;
       },
+      allNotesProcessed() {
+        return this.notesAlreadyProcessed.length === this.notesList.length;
+      }
     },
     watch: {
       isCheckedMapStart: function (val) {
