@@ -34,6 +34,22 @@ export default async function fetchNotes(client, patientId) {
 
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
+            let codingArray = noteCode == note.resource && note.resource.type && note.resource.type.coding || null;
+            let isLoinc = false;
+
+            if (codingArray) {
+                for (let coding of codingArray) {
+                    if (coding.system == "http://loinc.org") {
+                        isLoinc = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isLoinc) {
+                skippedNotesCode++;
+                continue; // Skip this note if it is not a LOINC code
+            }
 
             // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
             if (noteCode == null || noteCode != "clinical-note") {
