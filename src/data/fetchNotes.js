@@ -10,22 +10,21 @@ export default async function fetchNotes(client, patientId) {
      */
 
     let noteSearchData = null;
-    
+    let docSearchUrl = "/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2";
     try { 
         //Try to get notes on a particular patient
-        noteSearchData = await client.request("/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2");
+        noteSearchData = await client.request(docSearchUrl);
     } catch (error) {
         // Return early with empty result if the initial request fails
         return {notesList: []};
     }
 
-    // Otherwise we will proceed with the data parsing
-    var notesList = [];
     var notes = {};
+    var notesList = [];
 
     //Check to make sure the noteSearchData is not null and that there are entries
     if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
-        console.log(noteSearchData);
+
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
         let skippedNotesCode = 0;
@@ -128,6 +127,28 @@ export default async function fetchNotes(client, patientId) {
         console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, rawResponse: notes};
+}
+
+// Function to repeatedly fetch the next page of notes and concatenate the entry arrays
+async function fetchEntries(client, url) {
+    let noteEnteries = [];
+    
+    try {
+        noteSearchData = await client.request(url);
+    } catch (error) {
+        return noteEnteries;
+    }
+
+    let links = noteSearchData.link || [];
+    for (let link of links) {
+        if (link.relation == "next") {
+            // If there is a next page of notes, then we need to fetch that page as well
+            let nextUrl = link.url;
+            let nextData = await client.request(nextUrl);
+            noteSearchData.entry = noteSearchData.entry.concat(nextData.entry);
+        }
+    }
+
 }
 
 function pullTextContent(html) {
