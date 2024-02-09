@@ -18,7 +18,7 @@ export default async function fetchNotes(client, patientId) {
         //no notes found
         console.error("Error fetching notes");
     }
-    
+
     var notesList = [];
 
     //Check to make sure the noteSearchData is not null and that there are entries
@@ -153,7 +153,7 @@ async function fetchEntries(client, url) {
         for (let link of links) {
             if (link.relation == "next") {
                 // If there is a next page of notes, then we need to fetch that page as well
-                url = link.url;
+                followUrl = link.url;
                 break;
             } else {
                 noNext = true;
