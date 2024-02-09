@@ -33,8 +33,8 @@
         @textChanged="changeTextContent">
         </ViewInfo>
         <div id="process-btn-container">
-          <button class="process-btn" @click="processText">Process Selected Note</button>
-          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked()">Process All Checked</button>
+          <!-- <button class="process-btn" @click="processText">Process Selected Note</button> -->
+          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked()">Process Selected Notes</button>
         </div>
       </div>
     </div>
@@ -98,7 +98,7 @@
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
-        allChecked: true,
+        allChecked: false,
         isCheckedMap: this.isCheckedMapStart || {},
       }
     }, 
@@ -158,6 +158,8 @@
         //If the item has already been processed dont add it to the list again
         if (!this.notesAlreadyProcessed.includes(this.selectedNote.id)) {
           this.notesAlreadyProcessed.push(this.selectedNote.id);
+        } else {
+          return;
         }
 
         //Show the loading overlay
@@ -252,7 +254,7 @@
       isCheckedMapStart() {
           let map = {};
           for (let note of this.notesList) {
-            map[note.id] = true;
+            map[note.id] = false;
           }
           return map;
       },
