@@ -28,9 +28,9 @@ export default async function fetchNotes(client, patientId) {
         //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
         notes = noteSearchData.entry;
         let skippedNotesCode = 0;
+        let skippedNotesLoinc = 0;
         let skippedNotesNurse = 0;
         outer: for (let note of notes) {
-            console.log(note);
 
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
@@ -47,7 +47,7 @@ export default async function fetchNotes(client, patientId) {
             }
 
             if (!isLoinc) {
-                skippedNotesCode++;
+                skippedNotesLoinc++;
                 continue; // Skip this note if it is not a LOINC code
             }
 
@@ -56,6 +56,8 @@ export default async function fetchNotes(client, patientId) {
                 skippedNotesCode++;
                 continue; // Skip this note if it is not a clinical note
             }
+
+            console.log(note);
 
             let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
             if (customExts == null) {
@@ -121,6 +123,7 @@ export default async function fetchNotes(client, patientId) {
             notesList.push(noteObj);
         }
         console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
+        console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
         console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, rawResponse: notes};
