@@ -1,7 +1,7 @@
 <template>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
-        <h3>EHR Note List ({{ notesNum }})</h3>
+        <h3>Relevant Notes List ({{ notesNum }})</h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
         :selectedNote="selectedNote"
