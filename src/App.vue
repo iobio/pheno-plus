@@ -42,7 +42,7 @@
       const appNotesObj = await fetchNotes(this.$client, this.$patientId);
       const appNotes = appNotesObj.notesList;
       this.$totalNotes = appNotesObj.totalNotes;
-
+      console.log("Total Notes: " + appNotesObj.totalNotes);
       this.hideOverlay = true;
 
       if (appNotes != null && appNotes.length != 0) {
