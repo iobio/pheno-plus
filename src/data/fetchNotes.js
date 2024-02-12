@@ -9,7 +9,8 @@ export default async function fetchNotes(client, patientId) {
      * 4. The function will return an array of ClinicalNote objects and the number of notes generated
      */
 
-    let docSearchUrl = "/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2";
+    // let docSearchUrl = "/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2";
+    let docSearchUrl = "/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended";
 
     let notes = null;
     try {
