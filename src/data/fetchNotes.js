@@ -20,13 +20,15 @@ export default async function fetchNotes(client, patientId) {
     }
 
     var notesList = [];
-
+    let totalNotes = 0;
     //Check to make sure the noteSearchData is not null and that there are entries
     if (notes) {
 
         let skippedNotesCode = 0;
         let skippedNotesLoinc = 0;
         let skippedNotesNurse = 0;
+
+        totalNotes = notes.length;
         outer: for (let note of notes) {
 
             // Get the code of the note
@@ -121,7 +123,7 @@ export default async function fetchNotes(client, patientId) {
         // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
         // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
-    return {notesList: notesList, rawResponse: notes};
+    return {notesList: notesList, notesFound: totalNotes};
 }
 
 // Function to repeatedly fetch the next page of notes and concatenate the entry arrays

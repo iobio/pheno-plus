@@ -54,6 +54,7 @@ if (prod == true && window.location.pathname === "/launch/") {
 //if we are on local host then skip all of this and mount the app with the testing environment flag
 if (window.location.hostname === "localhost") {
     const app = createApp(App)
+    app.config.globalProperties.$totalNotes = 0;
     app.config.globalProperties.$isTestingEnvironment = true;
     app.mount('#app');
 } else {
@@ -89,6 +90,7 @@ if (window.location.hostname === "localhost") {
             if (!userId || !(userId in userIdWhitelist)) {
                 //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
                 const app = createApp(App)
+                app.config.globalProperties.$totalNotes = 0;
                 app.config.globalProperties.$userNotAuthorized = true;
                 app.mount('#app');
             } else {
@@ -110,6 +112,7 @@ async function initializeApp(fhirClient) {
 
 
     const app = createApp(App);
+    app.config.globalProperties.$totalNotes = 0;
     //Set the properties needed for the app
     app.config.globalProperties.$userNotAuthorized = false;
     app.config.globalProperties.$isTestingEnvironment = false;

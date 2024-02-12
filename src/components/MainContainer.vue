@@ -11,7 +11,9 @@
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
-        <h3>Relevant EHR Notes ({{ notesNum }})</h3>
+        <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
+          <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.$totalNotes }} notes pulled from the EHR.</p>
+        </h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
         :selectedNote="selectedNote"
@@ -100,6 +102,7 @@
         selectedTerm: null,
         allChecked: false,
         isCheckedMap: this.isCheckedMapStart || {},
+        showNotesPulledTip: false
       }
     }, 
     async mounted () {
@@ -274,6 +277,24 @@
 </script>
 
 <style lang="css">
+  #item-selector-header {
+    position: relative;
+  }
+  #notes-pulled-tip {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    font-size: small;
+    font-style: italic;
+    margin-top: 0px;
+    background-color: white;
+    opacity: 0.8;
+    padding: 10px;
+    border-radius: 3px;
+    max-width: 150px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    z-index: 4;
+  }
   .small-italic {
     font-size: small; 
   }
