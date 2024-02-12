@@ -29,7 +29,7 @@
 
 
       <div class="content-title-wrapper view-info">
-        <h3>Selected Note Content</h3>
+        <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
         @textChanged="changeTextContent">
@@ -120,20 +120,20 @@
           this.selectedTerm = term;
         }
       },
-      selectNote (note) {
+      selectNote(note) {
         this.selectedNote = note;
       },
-      removeHpoTerm (id) {
+      removeHpoTerm(id) {
         if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
           this.selectedTerm = null;
         }
         this.sortedHpoList = this.sortedHpoList.filter(item => item[0] !== id);
         delete this.hpoTermsObj[id];
       },
-      updateHpoTerm (item) {
+      updateHpoTerm(item) {
         this.hpoTermsObj[item.getHpoId()] = item;
       },
-      formatAndPopulateTerms () {
+      formatAndPopulateTerms() {
         //Needs to populate the clipboard box with the terms
         let terms = [];
         for (let key in this.hpoTermsObj) {
@@ -272,6 +272,11 @@
       },
       hideOverlayFromApp: function (val) {
         this.hideOverlay = val;
+      },
+      notesList: function (newVal, oldVal) {
+        if (newVal && newVal !== oldVal) {
+          this.selectNote(newVal[0]);
+        }
       }
     }
   }
