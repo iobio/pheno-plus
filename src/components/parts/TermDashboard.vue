@@ -28,7 +28,7 @@
         </div>
 
         <div id="send-terms-btn-container">
-            <button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button>
+            <!-- <button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button> -->
             <button id="clear-terms-btn" @click="this.$emit('clearTableTerms')">Clear Terms</button>
         </div>
     </div>
@@ -62,6 +62,7 @@
             },
             updateItem (item) {
                 this.$emit('updateItem', item);
+                this.$emit('sendTerms');
             },
             handleTermSelected(term) {
                 this.$emit('selectTerm', term);
@@ -75,7 +76,15 @@
                     }
                 },
                 deep: true,
-        }
+        },
+        sortedHpoList: {
+            handler: function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    this.$emit('sendTerms')
+                }
+            },
+            deep: true,
+        },
     }
 }
 

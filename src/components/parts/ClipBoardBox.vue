@@ -7,7 +7,7 @@
             <p>Nothing to show, select and send terms to populate.</p>
         </div>
         <div id="clip-btns-container">
-            <button class="clip-board-box-btn" @click="clearTerms">Clear</button>
+            <!-- <button class="clip-board-box-btn" @click="clearTerms">Clear</button> -->
             <button class="clip-board-box-btn" @click="copyToClipboard">Copy List</button>
         </div>
     </div>
