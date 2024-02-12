@@ -12,7 +12,7 @@
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
-          <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p>
+          <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
         </h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
