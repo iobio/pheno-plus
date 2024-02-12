@@ -274,7 +274,7 @@
         this.hideOverlay = val;
       },
       notesList: function (newVal, oldVal) {
-        if (newVal && newVal !== oldVal) {
+        if (newVal && newVal.length > 0 && newVal !== oldVal) {
           this.selectNote(newVal[0]);
         }
       }
