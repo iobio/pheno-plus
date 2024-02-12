@@ -123,7 +123,7 @@ export default async function fetchNotes(client, patientId) {
         // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
         // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
-    return {notesList: notesList, notesFound: totalNotes};
+    return {notesList: notesList, totalNotes: totalNotes};
 }
 
 // Function to repeatedly fetch the next page of notes and concatenate the entry arrays
