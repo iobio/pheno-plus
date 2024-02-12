@@ -26,7 +26,7 @@
         border-radius: 3px;
         margin-left: 0px;
         font-style: italic;
-        padding: 5px;
+        padding: 0px 5px 5px 5px;
         transition: all 0.45s ease-in-out;
         overflow: hidden;
         color: rgb(72, 71, 71);
@@ -34,6 +34,7 @@
     #term-peek-div.visible {
         width: 20%;
         margin-left: 5px;
+        overflow-y: auto;
     }
 
     #term-peek-div h3 {
@@ -41,6 +42,10 @@
         padding-top: 10px;
         width: 100%;
         text-align: center;
+        position: sticky;
+        top: 0;
+        margin-top: 0px;
+        background-color: inherit;
     }
 
     #term-peek-div div {
