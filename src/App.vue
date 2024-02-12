@@ -5,7 +5,8 @@
     <MainContainer v-else
       :notesList="notesList" 
       :notesNum="notesNum"
-      :hideOverlayFromApp="hideOverlay">
+      :hideOverlayFromApp="hideOverlay"
+      :totalNotes="totalNotes">
     </MainContainer>
 </template>
 
@@ -26,6 +27,7 @@
         testInformation: null,
         theClient: null,
         hideOverlay: true,
+        totalNotes: 0
       }
     }, 
     async mounted () {
@@ -41,9 +43,7 @@
       //Fetch the notes from the server
       const appNotesObj = await fetchNotes(this.$client, this.$patientId);
       const appNotes = appNotesObj.notesList;
-      this.$totalNotes = appNotesObj.totalNotes;
-      console.log("Total Notes: " + appNotesObj.totalNotes);
-      console.log("global total notes: " + this.$totalNotes);
+      this.totalNotes = appNotesObj.totalNotes;
 
       this.hideOverlay = true;
 
