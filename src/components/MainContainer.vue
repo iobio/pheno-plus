@@ -176,10 +176,20 @@
           //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
           for (let key in clinPhen) {
             if (this.hpoTermsObj[key]) {
-              //If it already exists add the new instance factors to the item
-              this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
-              this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
-              this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+              let alreadyExists = false;
+              for (let sentence of this.hpoTermsObj[key].exampleSentence) {
+                if (sentence == clinPhen[key]["Example sentence"]) {
+                  alreadyExists = true;
+                }
+              }
+
+              if (!alreadyExists){
+                //If it already exists add the new instance factors to the item
+                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
+                this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
+                this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+                continue;
+              }
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
@@ -302,7 +312,7 @@
     z-index: 4;
   }
   .small-italic {
-    font-size: small; 
+    font-size: x-small; 
   }
 
   h3 {
