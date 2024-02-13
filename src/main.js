@@ -10,7 +10,8 @@ const userIdWhitelist = {
     "U0770443": "Kensaku Kawamoto", 
     "U0770371": "Phillip Warner",
     "U0059678": "Dave Tille",
-    "U0827583": "Bryce Covey"
+    "U0827583": "Bryce Covey",
+    "U6035684": "Kelsey Simek"
 };
 
 let prod = false;
