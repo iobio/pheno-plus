@@ -9,33 +9,73 @@ export default async function fetchNotes(client, patientId) {
      * 4. The function will return an array of ClinicalNote objects and the number of notes generated
      */
 
-    let noteSearchData = null;
-    
-    try { 
-        //Try to get notes on a particular patient
-        noteSearchData = await client.request("/DocumentReference?patient=" + patientId);
+    let docSearchUrl = "/DocumentReference?patient=" + patientId + "&docstatus=preliminary,final,amended&type=http://loinc.org|18842-5,http://loinc.org|11488-4,http://loinc.org|34117-2";
+
+    let notes = null;
+    try {
+        notes = await fetchEntries(client, docSearchUrl);
     } catch (error) {
-        // Return early with empty result if the initial request fails
-        return {notesList: []};
+        //no notes found
+        console.error("Error fetching notes");
     }
 
-    // Otherwise we will proceed with the data parsing
     var notesList = [];
-    var notes = {};
-
+    let totalNotes = 0;
     //Check to make sure the noteSearchData is not null and that there are entries
-    if (noteSearchData != null && noteSearchData.entry && noteSearchData.entry.length) {
+    if (notes) {
 
-        //Set the notes to the entry because of how the data is structured entry is the array of DocumentReference objects
-        notes = noteSearchData.entry;
+        let skippedNotesCode = 0;
+        let skippedNotesLoinc = 0;
+        let skippedNotesNurse = 0;
 
-        for (let note of notes) {
+        totalNotes = notes.length;
+        outer: for (let note of notes) {
+
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
+            let codingArray = note.resource && note.resource.type && note.resource.type.coding || null;
+            let isLoinc = false;
+
+            if (codingArray) {
+                for (let coding of codingArray) {
+                    if (coding.system == "http://loinc.org") {
+                        isLoinc = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isLoinc) {
+                skippedNotesLoinc++;
+                continue; // Skip this note if it is not a LOINC code
+            }
 
             // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
             if (noteCode == null || noteCode != "clinical-note") {
+                skippedNotesCode++;
                 continue; // Skip this note if it is not a clinical note
+            }
+
+            let customExts = note.resource && note.resource.context && note.resource.context.extension || null;
+            if (customExts == null) {
+                //it is okay to just proccess this note
+            } else {
+            // Check if the note is authored by a nurse or if we can see that info at all
+                for (let ext of customExts) {
+                    let url = ext.url;
+                    let urlEnd = url.split('/').pop();
+                    if (urlEnd == "clinical-note-author-provider-type") {
+                        let valueCodeableConcept = ext.valueCodeableConcept;
+                        let text = valueCodeableConcept.text || null;
+                        let value = valueCodeableConcept.value || null;
+
+                        if ((text && (text.toLowerCase() == "rn" || text.toLowerCase() == "registered nurse")) ||
+                            (value && (value.toLowerCase() =="rn" || value.toLowerCase() == "registered nurse"))) {
+                                skippedNotesNurse++;
+                                continue outer; // Skip to the next note
+                        }
+                    }
+                }
             }
 
             // Get the id of the note
@@ -48,9 +88,9 @@ export default async function fetchNotes(client, patientId) {
             let noteEncounterId = note.resource && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
             // Build the components of the note title
+            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
             let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
-            let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let titleDate = noteDate.slice(0, 10);
 
             // Build the note title
@@ -79,8 +119,48 @@ export default async function fetchNotes(client, patientId) {
             let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
             notesList.push(noteObj);
         }
+        // console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
+        // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
+        // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
-    return {notesList: notesList, rawResponse: notes};
+    return {notesList: notesList, totalNotes: totalNotes};
+}
+
+// Function to repeatedly fetch the next page of notes and concatenate the entry arrays
+async function fetchEntries(client, url) {
+    let noNext = false;
+    let followUrl = url;
+    let noteEnteries = [];
+    
+    while (!noNext) {
+        let noteSearchData = null;
+
+        try {
+            noteSearchData = await client.request(followUrl);
+            //make sure that the search data has an entry
+            if (!noteSearchData.entry || noteSearchData.entry.length == 0) {
+                noNext = true;
+                return noteEnteries;
+            }
+        } catch (error) {
+            noNext = true;
+            return noteEnteries;
+        }
+
+        noteEnteries = noteEnteries.concat(noteSearchData.entry);
+
+        let links = noteSearchData.link || [];
+        for (let link of links) {
+            if (link.relation == "next") {
+                // If there is a next page of notes, then we need to fetch that page as well
+                followUrl = link.url;
+                break;
+            } else {
+                noNext = true;
+            }
+        }
+    }
+    return noteEnteries;
 }
 
 function pullTextContent(html) {

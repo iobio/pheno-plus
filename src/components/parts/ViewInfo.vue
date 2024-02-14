@@ -5,7 +5,7 @@
             @input="textChanged"
             id="note-info" 
             type="text" 
-            v-model="textInputText"></textarea>
+            v-model="textInputText" readonly="true"></textarea>
     </div>
 
     <div class="sub-container" v-if="!note" id="view-info">

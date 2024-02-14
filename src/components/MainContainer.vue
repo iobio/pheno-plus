@@ -11,7 +11,9 @@
     </div>
     <div id="selector-view-container">
       <div class="content-title-wrapper item-selector">
-        <h3>EHR Note List ({{ notesNum }})</h3>
+        <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
+          <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
+        </h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
         :selectedNote="selectedNote"
@@ -27,14 +29,14 @@
 
 
       <div class="content-title-wrapper view-info">
-        <h3>Selected Note Content</h3>
+        <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
         <div id="process-btn-container">
-          <button class="process-btn" @click="processText">Process Selected Note</button>
-          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked()">Process All Checked</button>
+          <!-- <button class="process-btn" @click="processText">Process Selected Note</button> -->
+          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button>
         </div>
       </div>
     </div>
@@ -64,7 +66,6 @@
 </template>
 
 <script>
-  import NoteSelectPane from './parts/NoteSelectPane.vue'
   import ViewInfo from './parts/ViewInfo.vue'
   import ItemSelector from './parts/ItemSelector.vue'
   import TermDashboard from './parts/TermDashboard.vue'
@@ -76,7 +77,6 @@
   export default {
     name: 'MainContainer',
     components: {
-      NoteSelectPane,
       ViewInfo,
       ItemSelector,
       TermDashboard,
@@ -87,6 +87,7 @@
       notesList: Array,
       notesNum: Number,
       hideOverlayFromApp: Boolean,
+      totalNotes: Number
     },
     data () {
       return {
@@ -100,8 +101,9 @@
         baseInformationOnly: true,
         sortedHpoList: [],
         selectedTerm: null,
-        allChecked: true,
+        allChecked: false,
         isCheckedMap: this.isCheckedMapStart || {},
+        showNotesPulledTip: false
       }
     }, 
     async mounted () {
@@ -118,20 +120,20 @@
           this.selectedTerm = term;
         }
       },
-      selectNote (note) {
+      selectNote(note) {
         this.selectedNote = note;
       },
-      removeHpoTerm (id) {
+      removeHpoTerm(id) {
         if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
           this.selectedTerm = null;
         }
         this.sortedHpoList = this.sortedHpoList.filter(item => item[0] !== id);
         delete this.hpoTermsObj[id];
       },
-      updateHpoTerm (item) {
+      updateHpoTerm(item) {
         this.hpoTermsObj[item.getHpoId()] = item;
       },
-      formatAndPopulateTerms () {
+      formatAndPopulateTerms() {
         //Needs to populate the clipboard box with the terms
         let terms = [];
         for (let key in this.hpoTermsObj) {
@@ -160,6 +162,8 @@
         //If the item has already been processed dont add it to the list again
         if (!this.notesAlreadyProcessed.includes(this.selectedNote.id)) {
           this.notesAlreadyProcessed.push(this.selectedNote.id);
+        } else {
+          return;
         }
 
         //Show the loading overlay
@@ -172,10 +176,20 @@
           //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
           for (let key in clinPhen) {
             if (this.hpoTermsObj[key]) {
-              //If it already exists add the new instance factors to the item
-              this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
-              this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
-              this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+              let alreadyExists = false;
+              for (let sentence of this.hpoTermsObj[key].exampleSentence) {
+                if (sentence == clinPhen[key]["Example sentence"]) {
+                  alreadyExists = true;
+                }
+              }
+
+              if (!alreadyExists){
+                //If it already exists add the new instance factors to the item
+                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
+                this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
+                this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+                continue;
+              }
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
@@ -254,10 +268,13 @@
       isCheckedMapStart() {
           let map = {};
           for (let note of this.notesList) {
-            map[note.id] = true;
+            map[note.id] = false;
           }
           return map;
       },
+      allNotesProcessed() {
+        return this.notesAlreadyProcessed.length === this.notesList.length;
+      }
     },
     watch: {
       isCheckedMapStart: function (val) {
@@ -265,14 +282,37 @@
       },
       hideOverlayFromApp: function (val) {
         this.hideOverlay = val;
+      },
+      notesList: function (newVal, oldVal) {
+        if (newVal && newVal.length > 0 && newVal !== oldVal) {
+          this.selectNote(newVal[0]);
+        }
       }
     }
   }
 </script>
 
 <style lang="css">
+  #item-selector-header {
+    position: relative;
+  }
+  #notes-pulled-tip {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    font-size: small;
+    font-style: italic;
+    margin-top: 0px;
+    background-color: white;
+    opacity: 0.8;
+    padding: 10px;
+    border-radius: 3px;
+    max-width: 150px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    z-index: 4;
+  }
   .small-italic {
-    font-size: small; 
+    font-size: x-small; 
   }
 
   h3 {

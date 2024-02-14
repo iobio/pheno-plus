@@ -1,13 +1,13 @@
 <template>
     <div id="clip-board-box-container">
         <div id="hpo-clip-container" v-if="clipBoardTerms && clipBoardTerms.length > 0">
-            <textarea id="hpo-term-clipboard" name="hpo-terms-text" cols="30" rows="10" v-model="clipBoardText"></textarea>
+            <textarea id="hpo-term-clipboard" name="hpo-terms-text" cols="30" rows="10" v-model="clipBoardText" readonly="true"></textarea>
         </div>
         <div id="hpo-clip-container" v-else>
             <p>Nothing to show, select and send terms to populate.</p>
         </div>
         <div id="clip-btns-container">
-            <button class="clip-board-box-btn" @click="clearTerms">Clear</button>
+            <!-- <button class="clip-board-box-btn" @click="clearTerms">Clear</button> -->
             <button class="clip-board-box-btn" @click="copyToClipboard">Copy List</button>
         </div>
     </div>
