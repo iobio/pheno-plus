@@ -11,7 +11,9 @@ const userIdWhitelist = {
     "U0770371": "Phillip Warner",
     "U0059678": "Dave Tille",
     "U0827583": "Bryce Covey",
-    "U6035684": "Kelsey Simek"
+    "U6035684": "Kelsey Simek",
+    "U0817010": "Rachel Palmquist",
+    "U6048746": "Emily Fleming"
 };
 
 let prod = false;
