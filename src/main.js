@@ -5,6 +5,7 @@ import App from './App.vue'
 (async function() {
     let prod = false;
     let redirect_uri = "";
+    let client_id = "";
 
     let whiteList = {};
 
@@ -26,6 +27,7 @@ import App from './App.vue'
         //cache the userId in local storage
         localStorage.setItem('userId', user);
         redirect_uri = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
+        client_id = "48f100f1-2599-444b-85f8-5d86b4415453";
     }
 
     //if the url is the production launch then get the user off the params
@@ -41,12 +43,13 @@ import App from './App.vue'
         //cache the userId in local storage
         localStorage.setItem('userId', user);
         redirect_uri = "https://pheno-plus.iobio.chpc.utah.edu/redirect";
+        client_id = "27876148-f01d-46ec-b1e9-763bf338b255";
     }
 
     //if we are on local host then skip all of this and mount the app with the testing environment flag
     if (window.location.hostname === "localhost") {
         try {
-            whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()); //Stage & Dev
+            whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()); // Dev
         } catch (error) {
             //If there is an error, just show a simple error in the console that says "Error getting whiteList"
             console.error("Error getting whiteList");
@@ -97,8 +100,8 @@ import App from './App.vue'
                 }
 
                 try {
-                    // whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) //Stage
-                    whiteList = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
+                    whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) //Stage
+                    // whiteList = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
                 } catch (error) {
                     //If there is an error, just show a simple error in the console that says "Error getting whiteList"
                     console.error("Error getting whiteList");
