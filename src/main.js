@@ -2,6 +2,7 @@ import './assets/base.css';
 import { createApp } from 'vue'
 import App from './App.vue'
 
+
 (async function() {
     let prod = false;
     let redirect_uri = "";
