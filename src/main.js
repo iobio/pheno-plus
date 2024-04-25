@@ -44,7 +44,12 @@ if (prod == true && window.location.pathname === "/launch/") {
 
 //if we are on local host then skip all of this and mount the app with the testing environment flag
 if (window.location.hostname === "localhost") {
-    // whiteList = await import('/Users/emerson/Documents/Code/pheno-plus-whitelist/secrets/whiteList.json')//DEV
+    try {
+        whiteList = await fetch('/Users/emerson/Documents/Code/pheno-plus-whitelist/secrets/whiteList.json').then(response => response.json());
+    } catch (error) {
+        //If there is an error, just show a simple error in the console that says "Error getting whiteList"
+        console.error("Error getting whiteList");
+    }
 
     //Set the userId to the testing userId u1069837
     let userId = "U1069837";;
@@ -90,8 +95,13 @@ if (!Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase
                 //If that fails then do nothing and userId will be null
             }
 
-            whiteList = await import('/ssd/emerson/pheno-plus-whitelist/secrets/whiteList.json') //staging & production
-            console.log(whiteList);
+            try {
+                whiteList = await fetch('/ssd/emerson/pheno-plus-whitelist/secrets/whiteList.json').then(response => response.json()) //staging & production
+            } catch (error) {
+                //If there is an error, just show a simple error in the console that says "Error getting whiteList"
+                console.error("Error getting whiteList");
+            }
+
             if (!userId || !Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
                 //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
                 const app = createApp(App)
