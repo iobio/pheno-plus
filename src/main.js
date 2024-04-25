@@ -91,7 +91,7 @@ if (!Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase
             }
 
             whiteList = await import('/ssd/emerson/pheno-plus-whitelist/secrets/whiteList.json') //staging & production
-
+            console.log(whiteList);
             if (!userId || !Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
                 //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
                 const app = createApp(App)
