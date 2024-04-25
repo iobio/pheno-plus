@@ -47,7 +47,6 @@ import App from './App.vue'
     if (window.location.hostname === "localhost") {
         try {
             whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()); //Stage & Dev
-            // whitelist = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
         } catch (error) {
             //If there is an error, just show a simple error in the console that says "Error getting whiteList"
             console.error("Error getting whiteList");
@@ -98,8 +97,8 @@ import App from './App.vue'
                 }
 
                 try {
-                    whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) //Stage & Dev
-                    // whitelist = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
+                    // whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) //Stage
+                    whiteList = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
                 } catch (error) {
                     //If there is an error, just show a simple error in the console that says "Error getting whiteList"
                     console.error("Error getting whiteList");
