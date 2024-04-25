@@ -2,121 +2,123 @@ import './assets/base.css';
 import { createApp } from 'vue'
 import App from './App.vue'
 
-let prod = false;
-let redirect_uri = "";
+(async function() {
+    let prod = false;
+    let redirect_uri = "";
 
-let whiteList = {};
+    let whiteList = {};
 
-//if the base url is the production url then set the prod flag to true
-if (window.location.hostname === "pheno-plus.iobio.chpc.utah.edu") {
-    prod = true;
-}
-
-//if the url is the staging launch then get the user off the params 
-if (window.location.pathname === "/phenoplus/oauth2/launch/") {
-    //clear out local storage in case there is anything there
-    localStorage.clear();
-    sessionStorage.clear();
-
-    //get the url parameters and get the userId
-    let urlParams = new URLSearchParams(window.location.search);
-    let user = urlParams.get('userId');
-
-    //cache the userId in local storage
-    localStorage.setItem('userId', user);
-    redirect_uri = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
-}
-
-//if the url is the production launch then get the user off the params
-if (prod == true && window.location.pathname === "/launch/") {
-    //clear out local storage in case there is anything there
-    localStorage.clear();
-    sessionStorage.clear();
-
-    //get the url parameters and get the userId
-    let urlParams = new URLSearchParams(window.location.search);
-    let user = urlParams.get('userId');
-
-    //cache the userId in local storage
-    localStorage.setItem('userId', user);
-    redirect_uri = "https://pheno-plus.iobio.chpc.utah.edu/redirect";
-}
-
-//if we are on local host then skip all of this and mount the app with the testing environment flag
-if (window.location.hostname === "localhost") {
-    try {
-        whiteList = await fetch('/whiteList.json').then(response => response.json());
-    } catch (error) {
-        //If there is an error, just show a simple error in the console that says "Error getting whiteList"
-        console.error("Error getting whiteList");
+    //if the base url is the production url then set the prod flag to true
+    if (window.location.hostname === "pheno-plus.iobio.chpc.utah.edu") {
+        prod = true;
     }
 
-    //Set the userId to the testing userId u1069837
-    let userId = "U1069837";;
+    //if the url is the staging launch then get the user off the params 
+    if (window.location.pathname === "/phenoplus/oauth2/launch/") {
+        //clear out local storage in case there is anything there
+        localStorage.clear();
+        sessionStorage.clear();
 
-if (!Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
-        const app = createApp(App)
-        app.config.globalProperties.$userNotAuthorized = true;
-        app.mount('#app');
-    } else {
-        const app = createApp(App)
-        app.config.globalProperties.$isTestingEnvironment = true;
-        app.config.globalProperties.$userNotAuthorized = false;
-        app.mount('#app');
+        //get the url parameters and get the userId
+        let urlParams = new URLSearchParams(window.location.search);
+        let user = urlParams.get('userId');
+
+        //cache the userId in local storage
+        localStorage.setItem('userId', user);
+        redirect_uri = "https://mosaic-staging.chpc.utah.edu/phenoplus/oauth2/redirect";
     }
 
-} else {
-    //Try to get the FHIR client if we can
-    getClient().then(async (client) => {
-        //If the client is null, we need to try to authorize
-        if (client === null) {
-            try {
-                await FHIR.oauth2.authorize({
-                    //Our application's ID
-                    client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
-                    //Initial scope
-                    scope: "launch patient/*.* openid user/*.* profile",
-                    //Our redirect URL
-                    redirect_uri: redirect_uri,
-                    completeInTarget: true,
-                });
-            } catch (error) {
-                //If there is an error, just show a simple error in the console that says "Error authorizing"
-                console.error("Error authorizing, there was an error following the authorization flow.");
-            }
+    //if the url is the production launch then get the user off the params
+    if (prod == true && window.location.pathname === "/launch/") {
+        //clear out local storage in case there is anything there
+        localStorage.clear();
+        sessionStorage.clear();
 
-        //If we have a client, we need to check if the user is authorized to use the app
-        } else {
-            let userId = null;
-            try {
-                //Try to get the userId from local storage
-                userId = localStorage.getItem('userId');
-            } catch (error) {
-                //If that fails then do nothing and userId will be null
-            }
+        //get the url parameters and get the userId
+        let urlParams = new URLSearchParams(window.location.search);
+        let user = urlParams.get('userId');
 
-            try {
-                whiteList = await fetch('/whiteList.json').then(response => response.json()) //staging & production
-            } catch (error) {
-                //If there is an error, just show a simple error in the console that says "Error getting whiteList"
-                console.error("Error getting whiteList");
-            }
+        //cache the userId in local storage
+        localStorage.setItem('userId', user);
+        redirect_uri = "https://pheno-plus.iobio.chpc.utah.edu/redirect";
+    }
 
-            if (!userId || !Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
-                //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
-                const app = createApp(App)
-                app.config.globalProperties.$userNotAuthorized = true;
-                app.mount('#app');
-            } else {
-                //Call the initializeApp function with the client if it exists & the user is authorized to use the app
-                initializeApp(client);
-            }
+    //if we are on local host then skip all of this and mount the app with the testing environment flag
+    if (window.location.hostname === "localhost") {
+        try {
+            whiteList = await fetch('/whiteList.json').then(response => response.json());
+        } catch (error) {
+            //If there is an error, just show a simple error in the console that says "Error getting whiteList"
+            console.error("Error getting whiteList");
         }
-    }).catch(error => {
-        //Just show a simple error in the console if we cannot get the client that just says "Error getting client"
-        console.error("Error getting client");
-    });
-}
+
+        //Set the userId to the testing userId u1069837
+        let userId = "U1069837";;
+
+    if (!Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
+            const app = createApp(App)
+            app.config.globalProperties.$userNotAuthorized = true;
+            app.mount('#app');
+        } else {
+            const app = createApp(App)
+            app.config.globalProperties.$isTestingEnvironment = true;
+            app.config.globalProperties.$userNotAuthorized = false;
+            app.mount('#app');
+        }
+
+    } else {
+        //Try to get the FHIR client if we can
+        getClient().then(async (client) => {
+            //If the client is null, we need to try to authorize
+            if (client === null) {
+                try {
+                    await FHIR.oauth2.authorize({
+                        //Our application's ID
+                        client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+                        //Initial scope
+                        scope: "launch patient/*.* openid user/*.* profile",
+                        //Our redirect URL
+                        redirect_uri: redirect_uri,
+                        completeInTarget: true,
+                    });
+                } catch (error) {
+                    //If there is an error, just show a simple error in the console that says "Error authorizing"
+                    console.error("Error authorizing, there was an error following the authorization flow.");
+                }
+
+            //If we have a client, we need to check if the user is authorized to use the app
+            } else {
+                let userId = null;
+                try {
+                    //Try to get the userId from local storage
+                    userId = localStorage.getItem('userId');
+                } catch (error) {
+                    //If that fails then do nothing and userId will be null
+                }
+
+                try {
+                    whiteList = await fetch('/whiteList.json').then(response => response.json()) //staging & production
+                } catch (error) {
+                    //If there is an error, just show a simple error in the console that says "Error getting whiteList"
+                    console.error("Error getting whiteList");
+                }
+
+                if (!userId || !Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
+                    //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
+                    const app = createApp(App)
+                    app.config.globalProperties.$userNotAuthorized = true;
+                    app.mount('#app');
+                } else {
+                    //Call the initializeApp function with the client if it exists & the user is authorized to use the app
+                    initializeApp(client);
+                }
+            }
+        }).catch(error => {
+            //Just show a simple error in the console if we cannot get the client that just says "Error getting client"
+            console.error("Error getting client");
+        });
+    }
+})();
 
 async function initializeApp(fhirClient) {
     //Set the client
