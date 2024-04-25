@@ -2,22 +2,10 @@ import './assets/base.css';
 import { createApp } from 'vue'
 import App from './App.vue'
 
-//whitelist of userIds that are allowed to access the app
-const userIdWhitelist = {
-    "U1069837": "Emerson Lebleu",
-    "U0029928": "Martin Tristani-Firouzi",
-    "U0969254": "Sabrina", 
-    "U0770443": "Kensaku Kawamoto", 
-    "U0770371": "Phillip Warner",
-    "U0059678": "Dave Tille",
-    "U0827583": "Bryce Covey",
-    "U6035684": "Kelsey Simek",
-    "U0817010": "Rachel Palmquist",
-    "U6048746": "Emily Fleming"
-};
-
 let prod = false;
 let redirect_uri = "";
+
+let whiteList = {};
 
 //if the base url is the production url then set the prod flag to true
 if (window.location.hostname === "pheno-plus.iobio.chpc.utah.edu") {
@@ -56,9 +44,22 @@ if (prod == true && window.location.pathname === "/launch/") {
 
 //if we are on local host then skip all of this and mount the app with the testing environment flag
 if (window.location.hostname === "localhost") {
-    const app = createApp(App)
-    app.config.globalProperties.$isTestingEnvironment = true;
-    app.mount('#app');
+    // whiteList = await import('/Users/emerson/Documents/Code/pheno-plus-whitelist/secrets/whiteList.json')//DEV
+
+    //Set the userId to the testing userId u1069837
+    let userId = "U1069837";;
+
+if (!Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
+        const app = createApp(App)
+        app.config.globalProperties.$userNotAuthorized = true;
+        app.mount('#app');
+    } else {
+        const app = createApp(App)
+        app.config.globalProperties.$isTestingEnvironment = true;
+        app.config.globalProperties.$userNotAuthorized = false;
+        app.mount('#app');
+    }
+
 } else {
     //Try to get the FHIR client if we can
     getClient().then(async (client) => {
@@ -89,7 +90,9 @@ if (window.location.hostname === "localhost") {
                 //If that fails then do nothing and userId will be null
             }
 
-            if (!userId || !(userId in userIdWhitelist)) {
+            whiteList = await import('/ssd/emerson/pheno-plus-whitelist/secrets/whiteList.json') //staging & production
+
+            if (!userId || !Object.keys(whiteList).some(key => key.toLowerCase() === userId.toLowerCase())) {
                 //If we can't get the userId or it is not in the whitelist, then we need to set the userNotAuthorized flag and mount the app
                 const app = createApp(App)
                 app.config.globalProperties.$userNotAuthorized = true;
