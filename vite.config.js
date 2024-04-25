@@ -16,6 +16,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/phenoplus/oauth2/redirect/',
-  // base: '/launch/',
+  base: '/phenoplus/oauth2/redirect/', //staging or dev
+  // base: '/launch/', //production
 })
