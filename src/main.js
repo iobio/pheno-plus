@@ -77,7 +77,7 @@ import App from './App.vue'
                 try {
                     await FHIR.oauth2.authorize({
                         //Our application's ID
-                        client_id: "48f100f1-2599-444b-85f8-5d86b4415453",
+                        client_id: client_id,
                         //Initial scope
                         scope: "launch patient/*.* openid user/*.* profile",
                         //Our redirect URL
