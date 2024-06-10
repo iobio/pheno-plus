@@ -9,8 +9,9 @@
         <p v-else>Pulling <br> Notes <br> ...</p>        
       </div>
     </div>
-    <div id="selector-view-container">
-      <div class="content-title-wrapper item-selector">
+    <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
+      <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">{{ !selectorViewOpen ? 'open' : 'close' }}</div>
+      <div class="content-title-wrapper item-selector" v-if="selectorViewOpen">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
           <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
         </h3>
@@ -28,7 +29,7 @@
       </div>
 
 
-      <div class="content-title-wrapper view-info">
+      <div class="content-title-wrapper view-info" v-if="selectorViewOpen">
         <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
@@ -41,8 +42,9 @@
       </div>
     </div>
 
-    <div id="full-width-box-container">
-      <div id="term-table">
+    <div id="full-width-box-container" :class="{closed: !fullWidthBoxOpen}">
+      <div class="open-close" @click="fullWidthBoxOpen = !fullWidthBoxOpen">{{ !fullWidthBoxOpen ? 'open' : 'close' }}</div>
+      <div id="term-table" v-if="fullWidthBoxOpen">
         <TermDashboard
           :hpoItemsObj="hpoTermsObj"
           :sortedHpoList="sortedHpoList"
@@ -58,6 +60,7 @@
           :hpoItemObj="selectedTerm"></TermPeek>
       </div>
       <ClipBoardBox
+        v-if="fullWidthBoxOpen"
         :clipBoardTerms="clipTerms"
         @clearClipboardTerms="clearClipTerms"></ClipBoardBox>
     </div>
@@ -103,7 +106,9 @@
         selectedTerm: null,
         allChecked: false,
         isCheckedMap: this.isCheckedMapStart || {},
-        showNotesPulledTip: false
+        showNotesPulledTip: false,
+        selectorViewOpen: true,
+        fullWidthBoxOpen: false
       }
     }, 
     async mounted () {
@@ -287,7 +292,15 @@
         if (newVal && newVal.length > 0 && newVal !== oldVal) {
           this.selectNote(newVal[0]);
         }
-      }
+      },
+      sortedHpoList: {
+        handler: function (newVal, oldVal) {
+          if (newVal && newVal.length > 0 && newVal !== oldVal) {
+            this.fullWidthBoxOpen = true;
+          }
+        },
+        deep: true,
+      },
     }
   }
 </script>
@@ -328,25 +341,68 @@
     padding-bottom: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+  }
+
+  #selector-view-container, #full-width-box-container {
+    transition: flex-grow 0.3s ease-in-out;
   }
 
   #selector-view-container {
-    width: 93%;
+    position: relative;
+    align-items: center;
     display: flex;
     flex-direction: row;
+    flex: 1;
     justify-content: space-between;
-    height: 40%;
+    overflow: hidden;
+    width: 93%;
   }
 
   #full-width-box-container {
+    position: relative;
+    align-items: center;
     display: flex;
     flex-direction: column;
+    flex: 1;
     justify-content: space-evenly;
-    align-items: center;
-    height: 58%;
+    overflow: hidden;
     width: 93%;
+  }
+
+  #selector-view-container.closed {
+    flex: 0 0 55px;
+  }
+
+  #full-width-box-container.closed {
+    flex: 0 0 55px;
+  }
+
+  #full-width-box-container .open-close {
+    position: absolute;
+    top: 15px;
+    left: 5px;
+    cursor: pointer;
+    text-align: center;
+    background-color: rgb(0,113,189);
+    color: white;
+    padding: 3px 5px;
+    border-radius: 3px;
+    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+  }
+
+  #selector-view-container .open-close {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    cursor: pointer;
+    text-align: center;
+    background-color: rgb(0,113,189);
+    color: white;
+    padding: 3px 5px;
+    border-radius: 3px;
+    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
   }
 
   #full-width-box-container #term-table {
