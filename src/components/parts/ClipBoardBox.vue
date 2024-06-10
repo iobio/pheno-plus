@@ -75,6 +75,14 @@
         flex-direction: row;
 
         background-color: white;        
+        transition: height 0.3s ease-in-out;
+    }
+    #clip-board-box-container.closed {
+        height: 0px;
+        padding: 0px;
+        border: none;
+        margin: 0px;
+        overflow: hidden;
     }
     #hpo-clip-container {
         width: 90%;

@@ -11,11 +11,11 @@
     </div>
     <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
       <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
-        <img v-if="selectorViewOpen" src="../assets/chev-down.svg" alt="open section">
-        <img v-else src="../assets/chev-up.svg" alt="close section">
+        <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
         <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
       </div>
-      <div class="content-title-wrapper item-selector" v-if="selectorViewOpen">
+      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
           <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
         </h3>
@@ -33,7 +33,7 @@
       </div>
 
 
-      <div class="content-title-wrapper view-info" v-if="selectorViewOpen">
+      <div class="content-title-wrapper view-info" :class="{closed: !selectorViewOpen}">
         <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
@@ -48,11 +48,11 @@
 
     <div id="full-width-box-container" :class="{closed: !fullWidthBoxOpen}">
       <div class="open-close" @click="fullWidthBoxOpen = !fullWidthBoxOpen">
-        <img v-if="fullWidthBoxOpen" src="../assets/chev-down.svg" alt="open section">
-        <img v-else src="../assets/chev-up.svg" alt="close section">
+        <img v-if="fullWidthBoxOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
         <div class="open-close-label">{{ fullWidthBoxOpen ? 'Close HPO Terms Section' : 'Open HPO Terms Section'}}</div>
       </div>
-      <div id="term-table" v-if="fullWidthBoxOpen">
+      <div id="term-table" :class="{closed: !fullWidthBoxOpen}">
         <TermDashboard
           :hpoItemsObj="hpoTermsObj"
           :sortedHpoList="sortedHpoList"
@@ -68,7 +68,7 @@
           :hpoItemObj="selectedTerm"></TermPeek>
       </div>
       <ClipBoardBox
-        v-if="fullWidthBoxOpen"
+        :class="{closed: !fullWidthBoxOpen}"
         :clipBoardTerms="clipTerms"
         @clearClipboardTerms="clearClipTerms"></ClipBoardBox>
     </div>
@@ -356,7 +356,9 @@
   }
 
   #selector-view-container, #full-width-box-container {
-    transition: flex-grow 0.3s ease-in-out;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: flex-grow 0.3s ease-in-out, border 0.4s ease-in-out;
   }
 
   #selector-view-container {
@@ -384,17 +386,16 @@
   #selector-view-container.closed {
     flex: 0 0 55px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
   }
 
   #full-width-box-container.closed {
     flex: 0 0 55px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
     margin-top: 20px;
   }
 
   #full-width-box-container .open-close {
+    transition: top 0.3s ease-in-out;
     align-items: center;
     color:#0071bd; 
     cursor: pointer;
@@ -413,6 +414,7 @@
   }
 
   #selector-view-container .open-close {
+    transition: top 0.3s ease-in-out;
     align-items: center;
     color:#0071bd; 
     cursor: pointer;
@@ -443,6 +445,7 @@
   }
 
   #full-width-box-container #term-table {
+    transition: height 0.3s ease-in-out; 
     width: 100%;
     height: 75%;
     border-radius: 3px;
@@ -452,6 +455,14 @@
 
     display: flex;
     flex-direction: row;
+  }
+
+  #full-width-box-container #term-table.closed {
+    height: 0px;
+    padding: 0px;
+    border: none;
+    margin: 0px;
+    overflow: hidden;
   }
 
   .content-title-wrapper .sub-container {
@@ -473,6 +484,16 @@
 
     height: 95%;
     border-radius: 3px;
+
+    transition: height 0.3s ease-in-out;
+  }
+
+  .content-title-wrapper.closed {
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    overflow: hidden;
   }
 
   .content-title-wrapper.item-selector {
