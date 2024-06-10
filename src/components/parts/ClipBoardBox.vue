@@ -75,6 +75,14 @@
         flex-direction: row;
 
         background-color: white;        
+        transition: height 0.3s ease-in-out;
+    }
+    #clip-board-box-container.closed {
+        height: 0px;
+        padding: 0px;
+        border: none;
+        margin: 0px;
+        overflow: hidden;
     }
     #hpo-clip-container {
         width: 90%;
@@ -100,6 +108,9 @@
         margin-bottom: 5px;
         background-color: rgb(0,113,189);
         color: white;
+    }
+    .clip-board-box-btn {
+        max-height: 40px;
     }
     .clip-board-box-btn:hover {
         background-color: rgb(0,113,189, .8);
