@@ -364,7 +364,7 @@
     align-items: center;
     display: flex;
     flex-direction: row;
-    flex: 1;
+    flex: 1 1 45%;
     justify-content: space-between;
     overflow: hidden;
     width: 93%;
@@ -375,7 +375,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 1 1 55%;
     justify-content: space-evenly;
     overflow: hidden;
     width: 93%;
@@ -404,7 +404,7 @@
     font-weight: bold;
     left: 5px;
     position: absolute;
-    top: 10px;
+    top: 16px;
     z-index: 3;
   }
 
@@ -422,8 +422,12 @@
     font-weight: bold;
     left: 5px;
     position: absolute;
-    top: 10px;
+    top: 2px;
     z-index: 3;
+  }
+
+  #selector-view-container.closed .open-close {
+    top: 10px;
   }
 
   #selector-view-container .open-close img {
