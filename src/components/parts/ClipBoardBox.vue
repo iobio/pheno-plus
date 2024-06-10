@@ -101,6 +101,9 @@
         background-color: rgb(0,113,189);
         color: white;
     }
+    .clip-board-box-btn {
+        max-height: 40px;
+    }
     .clip-board-box-btn:hover {
         background-color: rgb(0,113,189, .8);
     }

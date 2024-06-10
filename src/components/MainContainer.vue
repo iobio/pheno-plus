@@ -10,7 +10,11 @@
       </div>
     </div>
     <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
-      <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">{{ !selectorViewOpen ? 'open' : 'close' }}</div>
+      <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
+        <img v-if="selectorViewOpen" src="../assets/chev-down.svg" alt="open section">
+        <img v-else src="../assets/chev-up.svg" alt="close section">
+        <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
+      </div>
       <div class="content-title-wrapper item-selector" v-if="selectorViewOpen">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
           <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
@@ -43,7 +47,11 @@
     </div>
 
     <div id="full-width-box-container" :class="{closed: !fullWidthBoxOpen}">
-      <div class="open-close" @click="fullWidthBoxOpen = !fullWidthBoxOpen">{{ !fullWidthBoxOpen ? 'open' : 'close' }}</div>
+      <div class="open-close" @click="fullWidthBoxOpen = !fullWidthBoxOpen">
+        <img v-if="fullWidthBoxOpen" src="../assets/chev-down.svg" alt="open section">
+        <img v-else src="../assets/chev-up.svg" alt="close section">
+        <div class="open-close-label">{{ fullWidthBoxOpen ? 'Close HPO Terms Section' : 'Open HPO Terms Section'}}</div>
+      </div>
       <div id="term-table" v-if="fullWidthBoxOpen">
         <TermDashboard
           :hpoItemsObj="hpoTermsObj"
@@ -207,8 +215,10 @@
 
           this.sortedHpoList = sortedTerms;
           this.hideOverlay = true;
+          this.selectorViewOpen = false;
         } else {
           this.hideOverlay = true;
+          this.selectorViewOpen = false;
         }
 
       },
@@ -373,36 +383,59 @@
 
   #selector-view-container.closed {
     flex: 0 0 55px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
   }
 
   #full-width-box-container.closed {
     flex: 0 0 55px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-top: 20px;
   }
 
   #full-width-box-container .open-close {
-    position: absolute;
-    top: 15px;
-    left: 5px;
+    align-items: center;
+    color:#0071bd; 
     cursor: pointer;
-    text-align: center;
-    background-color: rgb(0,113,189);
-    color: white;
-    padding: 3px 5px;
-    border-radius: 3px;
-    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+    display: flex;
+    flex-direction: row;
+    font-style: italic;
+    font-weight: bold;
+    left: 5px;
+    position: absolute;
+    top: 10px;
+    z-index: 3;
+  }
+
+  #full-width-box-container.closed .open-close {
+    top: 13px;
   }
 
   #selector-view-container .open-close {
+    align-items: center;
+    color:#0071bd; 
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-style: italic;
+    font-weight: bold;
+    left: 5px;
     position: absolute;
     top: 10px;
-    left: 5px;
-    cursor: pointer;
-    text-align: center;
-    background-color: rgb(0,113,189);
-    color: white;
-    padding: 3px 5px;
-    border-radius: 3px;
-    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+    z-index: 3;
+  }
+
+  #selector-view-container .open-close img {
+    height: 30px;
+    width: 30px;
+    pointer-events: none;
+  }
+
+  #full-width-box-container .open-close img {
+    height: 30px;
+    width: 30px;
+    pointer-events: none;
   }
 
   #full-width-box-container #term-table {
@@ -469,7 +502,7 @@
     border-radius: 3px;
     box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
 
-    background-color: rgb(0,113,189);
+    background-color: #0071bd;
     color: white;
 
     text-align: center;
