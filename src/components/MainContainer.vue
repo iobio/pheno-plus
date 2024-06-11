@@ -32,7 +32,7 @@
         <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button> 
       </div>
 
-      <div class="open-close note-preview" @click="noteContentOpen = !noteContentOpen">
+      <div class="open-close note-preview" @click="noteContentOpen = !noteContentOpen" v-if="selectorViewOpen">
         <div class="open-close-label">{{ noteContentOpen ? 'Close Note Preview' : 'Open Note Preview'}}</div>
         <img v-if="noteContentOpen" src="../assets/close.svg" alt="close section">
         <img v-else src="../assets/dots-hz.svg" alt="open section">
