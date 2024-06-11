@@ -30,8 +30,8 @@
         @uncheckAll="uncheckAll"
         @checkAll="checkAll">
         </ItemSelector>
+        <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button> 
       </div>
-
 
       <div class="content-title-wrapper view-info" :class="{closed: !selectorViewOpen}">
         <h3>Note Content Preview</h3>
@@ -39,10 +39,6 @@
         :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
-        <div id="process-btn-container">
-          <!-- <button class="process-btn" @click="processText">Process Selected Note</button> -->
-          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button>
-        </div>
       </div>
     </div>
 
@@ -544,7 +540,7 @@
   }
   #view-info.sub-container {
     overflow-y: hidden;
-    height: 80%;
+    height: 100%;
     padding-top: 0px;
   }
 
