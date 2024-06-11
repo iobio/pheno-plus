@@ -115,12 +115,9 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent);
             notesList.push(noteObj);
         }
-        // console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
-        // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
-        // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, totalNotes: totalNotes};
 }
