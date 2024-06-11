@@ -77,7 +77,6 @@ export default async function fetchNotes(client, patientId) {
                     }
                 }
             }
-
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -90,13 +89,13 @@ export default async function fetchNotes(client, patientId) {
             // Build the components of the note title
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
-            let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
+            let context = note.resource && note.resource.context && note.resource.context.extension && note.resource.context.extension[0] && note.resource.context.extension[0].valueCodeableConcept && note.resource.context.extension[0].valueCodeableConcept.text || null;
             let titleDate = noteDate.slice(0, 10);
 
             // Build the note title
             if (type && author && titleDate) {
                 // If all the components are present then build the note title
-                var noteTitle = `[${titleDate}] ${type} ${author} (${category})`;
+                var noteTitle = `${type}: ${author} (${context}) [${titleDate}]`;
             } else {
                 // If any of the components are missing then set the note title to null
                 var noteTitle = 'No title.';
@@ -116,12 +115,9 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent);
             notesList.push(noteObj);
         }
-        // console.log("Skipped " + skippedNotesCode + " notes because of code not 'clinical-note'");
-        // console.log("Skipped " + skippedNotesLoinc + " notes because of non-LOINC code");
-        // console.log("Skipped " + skippedNotesNurse + " notes because of nurse authorship");
     }
     return {notesList: notesList, totalNotes: totalNotes};
 }

@@ -1,11 +1,13 @@
 <template>
     <div v-if="note" id="view-info" class="sub-container">
         <textarea
+            v-if="!note.html"
             @change="textChanged"
             @input="textChanged"
-            id="note-info" 
+            class="note-info" 
             type="text" 
             v-model="textInputText" readonly="true"></textarea>
+        <div v-if="note.html" class="note-info-html" v-html="note.html"></div>
     </div>
 
     <div class="sub-container" v-if="!note" id="view-info">
@@ -52,7 +54,7 @@
 </script>
 
 <style scoped lang="css">
-    #note-info {
+    .note-info {
         width: 100%;
         height: 100%;
         resize: none;
@@ -66,7 +68,7 @@
         background-color: white;
     }
 
-    #note-info-p {
+    .note-info-p {
         width: 100%;
         height: 100%;
         font-size: 1em;
@@ -76,6 +78,23 @@
         border-radius: 3px;
         padding: .5em; 
         background-color: white;
+    }
+
+    .note-info-html {
+        width: 100%;
+        height: 100%;
+        font-size: 1em;
+        font-family: 'Open Sans', sans-serif;
+
+        border: rgb(215, 215, 215) 1px solid;
+        border-radius: 3px;
+        padding: .5em; 
+        background-color: white;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
     }
 
 </style>
