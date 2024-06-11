@@ -77,7 +77,6 @@ export default async function fetchNotes(client, patientId) {
                     }
                 }
             }
-            console.log(note.resource)
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -90,7 +89,6 @@ export default async function fetchNotes(client, patientId) {
             // Build the components of the note title
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
-            let category = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].text || null; //not useing right now
             let context = note.resource && note.resource.context && note.resource.context.extension && note.resource.context.extension[0] && note.resource.context.extension[0].valueCodeableConcept && note.resource.context.extension[0].valueCodeableConcept.text || null;
             let titleDate = noteDate.slice(0, 10);
 
