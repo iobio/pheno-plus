@@ -567,7 +567,7 @@
   }
   #view-info.sub-container {
     overflow-y: hidden;
-    height: 100%;
+    height: 93.6%;
     padding-top: 0px;
   }
 
