@@ -7,7 +7,7 @@
             class="note-info" 
             type="text" 
             v-model="textInputText" readonly="true"></textarea>
-        <p v-if="note.html" class="note-info-p" v-html="note.html"></p>
+        <div v-if="note.html" class="note-info-html" v-html="note.html"></div>
     </div>
 
     <div class="sub-container" v-if="!note" id="view-info">
@@ -78,6 +78,23 @@
         border-radius: 3px;
         padding: .5em; 
         background-color: white;
+    }
+
+    .note-info-html {
+        width: 100%;
+        height: 100%;
+        font-size: 1em;
+        font-family: 'Open Sans', sans-serif;
+
+        border: rgb(215, 215, 215) 1px solid;
+        border-radius: 3px;
+        padding: .5em; 
+        background-color: white;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
 </style>
