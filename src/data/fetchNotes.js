@@ -108,6 +108,7 @@ export default async function fetchNotes(client, patientId) {
             try {
                 //Try to get the text content of the note from the binary url
                 noteContent = await client.request(String(noteUrlBinary));
+                console.log(noteContent);
                 //If there is no error then pull the text content from the note (the note is in html format originally)
                 noteText = pullTextContent(noteContent);
             } catch (error) {
