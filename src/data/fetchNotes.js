@@ -97,7 +97,7 @@ export default async function fetchNotes(client, patientId) {
             // Build the note title
             if (type && author && titleDate) {
                 // If all the components are present then build the note title
-                var noteTitle = `[${titleDate}] ${type} ${author} (${category}: ${context})`;
+                var noteTitle = `${type}: ${author} (${context}) [${titleDate}]`;
             } else {
                 // If any of the components are missing then set the note title to null
                 var noteTitle = 'No title.';
