@@ -17,7 +17,6 @@
       </div>
       <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
-          <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
         </h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
@@ -33,7 +32,12 @@
         <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button> 
       </div>
 
-      <div class="content-title-wrapper view-info" :class="{closed: !selectorViewOpen}">
+      <div class="open-close note-preview" @click="noteContentOpen = !noteContentOpen" v-if="selectorViewOpen">
+        <div class="open-close-label">{{ noteContentOpen ? 'Close Note Preview' : 'Open Note Preview'}}</div>
+        <img v-if="noteContentOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
+      </div>
+      <div class="content-title-wrapper view-info" :class="{closed: !selectorViewOpen, closedWidth: !noteContentOpen}">
         <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
@@ -112,6 +116,7 @@
         isCheckedMap: this.isCheckedMapStart || {},
         showNotesPulledTip: false,
         selectorViewOpen: true,
+        noteContentOpen: false,
         fullWidthBoxOpen: false
       }
     }, 
@@ -420,8 +425,14 @@
     font-weight: bold;
     left: 5px;
     position: absolute;
-    top: 2px;
+    top: 0px;
     z-index: 3;
+  }
+
+  #selector-view-container .open-close.note-preview {
+    right: 5px;
+    top: 2px;
+    left: auto;
   }
 
   #selector-view-container.closed .open-close {
@@ -432,6 +443,14 @@
     height: 30px;
     width: 30px;
     pointer-events: none;
+  }
+
+  #selector-view-container .open-close-label, #full-width-box-container .open-close-label {
+    margin-left: 10px;
+  }
+
+  #selector-view-container .note-preview .open-close-label {
+    margin-right: 10px;
   }
 
   #full-width-box-container .open-close img {
@@ -493,7 +512,7 @@
   }
 
   .content-title-wrapper.item-selector {
-    width: 43%;
+    flex: 1 1 45%;
   }
 
   .content-title-wrapper.item-selector .sub-container {
@@ -502,6 +521,14 @@
   }
   .content-title-wrapper.view-info {
     width: 56%;
+    transition: width 0.3s ease-in-out;
+  }
+
+  .content-title-wrapper.view-info.closedWidth {
+    width: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
   }
   
   #process-btn-container {
