@@ -9,10 +9,14 @@
         <p v-else>Pulling <br> Notes <br> ...</p>        
       </div>
     </div>
-    <div id="selector-view-container">
-      <div class="content-title-wrapper item-selector">
+    <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
+      <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
+        <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
+        <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
+      </div>
+      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
-          <!-- <p v-if="showNotesPulledTip" id="notes-pulled-tip">{{ this.totalNotes }} notes pulled from the EHR.</p> -->
         </h3>
         <ItemSelector class="sub-container" 
         :notesList="notesList"
@@ -25,24 +29,30 @@
         @uncheckAll="uncheckAll"
         @checkAll="checkAll">
         </ItemSelector>
+        <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button> 
       </div>
 
-
-      <div class="content-title-wrapper view-info">
+      <div class="open-close note-preview" @click="noteContentOpen = !noteContentOpen" v-if="selectorViewOpen">
+        <div class="open-close-label">{{ noteContentOpen ? 'Close Note Preview' : 'Open Note Preview'}}</div>
+        <img v-if="noteContentOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
+      </div>
+      <div class="content-title-wrapper view-info" :class="{closed: !selectorViewOpen, closedWidth: !noteContentOpen}">
         <h3>Note Content Preview</h3>
         <ViewInfo
         :note="selectedNote"
         @textChanged="changeTextContent">
         </ViewInfo>
-        <div id="process-btn-container">
-          <!-- <button class="process-btn" @click="processText">Process Selected Note</button> -->
-          <button class="process-btn all" @click="processTextAll" :disabled="checkForChecked() || allNotesProcessed">Process Selected Notes</button>
-        </div>
       </div>
     </div>
 
-    <div id="full-width-box-container">
-      <div id="term-table">
+    <div id="full-width-box-container" :class="{closed: !fullWidthBoxOpen}">
+      <div class="open-close" @click="fullWidthBoxOpen = !fullWidthBoxOpen">
+        <img v-if="fullWidthBoxOpen" src="../assets/close.svg" alt="close section">
+        <img v-else src="../assets/dots-hz.svg" alt="open section">
+        <div class="open-close-label">{{ fullWidthBoxOpen ? 'Close HPO Terms Section' : 'Open HPO Terms Section'}}</div>
+      </div>
+      <div id="term-table" :class="{closed: !fullWidthBoxOpen}">
         <TermDashboard
           :hpoItemsObj="hpoTermsObj"
           :sortedHpoList="sortedHpoList"
@@ -58,6 +68,7 @@
           :hpoItemObj="selectedTerm"></TermPeek>
       </div>
       <ClipBoardBox
+        :class="{closed: !fullWidthBoxOpen}"
         :clipBoardTerms="clipTerms"
         @clearClipboardTerms="clearClipTerms"></ClipBoardBox>
     </div>
@@ -103,7 +114,10 @@
         selectedTerm: null,
         allChecked: false,
         isCheckedMap: this.isCheckedMapStart || {},
-        showNotesPulledTip: false
+        showNotesPulledTip: false,
+        selectorViewOpen: true,
+        noteContentOpen: false,
+        fullWidthBoxOpen: false
       }
     }, 
     async mounted () {
@@ -202,8 +216,10 @@
 
           this.sortedHpoList = sortedTerms;
           this.hideOverlay = true;
+          this.selectorViewOpen = false;
         } else {
           this.hideOverlay = true;
+          this.selectorViewOpen = false;
         }
 
       },
@@ -287,7 +303,15 @@
         if (newVal && newVal.length > 0 && newVal !== oldVal) {
           this.selectNote(newVal[0]);
         }
-      }
+      },
+      sortedHpoList: {
+        handler: function (newVal, oldVal) {
+          if (newVal && newVal.length > 0 && newVal !== oldVal) {
+            this.fullWidthBoxOpen = true;
+          }
+        },
+        deep: true,
+      },
     }
   }
 </script>
@@ -328,28 +352,115 @@
     padding-bottom: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+  }
+
+  #selector-view-container, #full-width-box-container {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: flex-grow 0.3s ease-in-out, border 0.4s ease-in-out;
   }
 
   #selector-view-container {
-    width: 93%;
+    position: relative;
+    align-items: center;
     display: flex;
     flex-direction: row;
+    flex: 1 1 45%;
     justify-content: space-between;
-    height: 40%;
+    overflow: hidden;
+    width: 93%;
   }
 
   #full-width-box-container {
+    position: relative;
+    align-items: center;
     display: flex;
     flex-direction: column;
+    flex: 1 1 55%;
     justify-content: space-evenly;
-    align-items: center;
-    height: 58%;
+    overflow: hidden;
     width: 93%;
   }
 
+  #selector-view-container.closed {
+    flex: 0 0 55px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  #full-width-box-container.closed {
+    flex: 0 0 55px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+  }
+
+  #full-width-box-container .open-close {
+    transition: top 0.3s ease-in-out;
+    align-items: center;
+    color:#0071bd; 
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-style: italic;
+    font-weight: bold;
+    left: 5px;
+    position: absolute;
+    top: 16px;
+    z-index: 3;
+  }
+
+  #full-width-box-container.closed .open-close {
+    top: 13px;
+  }
+
+  #selector-view-container .open-close {
+    transition: top 0.3s ease-in-out;
+    align-items: center;
+    color:#0071bd; 
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-style: italic;
+    font-weight: bold;
+    left: 5px;
+    position: absolute;
+    top: 0px;
+    z-index: 3;
+  }
+
+  #selector-view-container .open-close.note-preview {
+    right: 5px;
+    top: 2px;
+    left: auto;
+  }
+
+  #selector-view-container.closed .open-close {
+    top: 10px;
+  }
+
+  #selector-view-container .open-close img {
+    height: 30px;
+    width: 30px;
+    pointer-events: none;
+  }
+
+  #selector-view-container .open-close-label, #full-width-box-container .open-close-label {
+    margin-left: 10px;
+  }
+
+  #selector-view-container .note-preview .open-close-label {
+    margin-right: 10px;
+  }
+
+  #full-width-box-container .open-close img {
+    height: 30px;
+    width: 30px;
+    pointer-events: none;
+  }
+
   #full-width-box-container #term-table {
+    transition: height 0.3s ease-in-out; 
     width: 100%;
     height: 75%;
     border-radius: 3px;
@@ -359,6 +470,14 @@
 
     display: flex;
     flex-direction: row;
+  }
+
+  #full-width-box-container #term-table.closed {
+    height: 0px;
+    padding: 0px;
+    border: none;
+    margin: 0px;
+    overflow: hidden;
   }
 
   .content-title-wrapper .sub-container {
@@ -380,10 +499,20 @@
 
     height: 95%;
     border-radius: 3px;
+
+    transition: height 0.3s ease-in-out;
+  }
+
+  .content-title-wrapper.closed {
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    overflow: hidden;
   }
 
   .content-title-wrapper.item-selector {
-    width: 43%;
+    flex: 1 1 45%;
   }
 
   .content-title-wrapper.item-selector .sub-container {
@@ -392,6 +521,14 @@
   }
   .content-title-wrapper.view-info {
     width: 56%;
+    transition: width 0.3s ease-in-out;
+  }
+
+  .content-title-wrapper.view-info.closedWidth {
+    width: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
   }
   
   #process-btn-container {
@@ -413,7 +550,7 @@
     border-radius: 3px;
     box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
 
-    background-color: rgb(0,113,189);
+    background-color: #0071bd;
     color: white;
 
     text-align: center;
@@ -430,7 +567,7 @@
   }
   #view-info.sub-container {
     overflow-y: hidden;
-    height: 80%;
+    height: 93.6%;
     padding-top: 0px;
   }
 

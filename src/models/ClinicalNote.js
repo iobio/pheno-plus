@@ -1,11 +1,12 @@
 class ClinicalNote {
-    constructor(id, date, encounterId, binaryUrl, text=null, title=null) {
+    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null) {
         this.id = id;
         this.date = date;
         this.encounterId = encounterId;
         this.binaryUrl = binaryUrl;
         this.text = text;
         this.title = title;
+        this.html = html;
     }
 
     //setters
@@ -24,6 +25,9 @@ class ClinicalNote {
     setTitle(title) {
         this.title = title;
     }
+    setHtml(html) {
+        this.html = html;
+    }
 
     //getters
     getId() {
@@ -40,6 +44,9 @@ class ClinicalNote {
     }
     getTitle() {
         return this.title;
+    }
+    getHtml() {
+        return this.html;
     }
 
 }
