@@ -6,7 +6,7 @@
         </span>
 
         <span class="delete-btn-span">
-            <input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateItem">
+            <input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateUse($event)">
         </span>
         <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/doc-view.svg"></span>
         <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/doc-close.svg"></span>
@@ -31,18 +31,14 @@
             this.setColor();
         },
         methods: {
-            changeSeverity() {
-                this.setColor();
-                this.updateItem();
-            },
             deleteFromList() {
                 if (this.selectedTerm == this.hpoItemObj) {
                     this.$emit('selectTerm', null);
                 }
                 this.$emit('deleteItem', this.hpoItemObj.getHpoId());
             },
-            updateItem() {
-                this.$emit('updateItem', this.thisHpoItemObj);
+            updateUse(event) {
+                this.$emit('updateItem', event, this.hpoItemObj);
             },
             setColor() {
                 switch (this.hpoItemObj.getSeverity()) {
@@ -65,12 +61,19 @@
             showHpoIdSpan(event) {
                 //takes this event and shows the hpo id span with the current phenotype-name-span
                 //this is a hover event
-                event.target.querySelector('.hpo-id-span').style.visibility = 'visible';
+                let idspan = event.target.querySelector('.hpo-id-span');
+                if (idspan) {
+                    idspan.style.visibility = 'visible';
+                }
+
             },
             hideHpoIdSpan(event) {
                 //takes this event and hides the hpo id span with the current phenotype-name-span
                 //this is a hover event
-                event.target.querySelector('.hpo-id-span').style.visibility = 'hidden';
+                let idspan = event.target.querySelector('.hpo-id-span');
+                if (idspan) {
+                    idspan.style.visibility = 'hidden';
+                }
             }
         },
         watch: {

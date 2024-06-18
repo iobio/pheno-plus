@@ -146,6 +146,18 @@
       },
       updateHpoTerm(item) {
         this.hpoTermsObj[item.getHpoId()] = item;
+
+        //we need to sort the list again incase
+        this.sortedHpoList = Object.values(this.hpoTermsObj)
+          .sort((a, b) => b.numOccurrences - a.numOccurrences)
+          .map(item => [item.hpoId, item.numOccurrences]);
+          
+        //Sort all the terms in the sorted list again and put any that have the 'use' property false to the bottom
+        let sortedToBottom = this.sortedHpoList.filter(item => !this.hpoTermsObj[item[0]].getUse());
+        let sortedToTop = this.sortedHpoList.filter(item => this.hpoTermsObj[item[0]].getUse());
+
+        this.sortedHpoList = sortedToTop.concat(sortedToBottom);
+
       },
       formatAndPopulateTerms() {
         //Needs to populate the clipboard box with the terms
@@ -213,6 +225,10 @@
           let sortedTerms = Object.values(this.hpoTermsObj)
             .sort((a, b) => b.numOccurrences - a.numOccurrences)
             .map(item => [item.hpoId, item.numOccurrences]);
+
+          let sortedToBottom = sortedTerms.filter(item => !this.hpoTermsObj[item[0]].getUse());
+          let sortedToTop = sortedTerms.filter(item => this.hpoTermsObj[item[0]].getUse());
+          sortedTerms = sortedToTop.concat(sortedToBottom);
 
           this.sortedHpoList = sortedTerms;
           this.hideOverlay = true;
