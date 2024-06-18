@@ -77,7 +77,6 @@ export default async function fetchNotes(client, patientId) {
                     }
                 }
             }
-            console.log(note);
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -90,7 +89,20 @@ export default async function fetchNotes(client, patientId) {
             // Build the components of the note title
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
-            let context = note.resource && note.resource.context && note.resource.context.extension && note.resource.context.extension[0] && note.resource.context.extension[0].valueCodeableConcept && note.resource.context.extension[0].valueCodeableConcept.text || null;
+
+            let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
+
+            //try to get the encounter from the encounter link
+            let encounter = null;
+            let context = 'No context';
+            try {
+                encounter = await client.request(encounterLink);
+                console.log(encounter);
+            } catch (error) {
+                //If there is an error then skip this note
+                continue;
+            }
+
             let titleDate = noteDate.slice(0, 10);
 
             // Build the note title
