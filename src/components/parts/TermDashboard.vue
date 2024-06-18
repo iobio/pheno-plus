@@ -175,14 +175,19 @@
         width: 100%;
         display: grid;
         grid-template-columns: .70fr .15fr .15fr;
-        justify-items: start;
+        justify-items: center;
         align-items: center;
+        text-align: center;
 
         margin-top: 0px;
         margin-bottom: 5px;
         color: rgb(0,113,189);
         padding-left: .25em;
         padding-right: 16px;
+    }
+
+    #title-row > :first-child {
+        justify-self: start;
     }
 
     #title-row.base {

@@ -106,10 +106,13 @@
         width: 100%;
         display: grid;
         grid-template-columns: .70fr .15fr .15fr;
-        justify-items: start;
+        justify-items: center;
         align-items: center;
 
         padding: .25em;
+    }
+    .hpo-row-container.base > :first-child {
+        justify-self: start;
     }
     .hpo-row-container.base {
         grid-template-columns: .70fr .15fr .15fr;
@@ -132,6 +135,7 @@
         display: flex;
         cursor: pointer;
         justify-content: center;
+        align-items: center;
         width: 20px;
         height: 20px;
     }
