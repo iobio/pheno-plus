@@ -95,16 +95,12 @@ export default async function fetchNotes(client, patientId) {
             //try to get the encounter from the encounter link
             let encounter = null;
             let context = 'No context';
-            // try {
-            //     //take Encounter/ off the front of the encounter link
-            //     encounterLink = encounterLink.substring(9);
-                
-            //     encounter = await client.request("/Encounter?patient=" + patientId + "&identifier=" + encounterLink);
-            //     console.log(encounter);
-            // } catch (error) {
-            //     //If there is an error then skip this note
-            //     continue;
-            // }
+            try {
+                encounter = await client.request(encounterLink);
+                console.log(encounter);
+            } catch (error) {
+                //If there is an dont do anything
+            }
 
             let titleDate = noteDate.slice(0, 10);
 
