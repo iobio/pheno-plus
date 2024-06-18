@@ -30,7 +30,7 @@ export default async function fetchNotes(client, patientId) {
 
         totalNotes = notes.length;
         outer: for (let note of notes) {
-
+            console.log(note);
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
             let codingArray = note.resource && note.resource.type && note.resource.type.coding || null;
@@ -95,13 +95,16 @@ export default async function fetchNotes(client, patientId) {
             //try to get the encounter from the encounter link
             let encounter = null;
             let context = 'No context';
-            try {
-                encounter = await client.request(encounterLink);
-                console.log(encounter);
-            } catch (error) {
-                //If there is an error then skip this note
-                continue;
-            }
+            // try {
+            //     //take Encounter/ off the front of the encounter link
+            //     encounterLink = encounterLink.substring(9);
+                
+            //     encounter = await client.request("/Encounter?patient=" + patientId + "&identifier=" + encounterLink);
+            //     console.log(encounter);
+            // } catch (error) {
+            //     //If there is an error then skip this note
+            //     continue;
+            // }
 
             let titleDate = noteDate.slice(0, 10);
 
