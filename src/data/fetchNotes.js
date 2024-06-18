@@ -96,7 +96,6 @@ export default async function fetchNotes(client, patientId) {
             let context = 'No context';
             try {
                 encounter = await client.request(encounterLink);
-                console.log(encounter);
                 context = encounter && encounter.serviceType && encounter.serviceType.text || 'No context';
             } catch (error) {
                 //If there is an dont do anything
