@@ -30,7 +30,6 @@ export default async function fetchNotes(client, patientId) {
 
         totalNotes = notes.length;
         outer: for (let note of notes) {
-            console.log(note);
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
             let codingArray = note.resource && note.resource.type && note.resource.type.coding || null;
