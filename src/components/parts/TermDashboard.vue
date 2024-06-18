@@ -1,15 +1,9 @@
 <template>
     <div id="term-dashboard-container">
         <h4 id="title-row" :class="{ base: baseInformationOnly}">
-            <span v-if="baseInformationOnly"></span>
-            <span v-if="!baseInformationOnly">Severity</span>
             <span><i class="small-italic">(Unique Occ.)</i> Phenotype</span>
-            <span>HPO Term</span>
-            <span v-if="!baseInformationOnly">Inheritance</span>
-            <span v-if="!baseInformationOnly">Mother</span>
-            <span v-if="!baseInformationOnly">Father</span>
-            <span>Relevant</span>
-            <span></span>
+            <span>Use Term</span>
+            <span>Review Context</span>
         </h4>
         <div v-if="sortedHpoList.length > 0" id="table-container">
             <HpoTermRow
@@ -180,8 +174,9 @@
     #title-row {
         width: 100%;
         display: grid;
-        grid-template-columns: .75fr 1.5fr 1fr 1fr .5fr .5fr .25fr .25fr;
+        grid-template-columns: .70fr .15fr .15fr;
         justify-items: start;
+        align-items: center;
 
         margin-top: 0px;
         margin-bottom: 5px;
@@ -191,7 +186,7 @@
     }
 
     #title-row.base {
-        grid-template-columns: .25fr 1.75fr 1.5fr .25fr .25fr;
+        grid-template-columns: .70fr .15fr .15fr;
     }
 
 </style>
