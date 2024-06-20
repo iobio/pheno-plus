@@ -81,20 +81,17 @@
     }
 
     .note-info-html {
-        width: 100%;
-        height: 100%;
-        font-size: 1em;
-        font-family: 'Open Sans', sans-serif;
-
-        border: rgb(215, 215, 215) 1px solid;
-        border-radius: 3px;
-        padding: .5em; 
+        align-items: flex-start;
         background-color: white;
-        overflow-y: auto;
+        border-radius: 3px;
+        border: rgb(215, 215, 215) 1px solid;
         display: flex;
         flex-direction: column;
+        height: 100%;
         justify-content: flex-start;
-        align-items: center;
+        overflow: auto;
+        padding: .5em; 
+        width: 100%;
     }
 
 </style>

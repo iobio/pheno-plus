@@ -1,15 +1,9 @@
 <template>
     <div id="term-dashboard-container">
         <h4 id="title-row" :class="{ base: baseInformationOnly}">
-            <span v-if="baseInformationOnly"></span>
-            <span v-if="!baseInformationOnly">Severity</span>
             <span><i class="small-italic">(Unique Occ.)</i> Phenotype</span>
-            <span>HPO Term</span>
-            <span v-if="!baseInformationOnly">Inheritance</span>
-            <span v-if="!baseInformationOnly">Mother</span>
-            <span v-if="!baseInformationOnly">Father</span>
-            <span>Relevant</span>
-            <span></span>
+            <span>Use Term</span>
+            <span>Review Context</span>
         </h4>
         <div v-if="sortedHpoList.length > 0" id="table-container">
             <HpoTermRow
@@ -18,7 +12,7 @@
                 :baseInformationOnly="baseInformationOnly"
                 :selectedTerm="selectedTerm"
                 @deleteItem="removeItem"
-                @updateItem="updateItem"
+                @updateItem="updateUse"
                 @selectTerm="handleTermSelected"></HpoTermRow>
         </div>
 
@@ -60,9 +54,36 @@
             removeItem (id) {
                 this.$emit('removeItem', id);
             },
-            updateItem (item) {
-                this.$emit('updateItem', item);
-                this.$emit('sendTerms');
+            updateUse (event, item) {
+                //if we are going from item.use = true to item.use = false
+                if (item.use) {
+                    this.$emit('updateItem', item);
+                    this.$emit('sendTerms');
+                } else {
+                    //get the position of this item in the list
+                    let itemIndex = this.sortedHpoList.findIndex(hpoPair => hpoPair[0] == item.getHpoId());
+
+                    //Grab the hpo-row-container associated with this event
+                    let hpoRow = event.target.closest('.hpo-row-container');
+                    let rowHeight = hpoRow.clientHeight;
+                    //height diff is the number of items AFTER this item in the list but not counting the non 'use' items
+                    let heightDiff = this.sortedHpoList.filter((hpoPair, index) => index > itemIndex && this.hpoItemsObj[hpoPair[0]].use).length;
+                    let rowsHeight = rowHeight * heightDiff;
+                    //we are going to translate y to the bottom of the parent container and then remove it
+                    hpoRow.style.transition = 'transform 0.6s, opacity 0.6s';
+                    hpoRow.style.transform = 'translateY(' + rowsHeight + 'px)';
+                    // hpoRow.style.opacity = '.7';
+                    setTimeout(() => {
+                        this.$emit('updateItem', item);
+                        this.$emit('sendTerms');
+
+                        //remove the transition and transform
+                        hpoRow.style.transition = 'none';
+                        hpoRow.style.transform = 'none';
+                        // hpoRow.style.opacity = '1';
+                    }, 590);
+                }
+
             },
             handleTermSelected(term) {
                 this.$emit('selectTerm', term);
@@ -180,8 +201,10 @@
     #title-row {
         width: 100%;
         display: grid;
-        grid-template-columns: .75fr 1.5fr 1fr 1fr .5fr .5fr .25fr .25fr;
-        justify-items: start;
+        grid-template-columns: .70fr .15fr .15fr;
+        justify-items: center;
+        align-items: center;
+        text-align: center;
 
         margin-top: 0px;
         margin-bottom: 5px;
@@ -190,8 +213,12 @@
         padding-right: 16px;
     }
 
+    #title-row > :first-child {
+        justify-self: start;
+    }
+
     #title-row.base {
-        grid-template-columns: .25fr 1.75fr 1.5fr .25fr .25fr;
+        grid-template-columns: .70fr .15fr .15fr;
     }
 
 </style>

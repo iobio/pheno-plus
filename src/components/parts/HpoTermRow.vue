@@ -1,34 +1,15 @@
 <template>
     <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}, {selected: selectedTerm == hpoItemObj}]">
-        <span v-if="baseInformationOnly"></span>
-        <span v-if="!baseInformationOnly">
-            <select name="severity" id="" v-model="thisHpoItemObj.severity" @change="changeSeverity">
-                <option value="mild">mild</option>
-                <option value="moderate">moderate</option>
-                <option value="severe">severe</option>
-                <option value="unknown">unknown</option>
-            </select>
-            <svg v-if="thisHpoItemObj.severity != 'unknown'" style="height: 12px; width: 12px; margin-left: 3px;" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" :fill="severityColor[0]" :stroke="severityColor[1]"></circle></svg>
+        <span class="phenotype-name-span" @mouseover="showHpoIdSpan($event)" @mouseleave="hideHpoIdSpan($event)">
+            <i class="small-italic">({{ thisHpoItemObj.getNumOccurrences() }})</i> {{ thisHpoItemObj.getPhenotypeName() }}
+            <span class="hpo-id-span">{{ thisHpoItemObj.getHpoId() }}</span>
         </span>
-        <span><i class="small-italic">({{ thisHpoItemObj.getNumOccurrences() }})</i> {{ thisHpoItemObj.getPhenotypeName() }}</span>
-        <span>{{ thisHpoItemObj.getHpoId() }}</span>
-        <span v-if="!baseInformationOnly">
-            <select name="inheritance" id="" v-model="thisHpoItemObj.inheritance" @change="updateItem">
-                <option value="unknown">unknown</option>
-                <option value="autosomal dominant">autosomal dominant</option>
-                <option value="autosomal recessive">autosomal recessive</option>
-                <option value="x-linked dominant">x-linked dominant</option>
-                <option value="x-linked recessive">x-linked recessive</option>
-                <option value="multifactoral">multifactoral</option>
-                <option value="mitochondrial">mitochondrial</option>
-            </select>
+
+        <span class="delete-btn-span">
+            <input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateUse($event)">
         </span>
-        <span v-if="!baseInformationOnly"><input type="checkbox" name="mother" v-model="thisHpoItemObj.mother" @change="updateItem"></span>
-        <span v-if="!baseInformationOnly"><input type="checkbox" name="father" v-model="thisHpoItemObj.father" @change="updateItem"></span>
-        <span class="delete-btn-span"><input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateItem"></span>
-        <span class="delete-btn-span" @click="deleteFromList"><img class="delete-btn-img" alt="remove" src="../../assets/backspace.svg"></span>
-        <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-off-outline.svg"></span>
-        <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/eye-outline.svg"></span>
+        <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/doc-view.svg"></span>
+        <span v-if="selectedTerm == hpoItemObj" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"><img class="show-btn-img" alt="show context" src="../../assets/doc-close.svg"></span>
     </div>
 </template>
 
@@ -50,18 +31,14 @@
             this.setColor();
         },
         methods: {
-            changeSeverity() {
-                this.setColor();
-                this.updateItem();
-            },
             deleteFromList() {
                 if (this.selectedTerm == this.hpoItemObj) {
                     this.$emit('selectTerm', null);
                 }
                 this.$emit('deleteItem', this.hpoItemObj.getHpoId());
             },
-            updateItem() {
-                this.$emit('updateItem', this.thisHpoItemObj);
+            updateUse(event) {
+                this.$emit('updateItem', event, this.hpoItemObj);
             },
             setColor() {
                 switch (this.hpoItemObj.getSeverity()) {
@@ -81,6 +58,23 @@
                         this.severityColor = ['white', 'black'];
                 }
             },
+            showHpoIdSpan(event) {
+                //takes this event and shows the hpo id span with the current phenotype-name-span
+                //this is a hover event
+                let idspan = event.target.querySelector('.hpo-id-span');
+                if (idspan) {
+                    idspan.style.visibility = 'visible';
+                }
+
+            },
+            hideHpoIdSpan(event) {
+                //takes this event and hides the hpo id span with the current phenotype-name-span
+                //this is a hover event
+                let idspan = event.target.querySelector('.hpo-id-span');
+                if (idspan) {
+                    idspan.style.visibility = 'hidden';
+                }
+            }
         },
         watch: {
             hpoItemObj: function (newVal, oldVal) {
@@ -114,14 +108,17 @@
     .hpo-row-container {
         width: 100%;
         display: grid;
-        grid-template-columns: .75fr 1.30fr 1fr 1fr .5fr .5fr .25fr .25fr .20fr;
-        justify-items: start;
+        grid-template-columns: .70fr .15fr .15fr;
+        justify-items: center;
         align-items: center;
 
         padding: .25em;
     }
+    .hpo-row-container.base > :first-child {
+        justify-self: start;
+    }
     .hpo-row-container.base {
-        grid-template-columns: .25fr 1.75fr 1.30fr .25fr .25fr .20fr;
+        grid-template-columns: .70fr .15fr .15fr;
     }
     .hpo-row-container:hover {
         background-color: #e2e2e2;
@@ -141,6 +138,7 @@
         display: flex;
         cursor: pointer;
         justify-content: center;
+        align-items: center;
         width: 20px;
         height: 20px;
     }
@@ -150,6 +148,22 @@
     }
     .delete-btn-img:hover {
         background-color: #e2e2e2;
+    }
+    .phenotype-name-span {
+        position: relative;
+        cursor: pointer;
+    }
+    .hpo-id-span {
+        position: absolute;
+        visibility: hidden;
+        background-color: gray;
+        color: white;
+        opacity: .8;
+        font-style: italic;
+        border-radius: 3px;
+        padding: 2px 5px;
+        z-index: 1;
+        transform: translate(5px, -2px);
     }
 
 </style>

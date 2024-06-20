@@ -30,7 +30,6 @@ export default async function fetchNotes(client, patientId) {
 
         totalNotes = notes.length;
         outer: for (let note of notes) {
-
             // Get the code of the note
             let noteCode = note.resource && note.resource.category && note.resource.category[0] && note.resource.category[0].coding && note.resource.category[0].coding[0] && note.resource.category[0].coding[0].code || null;
             let codingArray = note.resource && note.resource.type && note.resource.type.coding || null;
@@ -89,7 +88,19 @@ export default async function fetchNotes(client, patientId) {
             // Build the components of the note title
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
-            let context = note.resource && note.resource.context && note.resource.context.extension && note.resource.context.extension[0] && note.resource.context.extension[0].valueCodeableConcept && note.resource.context.extension[0].valueCodeableConcept.text || null;
+
+            let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
+
+            //try to get the encounter from the encounter link
+            let encounter = null;
+            let context = 'No context';
+            try {
+                encounter = await client.request(encounterLink);
+                context = encounter && encounter.serviceType && encounter.serviceType.text || 'No context';
+            } catch (error) {
+                //If there is an dont do anything
+            }
+
             let titleDate = noteDate.slice(0, 10);
 
             // Build the note title

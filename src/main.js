@@ -50,7 +50,7 @@ import App from './App.vue'
     //if we are on local host then skip all of this and mount the app with the testing environment flag
     if (window.location.hostname === "localhost") {
         try {
-            whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()); // Dev
+            whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json());
         } catch (error) {
             //If there is an error, just show a simple error in the console that says "Error getting whiteList"
             console.error("Error getting whiteList");
@@ -101,8 +101,12 @@ import App from './App.vue'
                 }
 
                 try {
-                    // whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) //Stage
-                    whiteList = await fetch('/launch/whiteList.json').then(response => response.json()); //Production
+                    if (!prod) {
+                        whiteList = await fetch('/phenoplus/oauth2/redirect/whiteList.json').then(response => response.json()) 
+                    }
+                    if (prod) {
+                        whiteList = await fetch('/launch/whiteList.json').then(response => response.json());
+                    }
                 } catch (error) {
                     //If there is an error, just show a simple error in the console that says "Error getting whiteList"
                     console.error("Error getting whiteList");
