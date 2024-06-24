@@ -94,19 +94,14 @@ export default async function fetchNotes(client, patientId) {
             let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
             //try to get the practitioer role form the reference on author
-            let encounter = null;
             let practitionerSearch = null;
             let practitionerId = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference || null;
-            //Clean "Practitioner/" from the string
-            // practitionerId = practitionerId && practitionerId.replace("Practitioner/", "");
-            practitionerId = "eAUYipfTmcZzN1s7sUyLfEA3";
-            let practitioerRole = 'Not Found';
-            let context = 'No context';
+            practitionerId = practitionerId.replace("Practitioner/", "");
+            // practitionerId = ''
+            let practitionerRole = 'Not Found';
             try {
-                encounter = await client.request(encounterLink);
-                context = encounter && encounter.serviceType && encounter.serviceType.text || 'No context';
                 practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
-                console.log(practitionerSearch);
+                practitionerRole = practitionerSearch && practitionerSearch.entry && practitionerSearch.entry[0] && practitionerSearch.entry[0].resource && practitionerSearch.entry[0].resource.specialty && practitionerSearch.entry[0].specialty[0] && practitionerSearch.entry[0].specialty[0].text || 'Not Found';
             } catch (error) {
                 //If there is an dont do anything
             }
@@ -116,7 +111,7 @@ export default async function fetchNotes(client, patientId) {
             // Build the note title
             if (type && author && titleDate) {
                 // If all the components are present then build the note title
-                var noteTitle = `${type}: ${author} (${context}) [${titleDate}]`;
+                var noteTitle = `${type}: ${author} (${practitionerRole}) [${titleDate}]`;
             } else {
                 // If any of the components are missing then set the note title to null
                 var noteTitle = 'No title.';
