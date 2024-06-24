@@ -101,6 +101,7 @@ export default async function fetchNotes(client, patientId) {
             let practitionerRole = 'Not Found';
             try {
                 practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
+                console.log(practitionerSearch);
                 practitionerRole = practitionerSearch && practitionerSearch.entry && practitionerSearch.entry[0] && practitionerSearch.entry[0].resource && practitionerSearch.entry[0].resource.specialty && practitionerSearch.entry[0].specialty[0] && practitionerSearch.entry[0].specialty[0].text || 'Not Found';
             } catch (error) {
                 //If there is an dont do anything
