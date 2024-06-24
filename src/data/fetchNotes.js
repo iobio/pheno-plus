@@ -76,6 +76,8 @@ export default async function fetchNotes(client, patientId) {
                     }
                 }
             }
+
+            console.log(note.resource);
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
