@@ -77,7 +77,6 @@ export default async function fetchNotes(client, patientId) {
                 }
             }
 
-            console.log(note.resource);
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -91,17 +90,13 @@ export default async function fetchNotes(client, patientId) {
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
 
-            let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
-
             //try to get the practitioer role form the reference on author
             let practitionerSearch = null;
             let practitionerId = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference || null;
             practitionerId = practitionerId.replace("Practitioner/", "");
-            // practitionerId = ''
             let practitionerRole = 'Not Found';
             try {
                 practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
-                console.log(practitionerSearch);
                 practitionerRole = practitionerSearch && practitionerSearch.entry && practitionerSearch.entry[0] && practitionerSearch.entry[0].resource && practitionerSearch.entry[0].resource.specialty && practitionerSearch.entry[0].resource.specialty[0] && practitionerSearch.entry[0].resource.specialty[0].text || 'Not Found';
             } catch (error) {
                 //If there is an dont do anything
