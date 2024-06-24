@@ -93,12 +93,19 @@ export default async function fetchNotes(client, patientId) {
 
             let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
 
-            //try to get the encounter from the encounter link
+            //try to get the practitioer role form the reference on author
             let encounter = null;
+            let practitionerSearch = null;
+            let practitionerId = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference || null;
+            //Clean "Practitioner/" from the string
+            practitionerId = practitionerId && practitionerId.replace("Practitioner/", "");
+            let practitioerRole = 'Not Found';
             let context = 'No context';
             try {
                 encounter = await client.request(encounterLink);
                 context = encounter && encounter.serviceType && encounter.serviceType.text || 'No context';
+                practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
+                console.log(practitionerSearch);
             } catch (error) {
                 //If there is an dont do anything
             }
