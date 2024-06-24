@@ -99,7 +99,7 @@ export default async function fetchNotes(client, patientId) {
             let practitionerId = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference || null;
             //Clean "Practitioner/" from the string
             // practitionerId = practitionerId && practitionerId.replace("Practitioner/", "");
-            practitionerId = practitionerId;
+            practitionerId = "eAUYipfTmcZzN1s7sUyLfEA3";
             let practitioerRole = 'Not Found';
             let context = 'No context';
             try {
