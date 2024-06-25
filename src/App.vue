@@ -27,7 +27,7 @@
         testInformation: null,
         theClient: null,
         hideOverlay: true,
-        totalNotes: 0
+        totalNotes: 0,
       }
     }, 
     async mounted () {

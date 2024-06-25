@@ -1,19 +1,39 @@
 class ChartItem{
-    constructor(ClinPhenResult) {
-        this.hpoId = ClinPhenResult["HPO ID"];
-        this.phenotypeName = ClinPhenResult["Phenotype name"];
-        this.numOccurrences = parseInt(ClinPhenResult["No. occurrences"]);
-        this.earliness = []
-        if (!Array.isArray(ClinPhenResult["Earliness (lower = earlier)"])) {
-            this.earliness.push(ClinPhenResult["Earliness (lower = earlier)"]);
-        } else {
-            this.earliness = this.earliness.concat(ClinPhenResult["Earliness (lower = earlier)"]);
+    constructor(phenotypeData, notesPresentIn=[]) {
+        if (!phenotypeData) {
+            return;
         }
+
+        this.hpoId = phenotypeData["HPO ID"] || phenotypeData.term_id;
+        if (this.hpoId === undefined) {
+            return;
+        }
+
+        this.phenotypeName = phenotypeData["Phenotype name"] || phenotypeData.name;
+        if (this.phenotypeName === undefined) {
+            return;
+        }
+
+        this.numOccurrences = parseInt(phenotypeData["No. occurrences"]) || 0;
+        
+        this.earliness = []
+        if (phenotypeData["Earliness (lower = earlier)"] !== undefined && !Array.isArray(phenotypeData["Earliness (lower = earlier)"])) {
+            this.earliness.push(phenotypeData["Earliness (lower = earlier)"]);
+        } else if (phenotypeData["Earliness (lower = earlier)"] !== undefined) {
+            this.earliness = this.earliness.concat(phenotypeData["Earliness (lower = earlier)"]);
+        }
+
         this.exampleSentence = []
-        if (!Array.isArray(ClinPhenResult["Example sentence"])) {
-            this.exampleSentence.push(ClinPhenResult["Example sentence"]);
+        if (phenotypeData["Example sentence"] !== undefined && !Array.isArray(phenotypeData["Example sentence"])) {
+            this.exampleSentence.push(phenotypeData["Example sentence"]);
+        } else if (phenotypeData["Example sentence"] !== undefined) {
+            this.exampleSentence = this.exampleSentence.concat(phenotypeData["Example sentence"]);
+        }
+
+        if (notesPresentIn.length > 0) {
+            this.notesPresentIn = notesPresentIn;
         } else {
-            this.exampleSentence = this.exampleSentence.concat(ClinPhenResult["Example sentence"]);
+            this.notesPresentIn = [];
         }
 
         // These are the default values for the other chart elements
@@ -54,6 +74,9 @@ class ChartItem{
     }
     getUse() {
         return this.use;
+    }
+    getNotesPresentIn() {
+        return this.notesPresentIn;
     }
 
     //Setters
@@ -96,6 +119,9 @@ class ChartItem{
     }
     addToExampleSentence(exampleSentence) {
         this.exampleSentence.push(exampleSentence);
+    }
+    addToNotesPresentIn(note) {
+        this.notesPresentIn.push(note);
     }
 }
 export default ChartItem;

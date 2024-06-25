@@ -1,7 +1,14 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
-        <h3>Note Context</h3>
-        <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS }}..."</div>
+        <div class="sub-container">
+            <h3>Note Contexts Found</h3>
+            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS }}..."</div>
+        </div>
+
+        <div class="sub-container">
+            <h3>Notes Found In</h3>
+            <div v-if="hpoItemObj" v-for="noteTitle in hpoItemObj.getNotesPresentIn()">{{ noteTitle }}</div>
+        </div>
     </div>
 
 </template>
@@ -21,6 +28,8 @@
 
 <style>
     #term-peek-div {
+        display: flex;
+        flex-direction: column;
         width: 0px;
         background-color: white;
         border-radius: 3px;
@@ -37,6 +46,15 @@
         overflow-y: auto;
     }
 
+    #term-peek-div > .sub-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-y: auto;
+        height: 50%;
+    }
+
     #term-peek-div h3 {
         font-size: 12pt;
         padding-top: 10px;
@@ -48,7 +66,7 @@
         background-color: inherit;
     }
 
-    #term-peek-div div {
+    #term-peek-div > .sub-container > div {
         text-align: center;
         border-bottom: 1px solid rgb(209, 209, 209);
         padding-bottom: 5px;

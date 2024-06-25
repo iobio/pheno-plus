@@ -76,6 +76,7 @@ export default async function fetchNotes(client, patientId) {
                     }
                 }
             }
+
             // Get the id of the note
             let noteId = note.resource && note.resource.id || null;            
             // Get the date of the note
@@ -89,14 +90,14 @@ export default async function fetchNotes(client, patientId) {
             let author = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display || null;
             let type = note.resource && note.resource.type && note.resource.type.text || null;
 
-            let encounterLink = note.resource && note.resource.context && note.resource.context && note.resource.context.encounter && note.resource.context.encounter[0] && note.resource.context.encounter[0].reference || null;
-
-            //try to get the encounter from the encounter link
-            let encounter = null;
-            let context = 'No context';
+            //try to get the practitioer role form the reference on author
+            let practitionerSearch = null;
+            let practitionerId = note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference || null;
+            practitionerId = practitionerId.replace("Practitioner/", "");
+            let practitionerRole = 'Not Found';
             try {
-                encounter = await client.request(encounterLink);
-                context = encounter && encounter.serviceType && encounter.serviceType.text || 'No context';
+                practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
+                practitionerRole = practitionerSearch && practitionerSearch.entry && practitionerSearch.entry[0] && practitionerSearch.entry[0].resource && practitionerSearch.entry[0].resource.specialty && practitionerSearch.entry[0].resource.specialty[0] && practitionerSearch.entry[0].resource.specialty[0].text || 'Not Found';
             } catch (error) {
                 //If there is an dont do anything
             }
@@ -106,7 +107,7 @@ export default async function fetchNotes(client, patientId) {
             // Build the note title
             if (type && author && titleDate) {
                 // If all the components are present then build the note title
-                var noteTitle = `${type}: ${author} (${context}) [${titleDate}]`;
+                var noteTitle = `${type}: ${author} (${practitionerRole}) [${titleDate}]`;
             } else {
                 // If any of the components are missing then set the note title to null
                 var noteTitle = 'No title.';

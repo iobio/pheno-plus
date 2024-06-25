@@ -21,8 +21,20 @@
             <span id="no-terms-alt-msg">No terms to show. Process notes to populate terms.</span>
         </div>
 
-        <div id="send-terms-btn-container">
-            <!-- <button id="send-terms-btn" @click="this.$emit('sendTerms')">Send Terms</button> -->
+        <div id="term-dash-btn-container">
+            <div class="type-ahead-group row">
+                <label for="search-term">Find Term</label>
+
+                <div class="input-preview-container">
+                    <input type="text" id="search-term" placeholder="Search for a term" v-model="searchTerm" @input="searchForTerm(searchTerm)" @focusin="loadSqlDb" autocomplete="off">
+                    <div class="type-ahead-preview" v-if="typeAheadMatches && typeAheadMatches.length > 0">
+                        <div v-for="match in typeAheadMatches" :id="match.term_id" @click="setSearchTerm(match)">{{ match.name }}</div>
+                    </div>
+                </div>
+
+                <button class="blue-button" @click="addSelectedTermToDash">Add Term</button>
+            </div>
+
             <button id="clear-terms-btn" @click="this.$emit('clearTableTerms')">Clear Terms</button>
         </div>
     </div>
@@ -31,6 +43,8 @@
 
 <script>
     import HpoTermRow from './HpoTermRow.vue';
+    import ChartItem from '../../models/ChartItem.js'
+    import initSqlJs from 'sql.js';
 
     export default {
         name: 'TermDashboard',
@@ -46,9 +60,13 @@
         data () {
             return {
                 termDashHpoItemsObj: this.hpoItemsObj,
+                searchTerm: '',
+                hpoDb: null,
+                typeAheadMatches: [],
+                selectedSearchTerm: null,
             }
         }, 
-        async mounted () {
+        mounted () {
         },
         methods: {
             removeItem (id) {
@@ -83,11 +101,57 @@
                         // hpoRow.style.opacity = '1';
                     }, 590);
                 }
-
             },
             handleTermSelected(term) {
                 this.$emit('selectTerm', term);
-            }
+            },
+            async loadSqlDb() {
+                let prefix = '/phenoplus/oauth2/redirect';
+                if (this.$isProduction) {
+                    prefix = '/launch';
+                }
+                // Load the wasm file
+                const SQL = await initSqlJs({
+                    // the WASM is just in the public folder
+                    locateFile: file => `${prefix}/sql-wasm.wasm`
+                });
+
+                // Fetch the db file called mini_hpo.db in the public folder
+                const response = await fetch(`${prefix}/mini_hpo.db`);
+                const buffer = await response.arrayBuffer();
+                this.hpoDb = new SQL.Database(new Uint8Array(buffer));
+            },
+            setSearchTerm(term) {
+                this.searchTerm = term.name;
+                this.selectedSearchTerm = term;
+                this.typeAheadMatches = [];
+            },
+            searchForTerm(newVal) {
+                if (!newVal) {
+                    this.typeAheadMatches = [];
+                    return;
+                }
+                let matchArrays = this.hpoDb.exec(`SELECT * FROM simple_terms WHERE name LIKE '%${newVal}%'`);
+                if (matchArrays && matchArrays[0] && matchArrays[0].values) {
+                    matchArrays = matchArrays[0].values;
+                    this.typeAheadMatches = matchArrays.map(match => {
+                        return {
+                            name: match[1],
+                            term_id: match[0],
+                        }
+                    });
+                } else {
+                    this.typeAheadMatches = ['No matches found.'];
+                }
+            },
+            addSelectedTermToDash() {
+                if (this.selectedSearchTerm) {
+                    let newChartItem = new ChartItem(this.selectedSearchTerm);
+                    this.$emit('addTerm', newChartItem);
+                    this.searchTerm = '';
+                    this.selectedSearchTerm = null;
+                }
+            },
         }, 
         watch: {
             hpoItemsObj: {
@@ -97,15 +161,15 @@
                     }
                 },
                 deep: true,
-        },
-        sortedHpoList: {
-            handler: function (newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    this.$emit('sendTerms')
-                }
             },
-            deep: true,
-        },
+            sortedHpoList: {
+                handler: function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        this.$emit('sendTerms')
+                    }
+                },
+                deep: true,
+            },
     }
 }
 
@@ -115,12 +179,95 @@
     #no-terms-alt-msg {
         padding-top: 10px;
     }
-    #send-terms-btn-container {
+    #term-dash-btn-container {
         width: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
 
         margin-top: 10px;
+    }
+    .type-ahead-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    /* all the type ahead group children should have a bit of margin around them */
+    .type-ahead-group > * {
+        margin-right: 10px;
+    }
+
+    .type-ahead-group > label {
+        margin-right: 10px;
+    }
+
+    .type-ahead-group > div {
+        position: relative;
+        width: 200px;
+    }
+
+    .type-ahead-group > div > input {
+        width: 100%;
+        height: 30px;
+        border: 1px solid rgb(215, 215, 215);
+        border-radius: 3px;
+        padding-left: 5px;
+    }
+
+    .blue-button {
+        width: 60px;
+        font-size: .8rem;
+
+        height: 30px;
+        border: none;
+        border-radius: 3px;
+        box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+
+        background-color: rgb(0,113,189);
+        color: white;
+
+        text-align: center;
+        margin-left: 3px;
+    }
+    .blue-button:hover {
+        background-color: rgb(0,113,189, .8);
+    }
+
+    .input-preview-container {
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .type-ahead-preview {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: rgba(247, 244, 244, 0.9);
+        border: 1px solid rgb(215, 215, 215);
+        border-top: none;
+        border-radius: 0 3px 3px 3px;
+        box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+        z-index: 1;
+    }
+
+    .type-ahead-preview > div {
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgb(215, 215, 215);
+    }
+    .type-ahead-preview > div:last-child {
+        border-bottom: none;
+    }
+
+    .type-ahead-preview > div:hover {
+        background-color: rgb(0,113,189, .1);
+        cursor: pointer;
     }
 
     #send-terms-btn {
