@@ -122,8 +122,6 @@
       }
     }, 
     async mounted () {
-      console.log('pathname', window.location.pathname);
-      console.log('hostname', window.location.hostname);
     },
     methods: {
       selectTerm (term) {
