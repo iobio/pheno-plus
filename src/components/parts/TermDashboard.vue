@@ -66,7 +66,7 @@
                 selectedSearchTerm: null,
             }
         }, 
-        async mounted () {
+        mounted () {
             console.log('TermDashboard mounted');
             console.log('has global', this.$isProduction);
         },
