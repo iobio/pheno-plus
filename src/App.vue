@@ -28,7 +28,6 @@
         theClient: null,
         hideOverlay: true,
         totalNotes: 0,
-        isProduction: false
       }
     }, 
     async mounted () {
@@ -51,7 +50,6 @@
       if (appNotes != null && appNotes.length != 0) {
         this.notesList = appNotes;
         this.notesNum = appNotes.length;
-        this.isProduction = this.$isProduction;
 
       } else if (this.$isTestingEnvironment == true) {
         //Load demo data because we are in testing
@@ -60,7 +58,6 @@
       } else { //if we are not in testing and there are no notes
         //Notes List is empty
         this.notesList = [];
-        this.isProduction = this.$isProduction;
       }
     },
     methods: {

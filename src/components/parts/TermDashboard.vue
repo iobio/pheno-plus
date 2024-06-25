@@ -67,8 +67,6 @@
             }
         }, 
         mounted () {
-            console.log('TermDashboard mounted');
-            console.log('has global', this.$isProduction);
         },
         methods: {
             removeItem (id) {
@@ -108,16 +106,18 @@
                 this.$emit('selectTerm', term);
             },
             async loadSqlDb() {
-                let stagePrefix = '/phenoplus/oauth2/redirect';
-                let prodPrefix = '/launch';
+                let prefix = '/phenoplus/oauth2/redirect';
+                if (this.$isProduction) {
+                    prefix = '/launch';
+                }
                 // Load the wasm file
                 const SQL = await initSqlJs({
                     // the WASM is just in the public folder
-                    locateFile: file => `${stagePrefix}/sql-wasm.wasm`
+                    locateFile: file => `${prefix}/sql-wasm.wasm`
                 });
 
                 // Fetch the db file called mini_hpo.db in the public folder
-                const response = await fetch(`${stagePrefix}/mini_hpo.db`);
+                const response = await fetch(`${prefix}/mini_hpo.db`);
                 const buffer = await response.arrayBuffer();
                 this.hpoDb = new SQL.Database(new Uint8Array(buffer));
             },
