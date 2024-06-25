@@ -67,6 +67,8 @@
             }
         }, 
         async mounted () {
+            console.log('TermDashboard mounted');
+            console.log('has global', this.$isProduction);
         },
         methods: {
             removeItem (id) {

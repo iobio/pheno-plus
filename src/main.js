@@ -67,6 +67,7 @@ import App from './App.vue'
             const app = createApp(App)
             app.config.globalProperties.$isTestingEnvironment = true;
             app.config.globalProperties.$userNotAuthorized = false;
+            app.config.$isProduction = prod;
             app.mount('#app');
         }
 
@@ -119,7 +120,7 @@ import App from './App.vue'
                     app.mount('#app');
                 } else {
                     //Call the initializeApp function with the client if it exists & the user is authorized to use the app
-                    initializeApp(client);
+                    initializeApp(client, prod);
                 }
             }
         }).catch(error => {
@@ -129,7 +130,7 @@ import App from './App.vue'
     }
 })();
 
-async function initializeApp(fhirClient) {
+async function initializeApp(fhirClient, prod) {
     //Set the client
     const client = fhirClient;
     //Set the patientId
@@ -143,6 +144,7 @@ async function initializeApp(fhirClient) {
     
     app.config.globalProperties.$client = client;
     app.config.globalProperties.$patientId = patientId;
+    app.config.globalProperties.$isProduction = prod;
 
     app.mount('#app');
 }
