@@ -67,6 +67,7 @@
             }
         }, 
         async mounted () {
+            console.log(window.location.pathname);
         },
         methods: {
             removeItem (id) {
