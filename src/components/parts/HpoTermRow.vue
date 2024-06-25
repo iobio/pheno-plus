@@ -1,6 +1,6 @@
 <template>
     <div class="hpo-row-container" :class="[this.thisHpoItemObj.use ? '' : 'disabled', {base: baseInformationOnly}, {selected: selectedTerm == hpoItemObj}]">
-        <span class="phenotype-name-span" @mouseover="showHpoIdSpan($event)" @mouseleave="hideHpoIdSpan($event)">
+        <span class="phenotype-name-span" @mouseover="showHpoIdSpan($event)" @mouseleave="hideHpoIdSpan($event)" @click="$emit('selectTerm', thisHpoItemObj)">
             <i class="small-italic">({{ thisHpoItemObj.getNumOccurrences() }})</i> {{ thisHpoItemObj.getPhenotypeName() }}
             <span class="hpo-id-span">{{ thisHpoItemObj.getHpoId() }}</span>
         </span>
