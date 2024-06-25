@@ -62,7 +62,8 @@
           @updateItem="updateHpoTerm"
           @sendTerms="formatAndPopulateTerms"
           @clearTableTerms="clearAllTableTerms"
-          @selectTerm="selectTerm">
+          @selectTerm="selectTerm"
+          @addTerm="addTermFromUser">
         </TermDashboard>
         <TermPeek
           :hpoItemObj="selectedTerm"></TermPeek>
@@ -174,6 +175,10 @@
         this.clipTerms = [];
       },
       clearAllTableTerms () {
+        //Clear all the terms from the table and open the selector view and close the full width box
+        this.fullWidthBoxOpen = false;
+        this.selectorViewOpen = true;
+
         this.hpoTermsObj = {};
         this.sortedHpoList = [];
         this.notesAlreadyProcessed = [];
@@ -294,6 +299,12 @@
           }
         }
         return true;
+      },
+      addTermFromUser (term) {
+        this.hpoTermsObj[term.hpoId] = term;
+        this.sortedHpoList = Object.values(this.hpoTermsObj)
+          .sort((a, b) => b.numOccurrences - a.numOccurrences)
+          .map(item => [item.hpoId, item.numOccurrences]);
       }
     },
     computed: {
