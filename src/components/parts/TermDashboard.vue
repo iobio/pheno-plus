@@ -123,6 +123,10 @@
                 this.typeAheadMatches = [];
             },
             searchForTerm(newVal) {
+                if (!newVal) {
+                    this.typeAheadMatches = [];
+                    return;
+                }
                 let matchArrays = this.hpoDb.exec(`SELECT * FROM simple_terms WHERE name LIKE '%${newVal}%'`);
                 if (matchArrays && matchArrays[0] && matchArrays[0].values) {
                     matchArrays = matchArrays[0].values;
@@ -220,6 +224,9 @@
 
         text-align: center;
         margin-left: 3px;
+    }
+    .blue-button:hover {
+        background-color: rgb(0,113,189, .8);
     }
 
     .input-preview-container {
