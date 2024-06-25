@@ -1,5 +1,5 @@
 class ChartItem{
-    constructor(phenotypeData) {
+    constructor(phenotypeData, notesPresentIn=[]) {
         if (!phenotypeData) {
             return;
         }
@@ -28,6 +28,12 @@ class ChartItem{
             this.exampleSentence.push(phenotypeData["Example sentence"]);
         } else if (phenotypeData["Example sentence"] !== undefined) {
             this.exampleSentence = this.exampleSentence.concat(phenotypeData["Example sentence"]);
+        }
+
+        if (notesPresentIn.length > 0) {
+            this.notesPresentIn = notesPresentIn;
+        } else {
+            this.notesPresentIn = [];
         }
 
         // These are the default values for the other chart elements
@@ -68,6 +74,9 @@ class ChartItem{
     }
     getUse() {
         return this.use;
+    }
+    getNotesPresentIn() {
+        return this.notesPresentIn;
     }
 
     //Setters
@@ -110,6 +119,9 @@ class ChartItem{
     }
     addToExampleSentence(exampleSentence) {
         this.exampleSentence.push(exampleSentence);
+    }
+    addToNotesPresentIn(note) {
+        this.notesPresentIn.push(note);
     }
 }
 export default ChartItem;

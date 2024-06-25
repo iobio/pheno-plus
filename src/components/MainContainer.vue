@@ -215,16 +215,17 @@
               }
 
               if (!alreadyExists){
-                //If it already exists add the new instance factors to the item
+                //If the item doenst already exist add the new information to the existing item
                 this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
                 this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
                 this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
+                this.hpoTermsObj[key].addToNotesPresentIn(this.selectedNote.title)
                 continue;
               }
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
-            let item = new ChartItem(clinPhen[key]);
+            let item = new ChartItem(clinPhen[key], [this.selectedNote.title]);
             this.hpoTermsObj[key] = item;
           }
           let sortedTerms = Object.values(this.hpoTermsObj)
