@@ -137,6 +137,7 @@
       },
       selectNote(note) {
         this.selectedNote = note;
+        this.noteContentOpen = !this.noteContentOpen;
       },
       removeHpoTerm(id) {
         if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
@@ -540,7 +541,7 @@
   }
 
   .content-title-wrapper.item-selector {
-    flex: 1 1 45%;
+    flex: 1 1 30%;
   }
 
   .content-title-wrapper.item-selector .sub-container {
@@ -548,7 +549,7 @@
     border-radius: 3px;
   }
   .content-title-wrapper.view-info {
-    width: 56%;
+    width: 69%;
     transition: width 0.3s ease-in-out;
     overflow-x: hidden;
     overflow-y: hidden;
