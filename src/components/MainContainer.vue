@@ -136,8 +136,12 @@
         }
       },
       selectNote(note) {
-        this.selectedNote = note;
-        this.noteContentOpen = !this.noteContentOpen;
+        if (!this.selectedNote || this.selectedNote.id !== note.id) {
+          this.selectedNote = note; 
+          this.noteContentOpen = true;
+        } else {
+          this.noteContentOpen = !this.noteContentOpen;
+        }
       },
       removeHpoTerm(id) {
         if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
