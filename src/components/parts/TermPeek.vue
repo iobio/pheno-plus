@@ -41,7 +41,7 @@
         color: rgb(72, 71, 71);
     }
     #term-peek-div.visible {
-        width: 45%;
+        width: 60%;
         margin-left: 5px;
         overflow-y: auto;
     }
