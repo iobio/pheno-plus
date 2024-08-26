@@ -9,12 +9,14 @@
         <p v-else>Pulling <br> Notes <br> ...</p>        
       </div>
     </div>
+
     <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
       <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
         <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section">
         <img v-else src="../assets/dots-hz.svg" alt="open section">
         <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
       </div>
+
       <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
         </h3>
@@ -514,17 +516,6 @@
     overflow: hidden;
   }
 
-  .content-title-wrapper .sub-container {
-    width: 100%;
-
-    margin-top: 0px;
-    overflow-y: auto;
-    box-sizing: border-box;
-
-    padding: 0px 10px 10px 10px;
-
-  }
-
   .content-title-wrapper {
     margin-top: 1em;
     display: flex;
@@ -549,13 +540,8 @@
     flex: 1 1 30%;
   }
 
-  .content-title-wrapper.item-selector .sub-container {
-    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
-    border-radius: 3px;
-  }
   .content-title-wrapper.view-info {
-    width: 69%;
-    min-width: 69%;
+    flex: 1 1 70%;
     transition: width 0.3s ease-in-out;
     overflow-x: hidden;
     overflow-y: hidden;
