@@ -555,6 +555,7 @@
   }
   .content-title-wrapper.view-info {
     width: 69%;
+    min-width: 69%;
     transition: width 0.3s ease-in-out;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -562,6 +563,7 @@
 
   .content-title-wrapper.view-info.closedWidth {
     width: 0px;
+    min-width: 0px;
     padding: 0px;
     margin: 0px;
     border: none;
