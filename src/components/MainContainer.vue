@@ -547,7 +547,7 @@
       min-width: 70%; /* Prevent any minimum width */
       overflow-x: hidden;
       overflow-y: hidden;
-      transition: width 0.3s ease-in-out, width 0.3s ease-in-out;
+      transition: width 0.3s ease-in-out, min-width 0.3s ease-in-out; /* Transition based on flex-basis */
   }
 
   /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
