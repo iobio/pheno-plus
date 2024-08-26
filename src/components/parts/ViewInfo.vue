@@ -68,7 +68,7 @@
         background-color: white;
     }
 
-    .note-info * {
+    .note-info-html * {
         max-width: 100%;
         max-height: 100%;
         box-sizing: border-box;
