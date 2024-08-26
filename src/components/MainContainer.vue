@@ -538,8 +538,8 @@
 
   /* Default state: item-selector takes 30%, view-info takes 70% */
   .content-title-wrapper.item-selector {
-      flex: 1 1 30%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 30% */
-      transition: flex-basis 0.3s ease-in-out; /* Transition based on flex-basis */
+      width: 30%; /* Default width */
+      transition: width 0.3s ease-in-out; /* Transition based on flex-basis */
   }
 
   .content-title-wrapper.view-info {
@@ -547,7 +547,7 @@
       min-width: 70%; /* Prevent any minimum width */
       overflow-x: hidden;
       overflow-y: hidden;
-      transition: flex-basis 0.3s ease-in-out, width 0.3s ease-in-out;
+      transition: width 0.3s ease-in-out, width 0.3s ease-in-out;
   }
 
   /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
@@ -560,8 +560,8 @@
   }
 
   .content-title-wrapper.item-selector.fullWidth {
-      flex: 1 1 100%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 100% */
-      transition: flex-basis 0.3s ease-in-out;
+      width: 100%; /* Full width */
+      transition: width 0.3s ease-in-out;
   }
   
   #process-btn-container {
