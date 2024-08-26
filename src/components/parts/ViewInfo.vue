@@ -1,6 +1,8 @@
 <template>
     <div v-if="note" id="view-info" class="sub-container">
-        <div v-if="note.html" class="note-info-html" v-html="note.html"></div>
+        <div v-if="note.html" class="note-info-html">
+            <div v-html="note.html"></div>
+        </div>
     </div>
 
     <div class="sub-container" v-if="!note" id="view-info">
