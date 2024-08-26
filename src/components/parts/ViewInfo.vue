@@ -68,6 +68,13 @@
         background-color: white;
     }
 
+    .note-info * {
+        max-width: 100%;
+        max-height: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word; /* Ensure long words break instead of overflowing */
+    }
+
     .note-info-p {
         width: 100%;
         height: 100%;
