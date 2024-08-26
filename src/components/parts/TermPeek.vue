@@ -8,18 +8,18 @@
                 </svg>
             </div>
             <div>
-                <h3>{{ noteSelected.getTitle() }}</h3>
+                <h3 class="header-white">{{ noteSelected.getTitle() }}</h3>
                 <div v-if="noteSelected" v-html="computedNoteHtml"></div>
             </div>
         </div>
 
         <div class="sub-container">
-            <h3>Note Contexts Found</h3>
+            <h3 class="header-white">Note Contexts Found</h3>
             <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS }}..."</div>
         </div>
 
         <div class="sub-container">
-            <h3>Notes Found In</h3>
+            <h3 class="header-white">Notes Found In</h3>
             <div class="note-title-row" v-if="hpoItemObj" v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()">
                 <div class="exp-btn">
                     <svg @click="showFullTermContext(noteTIDPair[1])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -175,6 +175,11 @@
         overflow: hidden;
         color: rgb(72, 71, 71);
     }
+
+    .header-white {
+        background-color: white;
+    }
+    
     #term-peek-div.visible {
         width: 60%;
         margin-left: 5px;
