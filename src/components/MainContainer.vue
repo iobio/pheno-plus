@@ -543,7 +543,7 @@
   }
 
   .content-title-wrapper.view-info {
-      flex: 1 1 70%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 70% */
+      width: 70%; /* Default width */
       overflow-x: hidden;
       overflow-y: hidden;
       transition: flex-basis 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -551,8 +551,7 @@
 
   /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
   .content-title-wrapper.view-info.closedWidth {
-      flex: 0 0 0%; /* Flex-grow: 0, Flex-shrink: 0, Flex-basis: 0% */
-      width: 0; /* Ensure width collapses */
+      width: 0px;
       min-width: 0; /* Prevent any minimum width */
       padding: 0; /* Remove padding */
       margin: 0; /* Remove margin */
