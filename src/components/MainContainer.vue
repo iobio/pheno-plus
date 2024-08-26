@@ -17,10 +17,10 @@
         <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
       </div>
 
-      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
+      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen, fullWidth: !noteContentOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
         </h3>
-        <ItemSelector class="sub-container" 
+        <ItemSelector
         :notesList="notesList"
         :selectedNote="selectedNote"
         :alreadyProcessed="notesAlreadyProcessed"
@@ -536,24 +536,32 @@
     overflow: hidden;
   }
 
+  /* Default state: item-selector takes 30%, view-info takes 70% */
   .content-title-wrapper.item-selector {
-    flex: 1 1 30%;
+      flex: 1 1 30%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 30% */
+      transition: flex-basis 0.3s ease-in-out; /* Transition based on flex-basis */
   }
 
   .content-title-wrapper.view-info {
-    flex: 1 1 70%;
-    transition: width 0.3s ease-in-out;
-    overflow-x: hidden;
-    overflow-y: hidden;
+      flex: 1 1 70%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 70% */
+      overflow-x: hidden;
+      overflow-y: hidden;
+      transition: flex-basis 0.3s ease-in-out, width 0.3s ease-in-out;
   }
 
+  /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
   .content-title-wrapper.view-info.closedWidth {
-    width: 0px;
-    min-width: 0px;
-    flex: 1 1 0%;
-    padding: 0px;
-    margin: 0px;
-    border: none;
+      flex: 0 0 0%; /* Flex-grow: 0, Flex-shrink: 0, Flex-basis: 0% */
+      width: 0; /* Ensure width collapses */
+      min-width: 0; /* Prevent any minimum width */
+      padding: 0; /* Remove padding */
+      margin: 0; /* Remove margin */
+      border: none; /* Remove border */
+  }
+
+  .content-title-wrapper.item-selector.fullWidth {
+      flex: 1 1 100%; /* Flex-grow: 1, Flex-shrink: 1, Flex-basis: 100% */
+      transition: flex-basis 0.3s ease-in-out;
   }
   
   #process-btn-container {

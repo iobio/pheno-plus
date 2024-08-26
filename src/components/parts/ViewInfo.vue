@@ -1,5 +1,5 @@
 <template>
-    <div v-if="note" id="view-info" class="sub-container">
+    <div v-if="note" id="view-info">
         <div v-if="note.html" class="note-info-html">
             <div v-html="note.html"></div>
         </div>
