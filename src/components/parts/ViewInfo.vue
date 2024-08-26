@@ -48,7 +48,7 @@
 
 </script>
 
-<style scoped lang="css">
+<style lang="css">
     #view-info {
         display: flex;
         flex-direction: column;
