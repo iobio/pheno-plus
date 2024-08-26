@@ -252,6 +252,13 @@
         overflow-y: auto;
     }
 
+    .full-note-overlay * {
+        max-width: 100%;
+        max-height: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word; /* Ensure long words break instead of overflowing */
+    }
+
     .close-note-overlay {
         width: 25px;
         height: 25px;
