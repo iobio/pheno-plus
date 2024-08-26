@@ -550,6 +550,7 @@
   .content-title-wrapper.view-info.closedWidth {
     width: 0px;
     min-width: 0px;
+    flex: 1 1 0%;
     padding: 0px;
     margin: 0px;
     border: none;
