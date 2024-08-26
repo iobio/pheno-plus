@@ -66,7 +66,8 @@
           @addTerm="addTermFromUser">
         </TermDashboard>
         <TermPeek
-          :hpoItemObj="selectedTerm"></TermPeek>
+          :hpoItemObj="selectedTerm"
+          :notesList="notesList"></TermPeek>
       </div>
       <ClipBoardBox
         :class="{closed: !fullWidthBoxOpen}"
@@ -224,13 +225,13 @@
                 this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
                 this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
                 this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
-                this.hpoTermsObj[key].addToNotesPresentIn(this.selectedNote.title)
+                this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id])
                 continue;
               }
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
-            let item = new ChartItem(clinPhen[key], [this.selectedNote.title]);
+            let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
             this.hpoTermsObj[key] = item;
           }
           let sortedTerms = Object.values(this.hpoTermsObj)
