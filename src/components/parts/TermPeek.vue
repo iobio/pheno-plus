@@ -179,7 +179,7 @@
     .header-white {
         background-color: white;
     }
-    
+
     #term-peek-div.visible {
         width: 60%;
         margin-left: 5px;
@@ -203,7 +203,6 @@
         position: sticky;
         top: 0;
         margin-top: 0px;
-        background-color: inherit;
     }
 
     #term-peek-div > .sub-container > div {
