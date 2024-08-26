@@ -238,18 +238,18 @@
     }
 
     .full-note-overlay {
-        position: absolute;
-        width: 99%;
-        height: 99%;
+        align-items: flex-start;
         background-color: white;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        height: 99%;
         justify-content: flex-start;
-        align-items: flex-start;
-        z-index: 1;
-        box-sizing: border-box;
         overflow-x: auto;
         overflow-y: auto;
+        position: absolute;
+        width: 99%;
+        z-index: 1;
     }
 
     .full-note-overlay * {
