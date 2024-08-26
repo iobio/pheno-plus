@@ -71,15 +71,17 @@
     .note-info-html {
         align-items: flex-start;
         background-color: white;
+        box-sizing: border-box;
         border-radius: 3px;
         border: rgb(215, 215, 215) 1px solid;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: 99%;
         justify-content: flex-start;
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: auto;
         padding: .5em; 
-        width: 100%;
+        width: 99%;
     }
 
     .note-info-html * {
