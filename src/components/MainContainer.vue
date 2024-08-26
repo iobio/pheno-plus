@@ -601,11 +601,6 @@
     background-color: rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
   }
-  #view-info.sub-container {
-    overflow-y: hidden;
-    height: 93.6%;
-    padding-top: 0px;
-  }
 
   #loading-overlay.hidden {
     display: none;

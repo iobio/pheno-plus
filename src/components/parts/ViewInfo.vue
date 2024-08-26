@@ -87,10 +87,10 @@
     }
 
     .note-info-html * {
-        max-width: 100%;
-        max-height: 100%;
-        box-sizing: border-box;
-        overflow-wrap: break-word; /* Ensure long words break instead of overflowing */
+        max-width: 100% !important;
+        max-height: 100% !important;
+        box-sizing: border-box !important;
+        overflow-wrap: break-word !important; /* Ensure long words break instead of overflowing */
     }
 
 </style>
