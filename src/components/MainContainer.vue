@@ -544,6 +544,7 @@
 
   .content-title-wrapper.view-info {
       width: 70%; /* Default width */
+      min-width: 70%; /* Prevent any minimum width */
       overflow-x: hidden;
       overflow-y: hidden;
       transition: flex-basis 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -552,7 +553,7 @@
   /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
   .content-title-wrapper.view-info.closedWidth {
       width: 0px;
-      min-width: 0; /* Prevent any minimum width */
+      min-width: 0px; /* Prevent any minimum width */
       padding: 0; /* Remove padding */
       margin: 0; /* Remove margin */
       border: none; /* Remove border */
