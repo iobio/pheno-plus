@@ -9,16 +9,18 @@
         <p v-else>Pulling <br> Notes <br> ...</p>        
       </div>
     </div>
+
     <div id="selector-view-container" :class="{closed: !selectorViewOpen}">
       <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
         <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section">
         <img v-else src="../assets/dots-hz.svg" alt="open section">
         <div class="open-close-label">{{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section'}}</div>
       </div>
-      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen}">
+
+      <div class="content-title-wrapper item-selector" :class="{closed: !selectorViewOpen, fullWidth: !noteContentOpen}">
         <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">Relevant EHR Notes ({{ notesNum }})
         </h3>
-        <ItemSelector class="sub-container" 
+        <ItemSelector
         :notesList="notesList"
         :selectedNote="selectedNote"
         :alreadyProcessed="notesAlreadyProcessed"
@@ -66,7 +68,8 @@
           @addTerm="addTermFromUser">
         </TermDashboard>
         <TermPeek
-          :hpoItemObj="selectedTerm"></TermPeek>
+          :hpoItemObj="selectedTerm"
+          :notesList="notesList"></TermPeek>
       </div>
       <ClipBoardBox
         :class="{closed: !fullWidthBoxOpen}"
@@ -136,7 +139,12 @@
         }
       },
       selectNote(note) {
-        this.selectedNote = note;
+        if (!this.selectedNote || this.selectedNote.id !== note.id) {
+          this.selectedNote = note; 
+          this.noteContentOpen = true;
+        } else {
+          this.noteContentOpen = !this.noteContentOpen;
+        }
       },
       removeHpoTerm(id) {
         if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
@@ -219,13 +227,13 @@
                 this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
                 this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
                 this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
-                this.hpoTermsObj[key].addToNotesPresentIn(this.selectedNote.title)
+                this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id])
                 continue;
               }
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
-            let item = new ChartItem(clinPhen[key], [this.selectedNote.title]);
+            let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
             this.hpoTermsObj[key] = item;
           }
           let sortedTerms = Object.values(this.hpoTermsObj)
@@ -508,17 +516,6 @@
     overflow: hidden;
   }
 
-  .content-title-wrapper .sub-container {
-    width: 100%;
-
-    margin-top: 0px;
-    overflow-y: auto;
-    box-sizing: border-box;
-
-    padding: 0px 10px 10px 10px;
-
-  }
-
   .content-title-wrapper {
     margin-top: 1em;
     display: flex;
@@ -539,26 +536,32 @@
     overflow: hidden;
   }
 
+  /* Default state: item-selector takes 30%, view-info takes 70% */
   .content-title-wrapper.item-selector {
-    flex: 1 1 45%;
+      width: 30%; /* Default width */
+      transition: width 0.3s ease-in-out; /* Transition based on flex-basis */
   }
 
-  .content-title-wrapper.item-selector .sub-container {
-    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
-    border-radius: 3px;
-  }
   .content-title-wrapper.view-info {
-    width: 56%;
-    transition: width 0.3s ease-in-out;
-    overflow-x: hidden;
-    overflow-y: hidden;
+      width: 70%; /* Default width */
+      min-width: 70%; /* Prevent any minimum width */
+      overflow-x: hidden;
+      overflow-y: hidden;
+      transition: width 0.3s ease-in-out, min-width 0.3s ease-in-out; /* Transition based on flex-basis */
   }
 
+  /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
   .content-title-wrapper.view-info.closedWidth {
-    width: 0px;
-    padding: 0px;
-    margin: 0px;
-    border: none;
+      width: 0px;
+      min-width: 0px; /* Prevent any minimum width */
+      padding: 0; /* Remove padding */
+      margin: 0; /* Remove margin */
+      border: none; /* Remove border */
+  }
+
+  .content-title-wrapper.item-selector.fullWidth {
+      width: 100%; /* Full width */
+      transition: width 0.3s ease-in-out;
   }
   
   #process-btn-container {
@@ -594,11 +597,6 @@
   .process-btn:disabled {
     background-color: rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
-  }
-  #view-info.sub-container {
-    overflow-y: hidden;
-    height: 93.6%;
-    padding-top: 0px;
   }
 
   #loading-overlay.hidden {
