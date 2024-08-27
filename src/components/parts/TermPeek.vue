@@ -66,9 +66,8 @@
                 // let term = this.hpoItemObj.getPhenotypeName().toLowerCase(); // Convert term to lowercase
 
                 //get example sentances and make them all lowercase
-                let terms = this.hpoItemObj.getExampleSentence().map(s => s.toLowerCase());
-
-
+                let contexts = this.hpoItemObj.getExampleSentence().map(s => s.toLowerCase());
+                let term = this.hpoItemObj.getPhenotypeName().toLowerCase(); // Convert term to lowercase
 
                 // Function to highlight text within the innerText of elements
                 function highlightInnerText(element) {
@@ -77,24 +76,42 @@
                     let highlightedText = "";
                     let lastIndex = 0;
 
-                    for (let term of terms) {
+                    for (let context of contexts) {
                         // Adjust the threshold as needed (e.g., 20% of the term's length)
-                        let threshold = Math.floor(term.length * 0.2);
+                        let threshold = Math.floor(context.length * 0.2);
 
-                        for (let i = 0; i <= innerText.length - term.length; i++) {
-                            let substring = innerText.substring(i, i + term.length);
+                        for (let i = 0; i <= innerText.length - context.length; i++) {
+                            let substring = innerText.substring(i, i + context.length);
 
                             // Calculate the Levenshtein distance between the term and the substring
-                            let distance = this.getLevenshteinDistance(term, substring);
+                            let distance = this.getLevenshteinDistance(context, substring);
 
                             if (distance <= threshold) {
                                 // If within the threshold, wrap the original substring in a highlight span
-                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context">${originalInnerText.substring(i, i + term.length)}</span>`;
-                                lastIndex = i + term.length;
+                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
+                                lastIndex = i + context.length;
 
                                 // Move the loop index to skip over the matched substring
                                 i = lastIndex - 1;
                             }
+                        }
+                    }
+
+                    //also highlight the term if there is a good levenshtein distance
+                    let termThreshold = Math.floor(term.length * 0.2);
+                    for (let i = 0; i <= innerText.length - term.length; i++) {
+                        let substring = innerText.substring(i, i + term.length);
+
+                        // Calculate the Levenshtein distance between the term and the substring
+                        let distance = this.getLevenshteinDistance(term, substring);
+
+                        if (distance <= termThreshold) {
+                            // If within the threshold, wrap the original substring in a highlight span
+                            highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context-term">${originalInnerText.substring(i, i + term.length)}</span>`;
+                            lastIndex = i + term.length;
+
+                            // Move the loop index to skip over the matched substring
+                            i = lastIndex - 1;
                         }
                     }
 
@@ -121,7 +138,6 @@
                 //Commonly use NLP algorithm to find the distance between two strings
                 const matrix = [];
 
-                // Initialize the first row and column of the matrix
                 for (let i = 0; i <= b.length; i++) {
                     matrix[i] = [i];
                 }
@@ -284,7 +300,14 @@
     .highlighted-context {
         background-color: #fff19583;
         border-radius: 3px;
-        padding: 2px 0px;
+        padding: 1px 0px;
+        margin: 0px;
+    }
+
+    .highlighted-context-term {
+        background-color: #0088ff81;
+        border-radius: 3px;
+        padding: 1px 0px;
         margin: 0px;
     }
 
