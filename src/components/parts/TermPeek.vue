@@ -77,8 +77,8 @@
                     let lastIndex = 0;
 
                     for (let context of contexts) {
-                        // Adjust the threshold as needed (e.g., 20% of the term's length)
-                        let threshold = Math.floor(context.length * 0.2);
+                        // Adjust the threshold as needed (e.g., 15% of the context's length)
+                        let threshold = Math.floor(context.length * 0.15);
 
                         for (let i = 0; i <= innerText.length - context.length; i++) {
                             let substring = innerText.substring(i, i + context.length);
