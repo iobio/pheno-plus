@@ -64,10 +64,10 @@
                     if (firstHighlight) {
                         let scrollableParent = document.querySelector('.full-note-overlay');
                         if (scrollableParent) {
-                            scrollableParent.scrollTo({
-                                top: firstHighlight.offsetTop - scrollableParent.offsetTop,
-                                behavior: 'smooth'
-                            });
+                            //account for the sticky header
+                            let header = document.querySelector('.header-white');
+                            let headerHeight = header ? header.clientHeight : 0;
+                            scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
                         }
                     }
                 });
