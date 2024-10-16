@@ -25,9 +25,12 @@ class ChartItem{
 
         this.exampleSentence = []
         if (phenotypeData["Example sentence"] !== undefined && !Array.isArray(phenotypeData["Example sentence"])) {
-            this.exampleSentence.push(phenotypeData["Example sentence"]);
+            this.exampleSentence.push([phenotypeData["Example sentence"], 1]);
         } else if (phenotypeData["Example sentence"] !== undefined) {
-            this.exampleSentence = this.exampleSentence.concat(phenotypeData["Example sentence"]);
+            // If the example sentence is an array, then it is an array of arrays
+            for (let i = 0; i < phenotypeData["Example sentence"].length; i++) {
+                this.exampleSentence.push([phenotypeData["Example sentence"][i], 1]);
+            }
         }
 
         if (notesPresentIn.length > 0) {
@@ -118,10 +121,19 @@ class ChartItem{
         this.exampleSentence = exampleSentence;
     }
     addToExampleSentence(exampleSentence) {
-        this.exampleSentence.push(exampleSentence);
+        if (Array.isArray(exampleSentence)) {
+            this.exampleSentence = this.exampleSentence.concat(exampleSentence);
+            return;
+        } else {
+            exampleSentence = [exampleSentence, 1];
+            this.exampleSentence.push(exampleSentence);
+        }
     }
     addToNotesPresentIn(note) {
         this.notesPresentIn.push(note);
+    }
+    addToTimesSeen(index) {
+        this.exampleSentence[index][1] += 1;
     }
 }
 export default ChartItem;

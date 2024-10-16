@@ -1,7 +1,7 @@
 <template>
     <div v-if="note" id="view-info">
         <div v-if="note.html" class="note-info-html">
-            <div v-html="note.html"></div>
+            <div id="note-html-parent" v-html="htmlLessImages"></div>
         </div>
     </div>
 
@@ -37,6 +37,12 @@
             }
         },
         computed: {
+            htmlLessImages() {
+                if (!this.note) {
+                    return '';
+                }
+                return this.note.html.replace(/<img[^>]*>/g,"");
+            }
         }, 
         watch: {
             note: function (newVal, oldVal) {
