@@ -9,7 +9,7 @@
             </div>
             <div v-if="noteSelected">
                 <h3 class="header-white">{{ noteSelected.getTitle() }}</h3>
-                <div v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
+                <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
             </div>
         </div>
 
@@ -70,11 +70,16 @@
                             scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
                         }
                     }
+
+                    let noteHTMLParent = document.getElementById('note-html-container');
+                    //set the z index of all content to be below the header
+                    noteHTMLParent.style.zIndex = 1;
                 });
             },
             closeAndResetNote() {
                 this.fullNoteShown = false;
                 this.noteSelected = null;
+                this.currentHighlightedHtml = null;
             },
             highlightContexts(note) {
                 // Get the HTML content of the note and parse it into a DOM structure
@@ -312,12 +317,12 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        height: 99%;
         justify-content: flex-start;
         overflow-x: auto;
         overflow-y: auto;
         position: absolute;
         width: 99%;
+        height: 99%;
         z-index: 2;
     }
 
