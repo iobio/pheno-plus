@@ -1,7 +1,7 @@
 <template>
     <div v-if="note" id="view-info">
         <div v-if="note.html" class="note-info-html">
-            <div id="note-html-parent" v-html="note.html"></div>
+            <div id="note-html-parent" v-html="htmlLessImages"></div>
         </div>
     </div>
 
