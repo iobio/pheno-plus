@@ -9,7 +9,7 @@
             </div>
             <div v-if="noteSelected">
                 <h3 class="header-white">{{ noteSelected.getTitle() }}</h3>
-                <div v-html="highlightContexts(noteSelected)"></div>
+                <div v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
             </div>
         </div>
 
@@ -45,6 +45,7 @@
             return {
                 fullNoteShown: false,
                 noteSelected: null,
+                currentHighlightedHtml: null,
             }
         },
         methods: {
@@ -54,10 +55,17 @@
                 this.noteSelected = selectedNote;
                 this.fullNoteShown = true;
 
+                // Highlight the contexts in the note
+                this.currentHighlightedHtml = this.highlightContexts(selectedNote);
+
                 //if there is a #first-context-highlight, scroll to it
                 let firstHighlight = document.getElementById('first-context-highlight');
                 if (firstHighlight) {
-                    firstHighlight.scrollIntoView();
+                    let scrollableParent = document.querySelector('.full-note-overlay');
+                    scrollableParent.scrollTo({
+                        top: firstHighlight.offsetTop - scrollableParent.offsetTop,
+                        behavior: 'smooth'
+                    });
                 }
             },
             closeAndResetNote() {
@@ -306,7 +314,7 @@
         overflow-y: auto;
         position: absolute;
         width: 99%;
-        z-index: 1;
+        z-index: 2;
     }
 
     .full-note-overlay * {
@@ -319,6 +327,7 @@
     .close-note-overlay {
         position: sticky;
         top: 0;
+        z-index: 3;
         width: 25px;
         height: 25px;
         align-self: flex-end;
