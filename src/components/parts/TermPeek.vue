@@ -61,6 +61,7 @@
                 //if there is a #first-context-highlight, scroll to it
                 let firstHighlight = document.getElementById('first-context-highlight');
                 if (firstHighlight) {
+                    console.log('scrolling to first highlight');
                     let scrollableParent = document.querySelector('.full-note-overlay');
                     scrollableParent.scrollTo({
                         top: firstHighlight.offsetTop - scrollableParent.offsetTop,
