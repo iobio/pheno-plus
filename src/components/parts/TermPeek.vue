@@ -58,16 +58,20 @@
                 // Highlight the contexts in the note
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
 
-                //if there is a #first-context-highlight, scroll to it
-                let firstHighlight = document.getElementById('first-context-highlight');
-                if (firstHighlight) {
-                    console.log('scrolling to first highlight');
-                    let scrollableParent = document.querySelector('.full-note-overlay');
-                    scrollableParent.scrollTo({
-                        top: firstHighlight.offsetTop - scrollableParent.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
+                // Ensure DOM updates are complete before scrolling
+                this.$nextTick(() => {
+                    let firstHighlight = document.getElementById('first-context-highlight');
+                    if (firstHighlight) {
+                        console.log('scrolling to first highlight');
+                        let scrollableParent = document.querySelector('.full-note-overlay');
+                        if (scrollableParent) {
+                            scrollableParent.scrollTo({
+                                top: firstHighlight.offsetTop - scrollableParent.offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
             },
             closeAndResetNote() {
                 this.fullNoteShown = false;
