@@ -65,6 +65,8 @@
                         console.log('scrolling to first highlight');
                         let scrollableParent = document.querySelector('.full-note-overlay');
                         if (scrollableParent) {
+                            console.log('parent exists');
+                            console.log(scrollableParent)
                             scrollableParent.scrollTo({
                                 top: firstHighlight.offsetTop - scrollableParent.offsetTop,
                                 behavior: 'smooth'
