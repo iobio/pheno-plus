@@ -15,7 +15,7 @@
 
         <div class="sub-container">
             <h3 class="header-white">Note Contexts Found</h3>
-            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS }}..."</div>
+            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS[0] }}..." <span class="seen-tag">Seen: <b>{{ exampleS[1] }}</b><i>x</i></span></div>
         </div>
 
         <div class="sub-container">
@@ -52,8 +52,13 @@
                 let selectedNote;
                 selectedNote = this.notesList.find(note => note.getId() == tid);
                 this.noteSelected = selectedNote;
-
                 this.fullNoteShown = true;
+
+                //if there is a #first-context-highlight, scroll to it
+                let firstHighlight = document.getElementById('first-context-highlight');
+                if (firstHighlight) {
+                    firstHighlight.scrollIntoView();
+                }
             },
             closeAndResetNote() {
                 this.fullNoteShown = false;
@@ -63,10 +68,11 @@
                 // Get the HTML content of the note and parse it into a DOM structure
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
-                // let term = this.hpoItemObj.getPhenotypeName().toLowerCase(); // Convert term to lowercase
+
+                let isFirstHighlight = true;
 
                 //get example sentances and make them all lowercase
-                let contexts = this.hpoItemObj.getExampleSentence().map(s => s.toLowerCase());
+                let contexts = this.hpoItemObj.getExampleSentence().map(s => s[0].toLowerCase());
                 let term = this.hpoItemObj.getPhenotypeName().toLowerCase(); // Convert term to lowercase
 
                 // Function to highlight text within the innerText of elements
@@ -88,9 +94,13 @@
 
                             if (distance <= threshold) {
                                 // If within the threshold, wrap the original substring in a highlight span
-                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
-                                lastIndex = i + context.length;
-
+                                if (isFirstHighlight) {
+                                    isFirstHighlight = false;
+                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="first-context-highlight" class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
+                                } else {
+                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
+                                    lastIndex = i + context.length;
+                                }
                                 // Move the loop index to skip over the matched substring
                                 i = lastIndex - 1;
                             }
@@ -107,9 +117,13 @@
 
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
-                            highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context-term">${originalInnerText.substring(i, i + term.length)}</span>`;
-                            lastIndex = i + term.length;
-
+                            if (isFirstHighlight) {
+                                isFirstHighlight = false;
+                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="first-context-highlight" class="highlighted-context">${originalInnerText.substring(i, i + term.length)}</span>`;
+                            } else {
+                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context-term">${originalInnerText.substring(i, i + term.length)}</span>`;
+                                lastIndex = i + term.length;
+                            }
                             // Move the loop index to skip over the matched substring
                             i = lastIndex - 1;
                         }
@@ -130,6 +144,11 @@
                         highlightInnerText.call(this, element);
                     }
                 });
+
+                //if first highlight is still true, then we didn't find any highlights just add a note to the top of the html that says no highlights found
+                if (isFirstHighlight) {
+                    doc.body.innerHTML = `<div class="no-context-alert">Could not parse the reference within this note.</div>` + doc.body.innerHTML;
+                }
 
                 // Return the updated HTML as a string
                 return doc.body.innerHTML;
@@ -187,6 +206,27 @@
         transition: all 0.45s ease-in-out;
         overflow: hidden;
         color: rgb(72, 71, 71);
+    }
+
+    .seen-tag {
+        font-size: 10pt;
+        color: #0B4B99;
+        margin-left: 5px;
+    }
+
+    .seen-tag > b {
+        font-weight: bold;
+        font-size: larger;
+    }
+
+    .seen-tag > i {
+        color: gray;
+    }
+
+    .no-context-alert {
+        font-size: 10pt;
+        color: red;
+        margin-left: 5px;
     }
 
     .header-white {
@@ -277,6 +317,8 @@
     }
 
     .close-note-overlay {
+        position: sticky;
+        top: 0;
         width: 25px;
         height: 25px;
         align-self: flex-end;
