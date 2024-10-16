@@ -216,8 +216,10 @@
           for (let key in clinPhen) {
             if (this.hpoTermsObj[key]) {
               let alreadyExists = false;
-              for (let sentence of this.hpoTermsObj[key].exampleSentence) {
+              for (let i = 0; i < this.hpoTermsObj[key].exampleSentence.length; i++) {
+                let sentence = this.hpoTermsObj[key].exampleSentence[i][0];
                 if (sentence == clinPhen[key]["Example sentence"]) {
+                  this.hpoTermsObj[key].addToTimesSeen(i);
                   alreadyExists = true;
                 }
               }
@@ -227,9 +229,10 @@
                 this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]["No. occurrences"])
                 this.hpoTermsObj[key].addToEarliness(clinPhen[key]["Earliness (lower = earlier)"])
                 this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]["Example sentence"])
-                this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id])
                 continue;
               }
+
+              this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id])
               continue;
             }
             //otherwise just add it to the list we haven't seen it before
@@ -257,7 +260,6 @@
         //For each of the notes in the notes list process the text
         for (let note of this.notesList) {
           //Call the process text function
-          
           if (this.isCheckedMap[note.id] == false) {
             continue;
           } else {
