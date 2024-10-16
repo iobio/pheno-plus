@@ -72,6 +72,9 @@
                     let noteHTMLParent = document.getElementById('note-html-container');
                     //set the z index of all content to be below the header
                     noteHTMLParent.style.zIndex = 1;
+
+                    //for sanity just remove all images from the note
+                    noteHTMLParent.querySelectorAll('img').forEach(img => img.remove());
                 });
             },
             closeAndResetNote() {
