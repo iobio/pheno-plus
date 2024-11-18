@@ -20,7 +20,7 @@
         </div>
 
         <div class="sub-container">
-            <h3 class="header-white">Notes Found In</h3>
+            <h3 class="header-white">Notes With Term</h3>
             <div class="note-title-row" v-if="hpoItemObj" v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()">
                 <div class="exp-btn">
                     <svg @click="showFullTermContext(noteTIDPair[1])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -33,8 +33,8 @@
         </div>
 
         <div class="sub-container">
-            <h3 class="header-white">Note Contexts Found</h3>
-            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()"><span class="seen-tag"><b>{{ exampleS[1] }}</b> Copies: </span> {{ exampleS[0] }}</div>
+            <h3 class="header-white">Context Snips</h3>
+            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()"><span class="seen-tag"><b>{{ exampleS[1] }}</b> Copies</span> {{ exampleS[0] }}</div>
         </div>
     </div>
 
@@ -354,14 +354,18 @@
     }
 
     .seen-tag {
-        font-size: 10pt;
+        background-color: aliceblue;
         color: #0B4B99;
         margin-left: 5px;
+        margin-right: 5px;
+        font-weight: bold;
+        font-style: normal;
+        padding: 2px 4px;
+        border-radius: 5px;
     }
 
     .seen-tag > b {
-        font-weight: bold;
-        font-size: larger;
+        text-decoration: underline;
     }
 
     .seen-tag > i {
