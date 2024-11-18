@@ -119,6 +119,7 @@
                     // Process all rows and cells within this table
                     table.querySelectorAll('tr').forEach(row => {
                         let rowDiv = document.createElement('div');
+                        rowDiv.classList.add('table-row');
                         row.querySelectorAll('td, th').forEach(cell => {
                             let cellDiv = document.createElement('div');
                             cellDiv.innerHTML = cell.innerHTML; // Copy cell content
@@ -284,6 +285,14 @@
     .table-div {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .table-row {
+        display: flex;
+        flex-direction: row;
         align-items: flex-start;
         justify-content: flex-start;
         width: 100%;
