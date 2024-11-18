@@ -109,24 +109,24 @@
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
 
-                //Before we do anything we are going to turn any tables into divs with the class table-div and turn any sub-table elements into divs
+                // Turn tables into divs with the class table-div and handle nested table elements
                 doc.body.querySelectorAll('table').forEach(table => {
                     let tableDiv = document.createElement('div');
                     tableDiv.classList.add('table-div');
-                    //all table bodies are going to be divs
-                    table.querySelectorAll('tbody').forEach(tbody => {
-                        let tbodyDiv = document.createElement('div');
-                        tbody.querySelectorAll('tr').forEach(row => {
-                            let rowDiv = document.createElement('div');
-                            row.querySelectorAll('td').forEach(cell => {
-                                let cellDiv = document.createElement('div');
-                                cellDiv.innerHTML = cell.innerHTML;
-                                rowDiv.appendChild(cellDiv);
-                            });
-                            tbodyDiv.appendChild(rowDiv);
+                    
+                    // Process all rows and cells into divs
+                    table.querySelectorAll('tr').forEach(row => {
+                        let rowDiv = document.createElement('div');
+                        row.querySelectorAll('td, th').forEach(cell => { // Handle both <td> and <th>
+                            let cellDiv = document.createElement('div');
+                            cellDiv.innerHTML = cell.innerHTML; // Copy cell content
+                            rowDiv.appendChild(cellDiv);
                         });
-                        tableDiv.appendChild(tbodyDiv);
+                        tableDiv.appendChild(rowDiv);
                     });
+
+                    // Replace the original table with the new div
+                    table.replaceWith(tableDiv);
                 });
 
                 let isFirstHighlight = true;
