@@ -105,19 +105,21 @@
                 this.lenOfIndexes = 0;
             },
             highlightContexts(note) {
-                // Get the HTML content of the note and parse it into a DOM structure
+                // Parse the HTML content of the note into a DOM structure
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
 
-                // Turn tables into divs with the class table-div and handle nested table elements
-                doc.querySelectorAll('table').forEach(table => {
+                // Select all tables in the document, including nested ones
+                // Use Array.from to convert the NodeList to an array and reverse it
+                // This ensures you replace the innermost tables first
+                Array.from(doc.querySelectorAll('table')).reverse().forEach(table => {
                     let tableDiv = document.createElement('div');
                     tableDiv.classList.add('table-div');
                     
-                    // Process all rows and cells into divs
+                    // Process all rows and cells within this table
                     table.querySelectorAll('tr').forEach(row => {
                         let rowDiv = document.createElement('div');
-                        row.querySelectorAll('td, th').forEach(cell => { // Handle both <td> and <th>
+                        row.querySelectorAll('td, th').forEach(cell => {
                             let cellDiv = document.createElement('div');
                             cellDiv.innerHTML = cell.innerHTML; // Copy cell content
                             rowDiv.appendChild(cellDiv);
