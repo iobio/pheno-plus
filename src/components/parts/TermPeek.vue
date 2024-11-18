@@ -259,6 +259,11 @@
 </script>
 
 <style>
+    table {
+        overflow: auto;
+        width: 100%;
+    }
+
     #term-peek-div {
         position: relative;
         display: flex;
