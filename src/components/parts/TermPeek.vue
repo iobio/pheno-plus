@@ -110,7 +110,7 @@
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
 
                 // Turn tables into divs with the class table-div and handle nested table elements
-                doc.body.querySelectorAll('table').forEach(table => {
+                doc.querySelectorAll('table').forEach(table => {
                     let tableDiv = document.createElement('div');
                     tableDiv.classList.add('table-div');
                     
