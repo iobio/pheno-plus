@@ -12,11 +12,6 @@
         </div>
 
         <div class="sub-container">
-            <h3 class="header-white">Note Contexts Found</h3>
-            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">"... {{ exampleS[0] }}..." <span class="seen-tag">Seen: <b>{{ exampleS[1] }}</b><i>x</i></span></div>
-        </div>
-
-        <div class="sub-container">
             <h3 class="header-white">Notes Found In</h3>
             <div class="note-title-row" v-if="hpoItemObj" v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()">
                 <div class="exp-btn">
@@ -27,6 +22,11 @@
                 </div> 
                 <span>{{ noteTIDPair[0] }}</span>
             </div>
+        </div>
+
+        <div class="sub-container">
+            <h3 class="header-white">Note Contexts Found</h3>
+            <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()"><span class="seen-tag"><b>{{ exampleS[1] }}</b> Copies: </span> {{ exampleS[0] }}</div>
         </div>
     </div>
 
