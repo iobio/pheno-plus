@@ -6,8 +6,16 @@
                     <title>close note inspection</title>
                     <path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M14.59,8L12,10.59L9.41,8L8,9.41L10.59,12L8,14.59L9.41,16L12,13.41L14.59,16L16,14.59L13.41,12L16,9.41L14.59,8Z" />
                 </svg>
+                
             </div>
-            <h3 class="header-white note-title">{{ noteSelected.getTitle() }}</h3>
+            <h3 class="header-white note-title">{{ noteSelected.getTitle() }} 
+                <div id="scroll-btn-wrapper" v-if="lenOfIndexes > 0"  @click="incrementScrollIndex()">
+                    <div>{{ scrolledIndex +1 }} / {{ lenOfIndexes }}</div>
+                    <div id="next-highlight">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>next</title><path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" /></svg>
+                    </div>
+                </div>
+            </h3>
             <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
         </div>
 
@@ -44,9 +52,18 @@
                 fullNoteShown: false,
                 noteSelected: null,
                 currentHighlightedHtml: null,
+                scrolledIndex: 0,
+                lenOfIndexes: 0
             }
         },
         methods: {
+            incrementScrollIndex() {
+                if (this.scrolledIndex < this.lenOfIndexes - 1) {
+                    this.scrolledIndex++;
+                } else {
+                    this.scrolledIndex = 0;
+                }
+            },
             showFullTermContext(tid) {
                 let selectedNote;
                 selectedNote = this.notesList.find(note => note.getId() == tid);
@@ -58,7 +75,7 @@
 
                 // Ensure DOM updates are complete before scrolling
                 this.$nextTick(() => {
-                    let firstHighlight = document.getElementById('first-context-highlight');
+                    let firstHighlight = document.getElementById('context-highlight-0');
                     if (firstHighlight) {
                         let scrollableParent = document.querySelector('.full-note-overlay');
                         if (scrollableParent) {
@@ -66,6 +83,9 @@
                             let header = document.querySelector('.header-white');
                             let headerHeight = header ? header.clientHeight : 0;
                             scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+
+                            //also add the scrolled class to the first highlight
+                            firstHighlight.classList.add('scrolled');
                         }
                     }
 
@@ -81,6 +101,8 @@
                 this.fullNoteShown = false;
                 this.noteSelected = null;
                 this.currentHighlightedHtml = null;
+                this.scrolledIndex = 0;
+                this.lenOfIndexes = 0;
             },
             highlightContexts(note) {
                 // Get the HTML content of the note and parse it into a DOM structure
@@ -88,6 +110,7 @@
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
 
                 let isFirstHighlight = true;
+                let scrollIndex = 0;
 
                 //get example sentances and make them all lowercase
                 let contexts = this.hpoItemObj.getExampleSentence().map(s => s[0].toLowerCase());
@@ -114,13 +137,14 @@
                                 // If within the threshold, wrap the original substring in a highlight span
                                 if (isFirstHighlight) {
                                     isFirstHighlight = false;
-                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="first-context-highlight" class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
+                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
                                 } else {
-                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
+                                    highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(i, i + context.length)}</span>`;
                                     lastIndex = i + context.length;
                                 }
                                 // Move the loop index to skip over the matched substring
                                 i = lastIndex - 1;
+                                scrollIndex++;
                             }
                         }
                     }
@@ -137,13 +161,14 @@
                             // If within the threshold, wrap the original substring in a highlight span
                             if (isFirstHighlight) {
                                 isFirstHighlight = false;
-                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="first-context-highlight" class="highlighted-context">${originalInnerText.substring(i, i + term.length)}</span>`;
+                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(i, i + term.length)}</span>`;
                             } else {
-                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span class="highlighted-context-term">${originalInnerText.substring(i, i + term.length)}</span>`;
+                                highlightedText += originalInnerText.substring(lastIndex, i) + `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(i, i + term.length)}</span>`;
                                 lastIndex = i + term.length;
                             }
                             // Move the loop index to skip over the matched substring
                             i = lastIndex - 1;
+                            scrollIndex++;
                         }
                     }
 
@@ -167,6 +192,8 @@
                 if (isFirstHighlight) {
                     doc.body.innerHTML = `<div class="no-context-alert">Could not parse the reference within this note.</div>` + doc.body.innerHTML;
                 }
+                
+                this.lenOfIndexes = scrollIndex;
 
                 // Return the updated HTML as a string
                 return doc.body.innerHTML;
@@ -205,6 +232,27 @@
         watch: {
             hpoItemObj: function (newVal, oldVal) {
                 this.closeAndResetNote();
+            },
+            scrolledIndex: function (newVal, oldVal) { 
+                let scrollHighlight = document.getElementById(`context-highlight-${this.scrolledIndex}`);
+                if (scrollHighlight) {
+                    let scrollableParent = document.querySelector('.full-note-overlay');
+                    if (scrollableParent) {
+                        //account for the sticky header
+                        let header = document.querySelector('.header-white');
+                        let headerHeight = header ? header.clientHeight : 0;
+                        scrollableParent.scrollTop = scrollHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+
+                        //remove the scrolled class from the previous highlight
+                        let prevHighlight = document.getElementById(`context-highlight-${oldVal}`);
+                        if (prevHighlight) {
+                            prevHighlight.classList.remove('scrolled');
+                        }
+
+                        //also add the scrolled class to the first highlight
+                        scrollHighlight.classList.add('scrolled');
+                    }
+                }
             }
         }
     }
@@ -224,6 +272,46 @@
         transition: all 0.45s ease-in-out;
         overflow: hidden;
         color: rgb(72, 71, 71);
+    }
+
+    #scroll-btn-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-right: 5px;
+        position: absolute;
+        right: 2px;
+        bottom: -20px;
+        background-color: white;
+        font-size: 10pt;
+        border: 1px solid #0B4B99;
+        padding: 2px 5px;
+        border-radius: 5px;
+    }
+
+    #next-highlight {
+        cursor: pointer;
+        margin-left: 5px;
+        height: 25px;
+        width: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+
+        background-color: gray;
+        border-radius: 5px;
+
+    }
+
+    #next-highlight:hover {
+        background-color: #0B4B99;
+    }
+
+    #next-highlight > svg {
+        height: 20px;
+        width: 20px;
+        fill: white;
     }
 
     .seen-tag {
@@ -374,6 +462,13 @@
         border-radius: 3px;
         padding: 1px 0px;
         margin: 0px;
+    }
+
+    .highlighted-context-term.scrolled, .highlighted-context.scrolled {
+        text-decoration: underline;
+        text-decoration-color: #0B4B99;
+        text-decoration-thickness: 3px;
+        font-weight: bold;
     }
 
 </style>
