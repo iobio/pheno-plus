@@ -113,16 +113,20 @@
                 doc.body.querySelectorAll('table').forEach(table => {
                     let tableDiv = document.createElement('div');
                     tableDiv.classList.add('table-div');
-                    table.querySelectorAll('tr').forEach(row => {
-                        let rowDiv = document.createElement('div');
-                        row.querySelectorAll('td').forEach(cell => {
-                            let cellDiv = document.createElement('div');
-                            cellDiv.innerHTML = cell.innerHTML;
-                            rowDiv.appendChild(cellDiv);
+                    //all table bodies are going to be divs
+                    table.querySelectorAll('tbody').forEach(tbody => {
+                        let tbodyDiv = document.createElement('div');
+                        tbody.querySelectorAll('tr').forEach(row => {
+                            let rowDiv = document.createElement('div');
+                            row.querySelectorAll('td').forEach(cell => {
+                                let cellDiv = document.createElement('div');
+                                cellDiv.innerHTML = cell.innerHTML;
+                                rowDiv.appendChild(cellDiv);
+                            });
+                            tbodyDiv.appendChild(rowDiv);
                         });
-                        tableDiv.appendChild(rowDiv);
+                        tableDiv.appendChild(tbodyDiv);
                     });
-                    table.replaceWith(tableDiv);
                 });
 
                 let isFirstHighlight = true;
@@ -278,6 +282,8 @@
     .table-div {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
         width: 100%;
     }
 
