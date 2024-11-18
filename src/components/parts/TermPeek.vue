@@ -109,6 +109,22 @@
                 let parser = new DOMParser();
                 let doc = parser.parseFromString(note.getHtml(), 'text/html');
 
+                //Before we do anything we are going to turn any tables into divs with the class table-div and turn any sub-table elements into divs
+                doc.body.querySelectorAll('table').forEach(table => {
+                    let tableDiv = document.createElement('div');
+                    tableDiv.classList.add('table-div');
+                    table.querySelectorAll('tr').forEach(row => {
+                        let rowDiv = document.createElement('div');
+                        row.querySelectorAll('td').forEach(cell => {
+                            let cellDiv = document.createElement('div');
+                            cellDiv.innerHTML = cell.innerHTML;
+                            rowDiv.appendChild(cellDiv);
+                        });
+                        tableDiv.appendChild(rowDiv);
+                    });
+                    table.replaceWith(tableDiv);
+                });
+
                 let isFirstHighlight = true;
                 let scrollIndex = 0;
 
@@ -259,8 +275,9 @@
 </script>
 
 <style>
-    table {
-        overflow: auto;
+    .table-div {
+        display: flex;
+        flex-direction: column;
         width: 100%;
     }
 
