@@ -7,7 +7,18 @@
             <p>Nothing to show, select and send terms to populate.</p>
         </div>
         <div id="clip-btns-container">
-            <!-- <button class="clip-board-box-btn" @click="clearTerms">Clear</button> -->
+            <fieldset id="format">
+                <legend>List Format</legend>
+                <label for="">
+                    <input type="radio" name="list-format" value="hpo-ids" v-model="clipBoardFormat"> HPO IDs
+                </label>
+                <label for="">
+                    <input type="radio" name="list-format" value="hpo-terms" v-model="clipBoardFormat"> HPO Terms
+                </label>
+                <label for="">
+                    <input type="radio" name="list-format" value="hpo-ids-terms" v-model="clipBoardFormat"> IDs & Terms
+                </label>
+            </fieldset>
             <button class="clip-board-box-btn" @click="copyToClipboard">Copy List</button>
         </div>
     </div>
@@ -23,6 +34,7 @@
         data () {
             return {
                 clipBoardText: '',
+                clipBoardFormat: 'hpo-ids'
             }
         }, 
         async mounted () {
@@ -33,11 +45,13 @@
                 if (!this.clipBoardTerms || this.clipBoardTerms.length === 0) {
                     return;
                 }
-                this.clipBoardText = this.clipBoardTerms.join(', ');
-            },
-            clearTerms() {
-                this.clipBoardText = '';
-                this.$emit('clearClipboardTerms');
+                if (this.clipBoardFormat === 'hpo-ids') {
+                    this.clipBoardText = this.clipBoardTerms.map(term => term.getHpoId()).join(', ');
+                } else if (this.clipBoardFormat === 'hpo-terms') {
+                    this.clipBoardText = this.clipBoardTerms.map(term => term.getPhenotypeName()).join(', ');
+                } else if (this.clipBoardFormat === 'hpo-ids-terms') {
+                    this.clipBoardText = this.clipBoardTerms.map(term => `${term.getHpoId()} - ${term.getPhenotypeName()}`).join(', ');
+                }
             },
             async copyToClipboard() {
                 try {
@@ -55,6 +69,9 @@
         },
         watch: {
             clipBoardTerms: function (newVal, oldVal) {
+                this.setText();
+            },
+            clipBoardFormat: function (newVal, oldVal) {
                 this.setText();
             }
         }
@@ -94,6 +111,7 @@
 
     #clip-btns-container {
         width: 10%;
+        min-width: 110px;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -110,13 +128,25 @@
         color: white;
     }
     .clip-board-box-btn {
-        max-height: 40px;
+        max-height: 30px;
     }
     .clip-board-box-btn:hover {
         background-color: rgb(0,113,189, .8);
     }
     .clip-board-box-btn:active {
         background-color: rgba(4, 83, 136);
+    }
+
+    #format {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: small;
+        border: none;
+        padding: 2px;
+        margin-bottom: 5px;
+        min-width: 101px;
     }
 
     #hpo-term-clipboard {

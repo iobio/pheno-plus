@@ -174,7 +174,7 @@
         for (let key in this.hpoTermsObj) {
           let item = this.hpoTermsObj[key];
           if (item.getUse()) {
-            terms.push(item.getHpoId());
+            terms.push(item);
           }
         }
         this.clipTerms = terms;
