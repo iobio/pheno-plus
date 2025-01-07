@@ -169,18 +169,20 @@ export default {
         let innerText = element.innerText.toLowerCase() // Get the innerText for case-insensitive matching
         let originalInnerText = element.innerText // Get the original innerText
         let highlightedText = ''
-        let lastIndex = 0 // Track the last index of the original innerText that was copied to the highlightedText
 
         //if the innerText is two letters shorter than the term then don't try to match just ignore
         if (innerText.length < term.length - 1) {
           return
         }
 
+        let lastIndex = 0 // Track the last index of the original innerText that was copied to the highlightedText
+
         for (let context of contexts) {
           // Adjust the threshold as needed (e.g., 15% of the context's length)
           let threshold = Math.floor(context.length * 0.15)
 
-          for (let i = 0; i <= innerText.length - context.length; i++) {
+          let i = 0
+          while (i <= innerText.length - (context.length - 1)) {
             //If a context is too short then don't try to match it
             if (context.length < term.length - 1) {
               continue
@@ -204,19 +206,25 @@ export default {
                   i + context.length
                 )}</span>`
 
+              let end = i + context.length
               // Update the lastIndex to the end of the matched substring, the highlight is only the size of the context
-              lastIndex = i + context.length
+              lastIndex = end
 
               // Move the loop index to skip over the matched substring
-              i = lastIndex - 1
+              i = lastIndex
               scrollIndex++
+            } else {
+              i++
             }
           }
         }
 
+        //if we have reached the end of the
+
         //also highlight the term if there is a good levenshtein distance
         let termThreshold = Math.floor(term.length * 0.2)
-        for (let i = 0; i <= innerText.length - term.length; i++) {
+        let i = lastIndex
+        while (i <= innerText.length - term.length) {
           let substring = innerText.substring(i, i + term.length)
 
           // Calculate the Levenshtein distance between the term and the substring
@@ -235,13 +243,14 @@ export default {
                 i + term.length
               )}</span>`
 
-            // Update the lastIndex to the end of the matched substring, the highlight is only the size of the term
-            // Not the whole original innerText
-            lastIndex = i + term.length
+            let end = i + term.length
+            lastIndex = end
 
             // Move the loop index to skip over the matched substring
             i = lastIndex
             scrollIndex++
+          } else {
+            i++
           }
         }
 
