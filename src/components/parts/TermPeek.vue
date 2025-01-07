@@ -240,7 +240,7 @@ export default {
             lastIndex = i + term.length
 
             // Move the loop index to skip over the matched substring
-            i = lastIndex - 1
+            i = lastIndex
             scrollIndex++
           }
         }
