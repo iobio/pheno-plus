@@ -29,13 +29,21 @@ class ChartItem {
     this.exampleSentence = []
     if (
       phenotypeData['Example sentence'] !== undefined &&
-      !Array.isArray(phenotypeData['Example sentence'])
+      !Array.isArray(phenotypeData['Example sentence']) &&
+      typeof phenotypeData['Example sentence'] === 'string' &&
+      phenotypeData['Example sentence'].length > 2
     ) {
+      //If the example sentence is a string, add it to the example sentence array
       this.exampleSentence.push([phenotypeData['Example sentence'], 1])
-    } else if (phenotypeData['Example sentence'] !== undefined) {
-      // If the example sentence is an array, then it is an array of arrays
-      for (let i = 0; i < phenotypeData['Example sentence'].length; i++) {
-        this.exampleSentence.push([phenotypeData['Example sentence'][i], 1])
+    } else if (
+      phenotypeData['Example sentence'] !== undefined &&
+      Array.isArray(phenotypeData['Example sentence'])
+    ) {
+      for (let example of phenotypeData['Example sentence']) {
+        //If the example sentence is an array, add each element to the example sentence array as long as it is a string
+        if (typeof example === 'string' && example.length > 2) {
+          this.exampleSentence.push([example, 1])
+        }
       }
     }
 
