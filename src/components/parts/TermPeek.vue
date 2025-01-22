@@ -53,7 +53,7 @@
 
     <div class="sub-container">
       <h3 class="header-white">Context Snips</h3>
-      <div v-if="hpoItemObj" v-for="exampleS in hpoItemObj.getExampleSentence()">
+      <div v-for="exampleS in exampleSentences">
         <span class="seen-tag"
           ><b>{{ exampleS[1] }}</b> Copies</span
         >
@@ -311,7 +311,14 @@ export default {
       return matrix[b.length][a.length]
     }
   },
-  computed: {},
+  computed: {
+    exampleSentences() {
+      if (!this.hpoItemObj) {
+        return []
+      }
+      return this.hpoItemObj.getExampleSentence()
+    }
+  },
   watch: {
     hpoItemObj: function (newVal, oldVal) {
       this.closeAndResetNote()
