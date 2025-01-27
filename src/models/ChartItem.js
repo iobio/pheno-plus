@@ -141,6 +141,11 @@ class ChartItem {
         }
     }
     addToNotesPresentIn(note) {
+        //Dont add the same note twice
+        if (this.notesPresentIn.includes(note)) {
+            return;
+        }
+
         this.notesPresentIn.push(note);
     }
     addToTimesSeen(index) {

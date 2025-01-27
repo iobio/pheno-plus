@@ -242,10 +242,10 @@ export default {
                             this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
                             this.hpoTermsObj[key].addToEarliness(clinPhen[key]['Earliness (lower = earlier)']);
                             this.hpoTermsObj[key].addToExampleSentences([clinPhen[key]['Example sentence'], 1]);
-                            this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
-                            continue;
                         }
 
+                        //It technically shouldnt be possible to add the same note twice via the UI but there is a
+                        //check on this method to prevent it from happening if it does
                         this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
                         continue;
                     }
