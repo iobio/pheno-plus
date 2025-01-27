@@ -135,9 +135,8 @@ class ChartItem {
         if (Array.isArray(exampleSentence)) {
             this.exampleSentences.push(exampleSentence);
             return;
-        } else {
-            let newExample = [exampleSentence, 1];
-            this.exampleSentences.push(newExample);
+        } else if (typeof exampleSentence === 'string') {
+            this.exampleSentences.push([exampleSentence, 1]);
         }
     }
     addToNotesPresentIn(note) {
