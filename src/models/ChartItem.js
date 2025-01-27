@@ -133,7 +133,7 @@ class ChartItem {
     }
     addToExampleSentences(exampleSentence) {
         if (Array.isArray(exampleSentence)) {
-            this.exampleSentences = this.exampleSentences.push(exampleSentence);
+            this.exampleSentences.push(exampleSentence);
             return;
         } else {
             let newExample = [exampleSentence, 1];

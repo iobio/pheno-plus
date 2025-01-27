@@ -43,7 +43,7 @@
             <h3 class="header-white">Context Snips</h3>
             <div v-for="exampleS in exampleSentences">
                 <span class="seen-tag"
-                    ><b>{{ exampleS[1] }}</b> exampleS</span
+                    ><b>{{ exampleS[1] }}</b> copies</span
                 >
                 {{ exampleS[0] }}
             </div>
