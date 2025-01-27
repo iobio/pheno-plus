@@ -253,6 +253,7 @@ export default {
       if (gru_data) {
         const clinPhen = gru_data.clinPhenData
 
+        console.log(clinPhen)
         //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
         for (let key in clinPhen) {
           if (this.hpoTermsObj[key]) {
