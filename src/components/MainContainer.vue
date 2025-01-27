@@ -241,7 +241,7 @@ export default {
                             //If the item doenst already exist add the new information to the existing item
                             this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
                             this.hpoTermsObj[key].addToEarliness(clinPhen[key]['Earliness (lower = earlier)']);
-                            this.hpoTermsObj[key].addToExampleSentences([clinPhen[key]['Example sentence'], 1]);
+                            this.hpoTermsObj[key].addToExampleSentences(clinPhen[key]['Example sentence']);
                         }
 
                         //It technically shouldnt be possible to add the same note twice via the UI but there is a
