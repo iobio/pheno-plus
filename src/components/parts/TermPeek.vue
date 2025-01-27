@@ -53,11 +53,14 @@
 
     <div class="sub-container">
       <h3 class="header-white">Context Snips</h3>
+      <div>{{ hpoItemObj }}</div>
+      <div>{{ exampleSentences }}</div>
       <div v-for="exampleS in exampleSentences">
-        <span class="seen-tag"
-          ><b>{{ exampleS[1] }}</b> Copies</span
+        {{ exampleS }}
+        <!-- <span class="seen-tag"
+          ><b>{{ exampleS[1] }}</b> exampleS</span
         >
-        {{ exampleS[0] }}
+        {{ exampleS[0] }} -->
       </div>
     </div>
   </div>
