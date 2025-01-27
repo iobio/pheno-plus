@@ -242,16 +242,19 @@ export default {
                             this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
                             this.hpoTermsObj[key].addToEarliness(clinPhen[key]['Earliness (lower = earlier)']);
                             this.hpoTermsObj[key].addToExampleSentences([clinPhen[key]['Example sentence'], 1]);
+                            this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
                             continue;
                         }
 
                         this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
                         continue;
                     }
+
                     //otherwise just add it to the list we haven't seen it before
                     let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
                     this.hpoTermsObj[key] = item;
                 }
+
                 let sortedTerms = Object.values(this.hpoTermsObj)
                     .sort((a, b) => b.numOccurrences - a.numOccurrences)
                     .map((item) => [item.hpoId, item.numOccurrences]);
