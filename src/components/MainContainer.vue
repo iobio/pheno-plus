@@ -254,7 +254,8 @@ export default {
         const clinPhen = gru_data.clinPhenData
 
         console.log(clinPhen)
-        //for each item in the clinPhen object create a new result item and add to the hpoItemsObj
+        console.log(this.hpoTermsObj)
+        //Clinphen is an object of objects, each object is a term the key is the hpo id
         for (let key in clinPhen) {
           if (this.hpoTermsObj[key]) {
             let alreadyExists = false
