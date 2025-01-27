@@ -232,8 +232,8 @@ export default {
                         //If we have seen this phenotypic term before
                         //Check if the sentence has already been seen
                         let sentenceAlreadySeen = false;
-                        for (let i = 0; i < this.hpoTermsObj[key].exampleSentence.length; i++) {
-                            let sentence = this.hpoTermsObj[key].exampleSentence[i][0];
+                        for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
+                            let sentence = this.hpoTermsObj[key].exampleSentences[i][0];
                             if (sentence === clinPhen[key]['Example sentence']) {
                                 this.hpoTermsObj[key].addToTimesSeen(i);
                                 sentenceAlreadySeen = true;
@@ -244,7 +244,7 @@ export default {
                             //If the item doenst already exist add the new information to the existing item
                             this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
                             this.hpoTermsObj[key].addToEarliness(clinPhen[key]['Earliness (lower = earlier)']);
-                            this.hpoTermsObj[key].addToExampleSentence(clinPhen[key]['Example sentence']);
+                            this.hpoTermsObj[key].addToExampleSentences([clinPhen[key]['Example sentence'], 1]);
                             continue;
                         }
 

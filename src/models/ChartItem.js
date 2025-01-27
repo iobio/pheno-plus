@@ -5,7 +5,7 @@ class ChartItem {
         }
 
         this.hpoId = phenotypeData['HPO ID'] || phenotypeData.term_id;
-        if (this.hpoId === undefined) {
+        if (!this.hpoId) {
             return;
         }
 
@@ -26,7 +26,7 @@ class ChartItem {
             this.earliness = this.earliness.concat(phenotypeData['Earliness (lower = earlier)']);
         }
 
-        this.exampleSentence = [];
+        this.exampleSentences = [];
         if (
             phenotypeData['Example sentence'] !== undefined &&
             !Array.isArray(phenotypeData['Example sentence']) &&
@@ -34,12 +34,12 @@ class ChartItem {
             phenotypeData['Example sentence'].length > 2
         ) {
             //If the example sentence is a string, add it to the example sentence array
-            this.exampleSentence.push([phenotypeData['Example sentence'], 1]);
+            this.exampleSentences.push([phenotypeData['Example sentence'], 1]);
         } else if (phenotypeData['Example sentence'] !== undefined && Array.isArray(phenotypeData['Example sentence'])) {
             for (let example of phenotypeData['Example sentence']) {
                 //If the example sentence is an array, add each element to the example sentence array as long as it is a string
                 if (typeof example === 'string' && example.length > 2) {
-                    this.exampleSentence.push([example, 1]);
+                    this.exampleSentences.push([example, 1]);
                 }
             }
         }
@@ -71,8 +71,8 @@ class ChartItem {
     getEarliness() {
         return this.earliness;
     }
-    getExampleSentence() {
-        return this.exampleSentence || [];
+    getExampleSentences() {
+        return this.exampleSentences || [];
     }
     getSeverity() {
         return this.severity;
@@ -128,23 +128,23 @@ class ChartItem {
     addToEarliness(earliness) {
         this.earliness.push(earliness);
     }
-    setExampleSentence(exampleSentence) {
-        this.exampleSentence = exampleSentence;
+    setExampleSentences(exampleSentence) {
+        this.exampleSentences = [exampleSentence, 1];
     }
-    addToExampleSentence(exampleSentence) {
+    addToExampleSentences(exampleSentence) {
         if (Array.isArray(exampleSentence)) {
-            this.exampleSentence = this.exampleSentence.concat(exampleSentence);
+            this.exampleSentences = this.exampleSentences.push(exampleSentence);
             return;
         } else {
-            exampleSentence = [exampleSentence, 1];
-            this.exampleSentence.push(exampleSentence);
+            let newExample = [exampleSentence, 1];
+            this.exampleSentences.push(newExample);
         }
     }
     addToNotesPresentIn(note) {
         this.notesPresentIn.push(note);
     }
     addToTimesSeen(index) {
-        this.exampleSentence[index][1] += 1;
+        this.exampleSentences[index][1] += 1;
     }
 }
 export default ChartItem;
