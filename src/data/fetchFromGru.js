@@ -76,12 +76,12 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         let theObject = {};
 
         concatClinPhenResponseArray.forEach((row, index) => {
-            let rowArray = row.split('\t');
+            let rowArray = row.trim().split('\t');
             let tempObject = {};
 
             //Create the headers in a temp object and assign the values from the row
             headerRowArray.forEach((header, index) => {
-                tempObject[header] = rowArray[index].trim();
+                tempObject[header] = rowArray[index];
             });
 
             //If the term is already in the object then add the entries together
