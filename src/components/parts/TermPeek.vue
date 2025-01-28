@@ -9,6 +9,7 @@
                     />
                 </svg>
             </div>
+            <div v-if="alertShown" class="no-context-alert">Pheno+ was not able to highlight the reference within this note.</div>
             <h3 class="header-white note-title">
                 {{ noteSelected.getTitle() }}
                 <div id="scroll-btn-wrapper" v-if="lenOfIndexes > 0" @click="incrementScrollIndex()">
@@ -63,6 +64,7 @@ export default {
             fullNoteShown: false,
             noteSelected: null,
             currentHighlightedHtml: null,
+            alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
         };
@@ -259,9 +261,9 @@ export default {
 
             //if first highlight is still true, then we didn't find any highlights just add a note to the top of the html that says no highlights found
             if (isFirstHighlight) {
-                doc.body.innerHTML =
-                    `<div class="no-context-alert">Pheno+ was not able to highlight the reference within this note.</div>` +
-                    doc.body.innerHTML;
+                this.alertShown = true;
+            } else {
+                this.alertShown = false;
             }
 
             this.lenOfIndexes = scrollIndex;
