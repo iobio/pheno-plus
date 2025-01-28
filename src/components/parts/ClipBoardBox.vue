@@ -129,7 +129,7 @@ export default {
 }
 
 /* At short heights make the clip-btns-container text much smaller */
-@media (max-height: 1000px) {
+@media (max-height: 700px) {
     #clip-btns-container {
         font-size: 0.8em;
     }
