@@ -128,6 +128,13 @@ export default {
     align-items: center;
 }
 
+/* At short heights make the clip-btns-container text much smaller */
+@media (max-height: 1000px) {
+    #clip-btns-container {
+        font-size: 0.8em;
+    }
+}
+
 button {
     width: 90%;
     height: 50%;
