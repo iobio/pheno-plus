@@ -226,23 +226,30 @@ export default {
                 //Clinphen is an object of objects, each object is a term the key is the hpo id
                 for (let key in clinPhen) {
                     if (this.hpoTermsObj[key]) {
-                        //If we have seen this phenotypic term before
-                        //Check if the sentence has already been seen
-                        let sentenceAlreadySeen = false;
-                        for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
-                            let sentence = this.hpoTermsObj[key].exampleSentences[i][0];
-                            //Check to see if clinphen returned a string or a list of strings
-                            if (sentence == clinPhen[key]['Example sentence']) {
-                                this.hpoTermsObj[key].addToTimesSeen(i);
-                                sentenceAlreadySeen = true;
-                            }
-                        }
+                        //clinPhen Example sentance is always an array, usually of one element but sometimes more
+                        for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                            let clinPhenSen = clinPhen[key]['Example sentence'][i];
+                            //Any example sentence will have a corresponding earliness value
+                            let earliness = clinPhen[key]['Earliness (lower = earlier)'][i];
 
-                        if (!sentenceAlreadySeen) {
-                            //If the item doenst already exist add the new information to the existing item
-                            this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
-                            this.hpoTermsObj[key].addToEarliness(clinPhen[key]['Earliness (lower = earlier)']);
-                            this.hpoTermsObj[key].addToExampleSentences(clinPhen[key]['Example sentence']);
+                            let sentenceAlreadySeen = false;
+                            for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
+                                let currSen = this.hpoTermsObj[key].exampleSentences[i][0];
+                                //Check if the sentence is already in the list
+                                if (currSen == clinPhenSen) {
+                                    this.hpoTermsObj[key].addToTimesSeen(i);
+                                    sentenceAlreadySeen = true;
+                                }
+                            }
+
+                            if (!sentenceAlreadySeen) {
+                                //If this clinPhen sentence is not already in the list add it
+                                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
+
+                                //Use the singular adding methods to add the earliness and example sentence
+                                this.hpoTermsObj[key].addToEarliness(earliness);
+                                this.hpoTermsObj[key].addToExampleSentences(clinPhenSen);
+                            }
                         }
 
                         //It technically shouldnt be possible to add the same note twice via the UI but there is a

@@ -21,19 +21,18 @@ class ChartItem {
             phenotypeData['Earliness (lower = earlier)'] !== undefined &&
             !Array.isArray(phenotypeData['Earliness (lower = earlier)'])
         ) {
+            //This should never happen but if it does, add the single value to the array
             this.earliness.push(phenotypeData['Earliness (lower = earlier)']);
-        } else if (phenotypeData['Earliness (lower = earlier)'] !== undefined) {
-            this.earliness = this.earliness.concat(phenotypeData['Earliness (lower = earlier)']);
+        } else if (
+            phenotypeData['Earliness (lower = earlier)'] !== undefined &&
+            Array.isArray(phenotypeData['Earliness (lower = earlier)'])
+        ) {
+            this.earliness = phenotypeData['Earliness (lower = earlier)'];
         }
 
         this.exampleSentences = [];
-        if (
-            phenotypeData['Example sentence'] !== undefined &&
-            !Array.isArray(phenotypeData['Example sentence']) &&
-            typeof phenotypeData['Example sentence'] === 'string' &&
-            phenotypeData['Example sentence'].length > 2
-        ) {
-            //If the example sentence is a string, add it to the example sentence array
+        if (phenotypeData['Example sentence'] !== undefined && !Array.isArray(phenotypeData['Example sentence'])) {
+            //This should never happen but if it does, add the single value to the array
             this.exampleSentences.push([phenotypeData['Example sentence'], 1]);
         } else if (phenotypeData['Example sentence'] !== undefined && Array.isArray(phenotypeData['Example sentence'])) {
             for (let example of phenotypeData['Example sentence']) {
@@ -44,7 +43,7 @@ class ChartItem {
             }
         }
 
-        if (notesPresentIn.length > 0) {
+        if (notesPresentIn.length > 0 && Array.isArray(notesPresentIn)) {
             this.notesPresentIn = notesPresentIn;
         } else {
             this.notesPresentIn = [];
@@ -126,12 +125,17 @@ class ChartItem {
         this.earliness = earliness;
     }
     addToEarliness(earliness) {
+        //Add the earliness to the array, expects a singular value
         this.earliness.push(earliness);
     }
     setExampleSentences(exampleSentence) {
         this.exampleSentences = [exampleSentence, 1];
     }
     addToExampleSentences(exampleSentence) {
+        /**
+         * Expects a string as the example sentence to be added to the exampleSentences array
+         * Not to be used to add an array of example sentences must be used to add a single example sentence
+         */
         if (typeof exampleSentence === 'string') {
             this.exampleSentences.push([exampleSentence, 1]);
         }
