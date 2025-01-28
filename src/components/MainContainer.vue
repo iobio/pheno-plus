@@ -235,8 +235,6 @@ export default {
                             let sentenceAlreadySeen = false;
                             for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
                                 let currSen = this.hpoTermsObj[key].exampleSentences[i][0].trim().toLowerCase();
-
-                                console.log(currSen + '??' + clinPhenSen + 'term' + this.hpoTermsObj[key].phenotypeName);
                                 //Check if the sentence is already in the list
                                 if (currSen == clinPhenSen) {
                                     this.hpoTermsObj[key].addToTimesSeen(i);
