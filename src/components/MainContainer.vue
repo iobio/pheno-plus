@@ -234,6 +234,8 @@ export default {
                             //Check to see if clinphen returned a string or a list of strings
                             console.log(clinPhen[key]['Example sentence']);
                             if (sentence === clinPhen[key]['Example sentence']) {
+                                console.log('sentence already seen');
+                                console.log(this.hpoTermsObj[key].phenotypeName);
                                 this.hpoTermsObj[key].addToTimesSeen(i);
                                 sentenceAlreadySeen = true;
                             }
