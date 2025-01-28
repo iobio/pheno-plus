@@ -1,10 +1,9 @@
-
 export default async function fetchFromGru(data) {
     var chpcGruURL = 'https://mosaic.chpc.utah.edu/gru/api/v1/';
 
     let clinPhenData = await fetchFromClinPhen(chpcGruURL, data);
 
-    return {clinPhenData: clinPhenData}
+    return { clinPhenData: clinPhenData };
 }
 
 async function fetchFromClinPhen(gruBaseUrl, data) {
@@ -30,7 +29,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
             }
 
             //Check to make sure the last 5 words arent 'no' or 'not'
-            var chunkArray = chunk.split(' ');// split the chunk on the spaces to check
+            var chunkArray = chunk.split(' '); // split the chunk on the spaces to check
 
             //iterate backwards for the last 5 words, if one of those is 'no' or 'not' slice the chunk there to the end and make that the negatedEnd
             for (let i = chunkArray.length - 1; i > chunkArray.length - 6; i--) {
@@ -38,7 +37,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
                     negatedEnd = chunkArray.slice(i).join(' ');
                     chunk = chunk.slice(0, chunk.length - negatedEnd.length); //We just want the chunk up to the negatedEnd we found
                     break;
-                } 
+                }
             }
             noteChunks.push(chunk);
         }
@@ -48,11 +47,11 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
             var chunk = noteChunks[i];
             try {
                 var clinphenResponse = await fetch(gruBaseUrl + 'clinphen?notes=' + chunk)
-                .then(response => response.text())
-                .then((data) => {
-                    return data;
-                });
-    
+                    .then((response) => response.text())
+                    .then((data) => {
+                        return data;
+                    });
+
                 //split by new line
                 var clinphenResponseArray = clinphenResponse.split('\n');
                 //take the header row off the first line
@@ -74,6 +73,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         }
         //Iterate over the array and split each row on the tabs, then create an object for each row with the header row as the keys
         var theObject = {};
+        console.log(concatClinPhenResponseArray);
         concatClinPhenResponseArray.forEach((row, index) => {
             var rowArray = row.split('\t');
             var tempObject = {};
@@ -102,48 +102,46 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         //remove any empty objects
         delete theObject[''];
         return theObject;
-
     } else {
         try {
             return fetch(gruBaseUrl + 'clinphen?notes=' + noteText)
-            .then(response => response.text())
-            .then((data) => {
-                
-                hpoText = data;
-        
-                //split the text on the new lines to get the rows
-                var theTextArray = hpoText.split('\n');
-        
-                //first part is the header row
-                var headerRow = theTextArray[0];
-        
-                //remove the header row from the array
-                theTextArray.shift();
+                .then((response) => response.text())
+                .then((data) => {
+                    hpoText = data;
 
-                //if nothing is found just return 0
-                if (theTextArray.length == 0) {
-                    return 0;
-                }
-        
-                //split the header row on the tabs
-                var headerRowArray = headerRow.split('\t');
-        
-                //Iterate over the text array and split each row on the tabs, then create an object for each row with the header row as the keys
-                var theObject = {};
-                theTextArray.forEach((row, index) => {
-                    var rowArray = row.split('\t');
-                    var tempObject = {};
-                    headerRowArray.forEach((header, index) => {
-                        tempObject[header] = rowArray[index];
+                    //split the text on the new lines to get the rows
+                    var theTextArray = hpoText.split('\n');
+
+                    //first part is the header row
+                    var headerRow = theTextArray[0];
+
+                    //remove the header row from the array
+                    theTextArray.shift();
+
+                    //if nothing is found just return 0
+                    if (theTextArray.length == 0) {
+                        return 0;
+                    }
+
+                    //split the header row on the tabs
+                    var headerRowArray = headerRow.split('\t');
+
+                    //Iterate over the text array and split each row on the tabs, then create an object for each row with the header row as the keys
+                    var theObject = {};
+                    theTextArray.forEach((row, index) => {
+                        var rowArray = row.split('\t');
+                        var tempObject = {};
+                        headerRowArray.forEach((header, index) => {
+                            tempObject[header] = rowArray[index];
+                        });
+                        theObject[rowArray[0]] = tempObject;
                     });
-                    theObject[rowArray[0]] = tempObject;
+
+                    //remove any empty objects
+                    delete theObject[''];
+
+                    return theObject;
                 });
-        
-                //remove any empty objects
-                delete theObject[''];
-        
-                return theObject;
-            });
         } catch {
             //No results return 0
             return 0;
