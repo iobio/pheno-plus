@@ -231,6 +231,8 @@ export default {
                         let sentenceAlreadySeen = false;
                         for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
                             let sentence = this.hpoTermsObj[key].exampleSentences[i][0];
+                            //Check to see if clinphen returned a string or a list of strings
+                            console.log(clinPhen[key]['Example sentence']);
                             if (sentence === clinPhen[key]['Example sentence']) {
                                 this.hpoTermsObj[key].addToTimesSeen(i);
                                 sentenceAlreadySeen = true;
