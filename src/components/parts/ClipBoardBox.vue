@@ -126,12 +126,13 @@ export default {
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
+    font-size: 0.9em;
 }
 
 /* At short heights make the clip-btns-container text much smaller */
 @media (max-height: 700px) {
     #clip-btns-container {
-        font-size: 0.8em;
+        font-size: 0.7em;
     }
 }
 
