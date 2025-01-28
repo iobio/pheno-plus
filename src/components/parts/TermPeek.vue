@@ -260,7 +260,7 @@ export default {
             //if first highlight is still true, then we didn't find any highlights just add a note to the top of the html that says no highlights found
             if (isFirstHighlight) {
                 doc.body.innerHTML =
-                    `<div class="no-context-alert">Pheno+ was not able to parse the reference within this note.</div>` +
+                    `<div class="no-context-alert">Pheno+ was not able to highlight the reference within this note.</div>` +
                     doc.body.innerHTML;
             }
 
@@ -430,11 +430,11 @@ export default {
     font-weight: bold;
     color: red;
     margin-left: 5px;
-    padding: 3px 5px;
+    padding: 5px 5px;
     position: absolute;
-    top: 0;
+    top: 3px;
     left: 0;
-    background-color: rgba(250, 202, 202, 0.68);
+    background-color: rgba(250, 202, 202, 0.4);
     border-radius: 5px;
 }
 
