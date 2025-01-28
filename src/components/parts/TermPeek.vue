@@ -469,7 +469,7 @@ export default {
     background-color: white;
 }
 
-#term-peek-div h3.note-title {
+.note-title {
     z-index: 2;
     font-size: 1.1em;
 }
