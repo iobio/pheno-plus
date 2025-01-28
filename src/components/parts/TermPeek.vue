@@ -260,7 +260,8 @@ export default {
             //if first highlight is still true, then we didn't find any highlights just add a note to the top of the html that says no highlights found
             if (isFirstHighlight) {
                 doc.body.innerHTML =
-                    `<div class="no-context-alert">Could not parse the reference within this note.</div>` + doc.body.innerHTML;
+                    `<div class="no-context-alert">Pheno+ was not able to parse the reference within this note.</div>` +
+                    doc.body.innerHTML;
             }
 
             this.lenOfIndexes = scrollIndex;
@@ -335,6 +336,10 @@ export default {
 </script>
 
 <style>
+#note-html-container {
+    position: relative;
+}
+
 .table-div {
     display: flex;
     flex-direction: column;
@@ -425,9 +430,14 @@ export default {
 }
 
 .no-context-alert {
-    font-size: 10pt;
+    font-size: 12pt;
+    font-weight: bold;
     color: red;
     margin-left: 5px;
+    position: absolute;
+    top: 0;
+    background-color: rgb(250, 202, 202);
+    border-radius: 5px;
 }
 
 .header-white {
