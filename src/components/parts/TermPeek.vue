@@ -432,7 +432,7 @@ export default {
     margin-left: 5px;
     padding: 3px 5px;
     position: absolute;
-    top: -2em;
+    top: 0;
     left: 0;
     background-color: rgba(250, 202, 202, 0.68);
     border-radius: 5px;
