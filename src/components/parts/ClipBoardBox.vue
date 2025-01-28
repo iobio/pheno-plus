@@ -126,12 +126,18 @@ export default {
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    font-size: 0.9em;
+    font-size: 0.8em;
+    overflow: hidden;
 }
 
 /* At short heights make the clip-btns-container text much smaller */
 @media (max-height: 700px) {
     #clip-btns-container {
+        font-size: 0.7em;
+    }
+
+    .clip-board-box-btn {
+        max-height: 25px;
         font-size: 0.7em;
     }
 }
@@ -160,10 +166,8 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    font-size: small;
     border: none;
-    padding: 2px;
-    margin-bottom: 5px;
+    padding: 1px;
     min-width: 101px;
 }
 
