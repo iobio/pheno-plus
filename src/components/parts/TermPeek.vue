@@ -336,10 +336,6 @@ export default {
 </script>
 
 <style>
-#note-html-container {
-    position: relative;
-}
-
 .table-div {
     display: flex;
     flex-direction: column;
