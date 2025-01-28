@@ -434,9 +434,11 @@ export default {
     font-weight: bold;
     color: red;
     margin-left: 5px;
+    padding: 3px 5px;
     position: absolute;
-    top: 0;
-    background-color: rgb(250, 202, 202);
+    top: -2em;
+    left: 0;
+    background-color: rgba(250, 202, 202, 0.68);
     border-radius: 5px;
 }
 
