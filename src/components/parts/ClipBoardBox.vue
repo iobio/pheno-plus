@@ -124,7 +124,7 @@ export default {
     min-width: 110px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     font-size: 0.8em;
     overflow: hidden;
