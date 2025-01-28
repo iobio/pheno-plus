@@ -436,7 +436,7 @@ export default {
     left: 0;
     background-color: rgba(250, 202, 202, 0.4);
     border-radius: 5px;
-    z-index: 3;
+    z-index: 4;
 }
 
 .header-white {
