@@ -81,7 +81,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
 
             //Create the headers in a temp object and assign the values from the row
             headerRowArray.forEach((header, index) => {
-                tempObject[header] = rowArray[index].strip();
+                tempObject[header] = rowArray[index].trim();
             });
 
             //If the term is already in the object then add the entries together
