@@ -228,13 +228,15 @@ export default {
                     if (this.hpoTermsObj[key]) {
                         //clinPhen Example sentance is always an array, usually of one element but sometimes more
                         for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
-                            let clinPhenSen = clinPhen[key]['Example sentence'][i];
+                            let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
                             //Any example sentence will have a corresponding earliness value
                             let earliness = clinPhen[key]['Earliness (lower = earlier)'][i];
 
                             let sentenceAlreadySeen = false;
                             for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
-                                let currSen = this.hpoTermsObj[key].exampleSentences[i][0];
+                                let currSen = this.hpoTermsObj[key].exampleSentences[i][0].trim().toLowerCase();
+
+                                console.log(currSen + '??' + clinPhenSen + 'term' + this.hpoTermsObj[key].phenotypeName);
                                 //Check if the sentence is already in the list
                                 if (currSen == clinPhenSen) {
                                     this.hpoTermsObj[key].addToTimesSeen(i);
