@@ -74,8 +74,6 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
 
         //Iterate over the array and split each row on the tabs, then create an object for each row with the header row as the keys
         let theObject = {};
-        console.log(headerRowArray);
-        console.log(concatClinPhenResponseArray);
 
         concatClinPhenResponseArray.forEach((row, index) => {
             let rowArray = row.split('\t');
