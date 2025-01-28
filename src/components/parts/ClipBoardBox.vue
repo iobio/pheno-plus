@@ -138,7 +138,7 @@ export default {
 
     .clip-board-box-btn {
         max-height: 25px;
-        font-size: 0.7em;
+        font-size: 0.95em;
     }
 }
 
