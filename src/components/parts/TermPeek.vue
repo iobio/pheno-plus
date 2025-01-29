@@ -84,10 +84,18 @@ export default {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            this.currentHighlightedHtml = this.highlightContexts(selectedNote);
-            if (!this.currentHighlightedHtml) {
+            try {
+                this.currentHighlightedHtml = this.highlightContexts(selectedNote);
+
+                if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
+                    this.alertShown = true;
+                    let parser = new DOMParser();
+                    this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
+                }
+            } catch (e) {
                 this.alertShown = true;
-                this.currentHighlightedHtml = selectedNote.getHtml();
+                let parser = new DOMParser();
+                this.currentHighlightedHtml = parser.parseFromString(note.html, 'text/html');
             }
 
             // Ensure DOM updates are complete before scrolling
@@ -124,7 +132,7 @@ export default {
         highlightContexts(note) {
             // Parse the HTML content of the note into a DOM structure
             let parser = new DOMParser();
-            let doc = parser.parseFromString(note.getHtml(), 'text/html');
+            let doc = parser.parseFromString(note.html, 'text/html');
 
             // Use Array.from to convert the NodeList to an array and reverse it
             // This allows you replace the innermost tables first
