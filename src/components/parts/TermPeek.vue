@@ -208,6 +208,10 @@ export default {
                             i++;
                         }
                     }
+
+                    if (!isFirstHighlight) {
+                        break;
+                    }
                 }
 
                 //If we didn't highlight a context then we can try to highlight the term
