@@ -257,6 +257,12 @@ export default {
             doc.body.querySelectorAll('*').forEach((element) => {
                 if (element.childElementCount === 0 && element.innerText.trim() !== '') {
                     highlightInnerText.call(this, element);
+                } else if (element.childElementCount > 0) {
+                    element.childNodes.forEach((child) => {
+                        if (child.nodeType === 3) {
+                            highlightInnerText.call(this, child);
+                        }
+                    });
                 }
             });
 
