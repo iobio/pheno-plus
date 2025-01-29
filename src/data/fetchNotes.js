@@ -12,7 +12,11 @@ export default async function fetchNotes(client, patientId) {
     let docSearchUrl =
         '/DocumentReference?patient=' +
         patientId +
-        '&docstatus=preliminary,final,amended&type=http%3A//loinc.org|18842-5,http%3A//loinc.org|11488-4,http%3A//loinc.org|34117-2'; //encoded the url to search for the note types
+        '&docstatus=preliminary,final,amended&type=http%3A//loinc.org|18842-5,http%3A//loinc.org|11488-4,http%3A//loinc.org|34117-2';
+
+    // URL encode the search URL
+    docSearchUrl = encodeURI(docSearchUrl);
+    console.log(docSearchUrl);
 
     let notes = null;
     try {
