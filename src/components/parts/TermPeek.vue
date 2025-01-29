@@ -166,6 +166,7 @@ export default {
 
                 let lastIndex = 0; // Track the last index of the original innerText that was copied to the highlightedText
 
+                //FIRST: We go through the whole context first
                 for (let context of contexts) {
                     // Adjust the threshold as needed (e.g., 15% of the context's length)
                     let threshold = Math.floor(context.length * 0.15);
@@ -208,38 +209,38 @@ export default {
                     }
                 }
 
-                //if we have reached the end of the
+                //If we didn't highlight a context then we can try to highlight the term
+                if (isFirstHighlight) {
+                    let termThreshold = Math.floor(term.length * 0.1);
+                    let i = 0;
+                    while (i <= innerText.length - (term.length - 1)) {
+                        let substring = innerText.substring(i, i + term.length);
 
-                //also highlight the term if there is a good levenshtein distance
-                let termThreshold = Math.floor(term.length * 0.2);
-                let i = lastIndex;
-                while (i <= innerText.length - term.length) {
-                    let substring = innerText.substring(i, i + term.length);
+                        // Calculate the Levenshtein distance between the term and the substring
+                        let distance = this.getLevenshteinDistance(term, substring);
 
-                    // Calculate the Levenshtein distance between the term and the substring
-                    let distance = this.getLevenshteinDistance(term, substring);
+                        if (distance <= termThreshold) {
+                            // If within the threshold, wrap the original substring in a highlight span
+                            if (isFirstHighlight) {
+                                isFirstHighlight = false;
+                            }
 
-                    if (distance <= termThreshold) {
-                        // If within the threshold, wrap the original substring in a highlight span
-                        if (isFirstHighlight) {
-                            isFirstHighlight = false;
+                            highlightedText +=
+                                originalInnerText.substring(lastIndex, i) +
+                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
+                                    i,
+                                    i + term.length,
+                                )}</span>`;
+
+                            let end = i + term.length;
+                            lastIndex = end;
+
+                            // Move the loop index to skip over the matched substring
+                            i = lastIndex;
+                            scrollIndex++;
+                        } else {
+                            i++;
                         }
-
-                        highlightedText +=
-                            originalInnerText.substring(lastIndex, i) +
-                            `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
-                                i,
-                                i + term.length,
-                            )}</span>`;
-
-                        let end = i + term.length;
-                        lastIndex = end;
-
-                        // Move the loop index to skip over the matched substring
-                        i = lastIndex;
-                        scrollIndex++;
-                    } else {
-                        i++;
                     }
                 }
 
