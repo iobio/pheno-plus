@@ -12,7 +12,7 @@ export default async function fetchNotes(client, patientId) {
     let docSearchUrl =
         '/DocumentReference?patient=' +
         patientId +
-        '&docstatus=preliminary,final,amended&type=http%3A//loinc.org\\|18842-5,http%3A//loinc.org\\|11488-4,http%3A//loinc.org\\|34117-2';
+        '&docstatus=preliminary,final,amended&type=http%3A//loinc.org|18842-5,http%3A//loinc.org|11488-4,http%3A//loinc.org|34117-2';
 
     console.log(docSearchUrl);
 
