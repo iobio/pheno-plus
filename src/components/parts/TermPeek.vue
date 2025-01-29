@@ -85,6 +85,10 @@ export default {
 
             // Highlight the contexts in the note
             this.currentHighlightedHtml = this.highlightContexts(selectedNote);
+            if (!this.currentHighlightedHtml) {
+                this.alertShown = true;
+                this.currentHighlightedHtml = selectedNote.getHtml();
+            }
 
             // Ensure DOM updates are complete before scrolling
             this.$nextTick(() => {
