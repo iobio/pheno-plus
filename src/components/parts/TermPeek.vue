@@ -259,7 +259,7 @@ export default {
                     highlightInnerText.call(this, element);
                 } else if (element.childElementCount > 0) {
                     element.childNodes.forEach((child) => {
-                        if (child.nodeType === 3) {
+                        if (child.nodeType === 3 && child.textContent.trim() !== '') {
                             highlightInnerText.call(this, child);
                         }
                     });
