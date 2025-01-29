@@ -250,13 +250,15 @@ export default {
                     }
                 }
 
-                // Append any remaining part of the original innerText
-                highlightedText += originalInnerText.substring(lastIndex);
-
-                // Replace the element's HTML if highlighting was applied
-                if (highlightedText !== originalInnerText) {
-                    element.innerHTML = highlightedText;
+                if (isFirstHighlight) {
+                    // If no highlights were applied, append the original innerText
+                    highlightedText += originalInnerText;
+                } else {
+                    // Append any remaining part of the original innerText
+                    highlightedText += originalInnerText.substring(lastIndex);
                 }
+
+                element.innerHTML = highlightedText;
             }
 
             // Iterate over all elements and apply the highlight to their innerText
