@@ -188,7 +188,7 @@ export default {
                             isFirstHighlight = false;
 
                             highlightedText +=
-                                originalInnerText.substring(lastIndex, i + 1) +
+                                originalInnerText.substring(lastIndex, i) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(
                                     i,
                                     i + context.length,
@@ -225,7 +225,7 @@ export default {
                             isFirstHighlight = false;
 
                             highlightedText +=
-                                originalInnerText.substring(lastIndex, i + 1) +
+                                originalInnerText.substring(lastIndex, i) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
                                     i,
                                     i + term.length,
