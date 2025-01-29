@@ -185,12 +185,10 @@ export default {
 
                         if (distance <= threshold) {
                             // If within the threshold, wrap the original substring in a highlight span
-                            if (isFirstHighlight) {
-                                isFirstHighlight = false;
-                            }
+                            isFirstHighlight = false;
 
                             highlightedText +=
-                                originalInnerText.substring(lastIndex, i) +
+                                originalInnerText.substring(lastIndex, i + 1) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(
                                     i,
                                     i + context.length,
@@ -203,6 +201,9 @@ export default {
                             // Move the loop index to skip over the matched substring
                             i = lastIndex;
                             scrollIndex++;
+
+                            // Break out of the loop to avoid matching the same context multiple times
+                            break;
                         } else {
                             i++;
                         }
@@ -221,12 +222,10 @@ export default {
 
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
-                            if (isFirstHighlight) {
-                                isFirstHighlight = false;
-                            }
+                            isFirstHighlight = false;
 
                             highlightedText +=
-                                originalInnerText.substring(lastIndex, i) +
+                                originalInnerText.substring(lastIndex, i + 1) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
                                     i,
                                     i + term.length,
@@ -238,6 +237,9 @@ export default {
                             // Move the loop index to skip over the matched substring
                             i = lastIndex;
                             scrollIndex++;
+
+                            // Break out of the loop to avoid matching the same context multiple times
+                            break;
                         } else {
                             i++;
                         }
