@@ -252,10 +252,12 @@ export default {
 
                 if (isFirstHighlight) {
                     // If no highlights were applied, append the original innerText
-                    highlightedText += originalInnerText;
+                    highlightedText = originalInnerText;
+                    this.alertShown = true;
                 } else {
                     // Append any remaining part of the original innerText
                     highlightedText += originalInnerText.substring(lastIndex);
+                    this.alertShown = false;
                 }
 
                 element.innerHTML = highlightedText;
@@ -273,13 +275,6 @@ export default {
                     });
                 }
             });
-
-            //if first highlight is still true, then we didn't find any highlights just add a note to the top of the html that says no highlights found
-            if (isFirstHighlight) {
-                this.alertShown = true;
-            } else {
-                this.alertShown = false;
-            }
 
             this.lenOfIndexes = scrollIndex;
 
