@@ -23,6 +23,7 @@
                 </div>
             </h3>
             <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
+            <div v-else-if="noteSelected.html" id="note-html-container" v-html="noteSelected.html"></div>
         </div>
 
         <div class="sub-container">
