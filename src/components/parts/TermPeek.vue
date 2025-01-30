@@ -174,7 +174,7 @@ export default {
 
                 //if the innerText is two letters shorter than the term then don't try to match just ignore
                 if (innerText.length < term.length - 1) {
-                    return;
+                    return element;
                 }
 
                 let lastIndex = 0; // Track the last index of the original innerText that was copied to the highlightedText
