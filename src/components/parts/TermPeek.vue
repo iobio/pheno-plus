@@ -1,6 +1,7 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
         <div id="loading-highlights-indicator" v-if="isLodingHighlights">Loading Highlights...</div>
+
         <div class="full-note-overlay" v-if="fullNoteShown && noteSelected">
             <div @click="closeAndResetNote" class="close-note-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -86,8 +87,8 @@ export default {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
+            this.isLodingHighlights = true;
             try {
-                this.isLodingHighlights = true;
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
@@ -95,14 +96,12 @@ export default {
                     let parser = new DOMParser();
                     this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
                 }
-                this.isLodingHighlights = false;
             } catch (e) {
                 this.alertShown = true;
                 let parser = new DOMParser();
-                this.isLodingHighlights = true;
                 this.currentHighlightedHtml = parser.parseFromString(note.html, 'text/html');
-                this.isLodingHighlights = false;
             }
+            this.isLodingHighlights = false;
 
             // Ensure DOM updates are complete before scrolling
             this.$nextTick(() => {
