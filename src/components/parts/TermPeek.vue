@@ -78,21 +78,22 @@ export default {
             }
         },
         showLoadingAndParseHtml(tid) {
-            //grab the term-peek-div and add the loading indicator
+            // Grab the term-peek-div and add the loading indicator
             let loadingDiv = document.createElement('div');
             loadingDiv.setAttribute('id', 'loading-highlights-indicator');
             loadingDiv.innerText = 'Loading Highlights...';
-
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            //wait for the loading indicator to be added
-            this.$nextTick(
-                async function () {
-                    await this.showFullTermContext(tid);
-                    //remove the loading indicator
-                    document.getElementById('loading-highlights-indicator').remove();
-                }.bind(this),
-            );
+            // Force the DOM to update before executing showFullTermContext
+            setTimeout(() => {
+                this.showFullTermContext(tid).then(() => {
+                    // Remove the loading indicator once the function completes
+                    let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                    if (loadingIndicator) {
+                        loadingIndicator.remove();
+                    }
+                });
+            }, 0);
         },
         async showFullTermContext(tid) {
             let selectedNote;
