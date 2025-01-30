@@ -178,6 +178,7 @@ export default {
                 }
 
                 let lastIndex = 0; // Track the last index of the original innerText that was copied to the highlightedText
+                let i = 0;
 
                 //FIRST: We go through the whole context first
                 for (let context of contexts) {
@@ -193,7 +194,6 @@ export default {
                         continue;
                     }
 
-                    let i = 0;
                     while (i <= innerText.length - windowLength) {
                         let substring = innerText.substring(i, i + windowLength);
                         let distance = this.getLevenshteinDistance(context, substring);
