@@ -81,6 +81,7 @@ export default {
         },
         showFullTermContext(tid) {
             this.isLodingHighlights = true;
+
             let selectedNote;
             selectedNote = this.notesList.find((note) => note.getId() == tid);
             this.noteSelected = selectedNote;
@@ -123,9 +124,9 @@ export default {
 
                 //for sanity just remove all images from the note
                 noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
-
-                this.isLodingHighlights = false;
             });
+
+            this.isLodingHighlights = false;
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
