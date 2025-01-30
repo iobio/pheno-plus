@@ -87,6 +87,7 @@ export default {
 
             // Highlight the contexts in the note
             try {
+                this.isLodingHighlights = true;
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
@@ -94,10 +95,13 @@ export default {
                     let parser = new DOMParser();
                     this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
                 }
+                this.isLodingHighlights = false;
             } catch (e) {
                 this.alertShown = true;
                 let parser = new DOMParser();
+                this.isLodingHighlights = true;
                 this.currentHighlightedHtml = parser.parseFromString(note.html, 'text/html');
+                this.isLodingHighlights = false;
             }
 
             // Ensure DOM updates are complete before scrolling
@@ -132,7 +136,6 @@ export default {
             this.lenOfIndexes = 0;
         },
         highlightContexts(note) {
-            this.isLodingHighlights = true;
             // Parse the HTML content of the note into a DOM structure
             let parser = new DOMParser();
             let doc = parser.parseFromString(note.html, 'text/html');
@@ -287,7 +290,6 @@ export default {
 
             this.lenOfIndexes = scrollIndex;
 
-            this.isLodingHighlights = false;
             // Return the updated HTML as a string
             return doc.body.innerHTML;
         },
