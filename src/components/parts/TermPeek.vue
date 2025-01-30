@@ -215,6 +215,8 @@ export default {
                             i++;
                         }
                     }
+                    //Reset I to the last highlight index
+                    i = lastIndex;
                 }
 
                 //If we didn't highlight a context then we can try to highlight the term
