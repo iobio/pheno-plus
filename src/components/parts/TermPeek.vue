@@ -84,7 +84,7 @@ export default {
 
             //Hacky way to show the loading indicator
             setTimeout(() => {
-                this.showFullTermContext(tid);
+                await this.showFullTermContext(tid);
                 this.isLoadingHighlights = false;
             }, 500);
         },
