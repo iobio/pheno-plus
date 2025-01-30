@@ -81,8 +81,12 @@ export default {
         },
         async showLoadingAndParseHtml(tid) {
             this.isLoadingHighlights = true;
-            await this.$nextTick();
-            this.showFullTermContext(tid);
+
+            //Hacky way to show the loading indicator
+            setTimeout(() => {
+                this.showFullTermContext(tid);
+                this.isLoadingHighlights = false;
+            }, 100);
         },
         async showFullTermContext(tid) {
             let selectedNote;
