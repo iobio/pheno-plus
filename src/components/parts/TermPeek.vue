@@ -383,18 +383,20 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
+    font-weight: bold;
     justify-content: center;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 2;
+    animation: glow 0.9s infinite alternate;
 }
 
-@keyframes fadeIn {
+@keyframes glow {
     from {
-        opacity: 0;
+        color: rgba(0, 0, 0, 0.1);
     }
     to {
-        opacity: 1;
+        color: rgb(0, 0, 0, 1);
     }
 }
 
