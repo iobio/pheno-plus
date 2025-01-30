@@ -79,8 +79,9 @@ export default {
                 this.scrolledIndex = 0;
             }
         },
-        showFullTermContext(tid) {
+        async showFullTermContext(tid) {
             this.isLoadingHighlights = true;
+            await this.$nextTick();
 
             let selectedNote;
             selectedNote = this.notesList.find((note) => note.getId() == tid);
@@ -103,29 +104,32 @@ export default {
             }
 
             // Ensure DOM updates are complete before scrolling
-            this.$nextTick(() => {
-                let firstHighlight = document.getElementById('context-highlight-0');
-                if (firstHighlight) {
-                    let scrollableParent = document.querySelector('.full-note-overlay');
-                    if (scrollableParent) {
-                        //account for the sticky header
-                        let header = document.querySelector('.header-white');
-                        let headerHeight = header ? header.clientHeight : 0;
-                        scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+            await this.$nextTick();
 
-                        //also add the scrolled class to the first highlight
-                        firstHighlight.classList.add('scrolled');
-                    }
+            let firstHighlight = document.getElementById('context-highlight-0');
+            if (firstHighlight) {
+                let scrollableParent = document.querySelector('.full-note-overlay');
+                if (scrollableParent) {
+                    //account for the sticky header
+                    let header = document.querySelector('.header-white');
+                    let headerHeight = header ? header.clientHeight : 0;
+                    scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+
+                    //also add the scrolled class to the first highlight
+                    firstHighlight.classList.add('scrolled');
                 }
+            }
 
-                let noteHTMLParent = document.getElementById('note-html-container');
-                //set the z index of all content to be below the header
-                noteHTMLParent.style.zIndex = 1;
+            let noteHTMLParent = document.getElementById('note-html-container');
+            //set the z index of all content to be below the header
+            noteHTMLParent.style.zIndex = 1;
 
-                //for sanity just remove all images from the note
-                noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+            //for sanity just remove all images from the note
+            noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+
+            setTimeout(() => {
                 this.isLoadingHighlights = false;
-            });
+            }, 100);
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
