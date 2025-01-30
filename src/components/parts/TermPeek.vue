@@ -1,8 +1,7 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
-        <div id="loading-highlights-indicator" v-if="isLodingHighlights">Loading Highlights...</div>
-
         <div class="full-note-overlay" v-if="fullNoteShown && noteSelected">
+            <div id="loading-highlights-indicator" v-if="isLodingHighlights">Loading Highlights...</div>
             <div @click="closeAndResetNote" class="close-note-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>close note inspection</title>
