@@ -1,5 +1,6 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
+        <div id="loading-highlights-indicator" v-if="isLodingHighlights">Loading Highlights...</div>
         <div class="full-note-overlay" v-if="fullNoteShown && noteSelected">
             <div @click="closeAndResetNote" class="close-note-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -25,7 +26,6 @@
             <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
             <div v-else-if="noteSelected.html" id="note-html-container" v-html="noteSelected.html"></div>
         </div>
-
         <div class="sub-container">
             <h3 class="header-white">Notes With Term</h3>
             <div class="note-title-row" v-if="hpoItemObj" v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()">
@@ -68,6 +68,7 @@ export default {
             alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
+            isLodingHighlights: false,
         };
     },
     methods: {
@@ -131,6 +132,7 @@ export default {
             this.lenOfIndexes = 0;
         },
         highlightContexts(note) {
+            this.isLodingHighlights = true;
             // Parse the HTML content of the note into a DOM structure
             let parser = new DOMParser();
             let doc = parser.parseFromString(note.html, 'text/html');
@@ -285,6 +287,7 @@ export default {
 
             this.lenOfIndexes = scrollIndex;
 
+            this.isLodingHighlights = false;
             // Return the updated HTML as a string
             return doc.body.innerHTML;
         },
@@ -369,6 +372,26 @@ export default {
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
+}
+
+#loading-highlights-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-size: 1.5em;
+    font-weight: bold;
+    animation: fadeIn infinite 1s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 #term-peek-div {
