@@ -81,13 +81,13 @@ export default {
             }
         },
         showFullTermContext(tid) {
+            this.isLodingHighlights = true;
             let selectedNote;
             selectedNote = this.notesList.find((note) => note.getId() == tid);
             this.noteSelected = selectedNote;
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            this.isLodingHighlights = true;
             try {
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
 
@@ -101,7 +101,6 @@ export default {
                 let parser = new DOMParser();
                 this.currentHighlightedHtml = parser.parseFromString(note.html, 'text/html');
             }
-            this.isLodingHighlights = false;
 
             // Ensure DOM updates are complete before scrolling
             this.$nextTick(() => {
@@ -125,6 +124,8 @@ export default {
 
                 //for sanity just remove all images from the note
                 noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+
+                this.isLodingHighlights = false;
             });
         },
         closeAndResetNote() {
