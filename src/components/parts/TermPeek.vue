@@ -183,56 +183,53 @@ export default {
                 for (let context of contexts) {
                     // Adjust the threshold as needed (e.g., 15% of the context's length)
                     let threshold = Math.floor(context.length * 0.15);
+                    let windowLength = context.length;
+
+                    if (windowLength > innerText.length) {
+                        //Go to the next context if the context is longer than the innerText
+                        continue;
+                    } else if (windowLength < term.length) {
+                        //Go to the next context if the context is shorter than the term
+                        continue;
+                    }
 
                     let i = 0;
-                    while (i <= innerText.length - (context.length - 1)) {
-                        //If a context is too short then don't try to match it
-                        if (context.length < term.length - 1) {
-                            continue;
-                        }
-
-                        let substring = innerText.substring(i, i + context.length);
-
-                        // Calculate the Levenshtein distance between the term and the substring
+                    while (i <= innerText.length - windowLength) {
+                        let substring = innerText.substring(i, i + windowLength);
                         let distance = this.getLevenshteinDistance(context, substring);
 
                         if (distance <= threshold) {
-                            // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
+                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(
-                                    i,
-                                    i + context.length,
-                                )}</span>`;
+                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalSubstring}</span>`;
 
-                            let end = i + context.length;
-                            // Update the lastIndex to the end of the matched substring, the highlight is only the size of the context
-                            lastIndex = end;
+                            //Jump to the end of the matched substring
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
 
-                            // Move the loop index to skip over the matched substring
-                            i = lastIndex;
                             scrollIndex++;
-
-                            // Break out of the loop to avoid matching the same context multiple times
-                            break;
                         } else {
                             i++;
                         }
-                    }
-
-                    if (!isFirstHighlight) {
-                        break;
                     }
                 }
 
                 //If we didn't highlight a context then we can try to highlight the term
                 if (isFirstHighlight) {
                     let termThreshold = Math.floor(term.length * 0.1);
+                    let windowLength = term.length;
+
+                    if (windowLength > innerText.length) {
+                        return;
+                    }
+
+                    let lastIndex = 0;
                     let i = 0;
-                    while (i <= innerText.length - (term.length - 1)) {
-                        let substring = innerText.substring(i, i + term.length);
+                    while (i <= innerText.length - windowLength) {
+                        let substring = innerText.substring(i, i + windowLength);
 
                         // Calculate the Levenshtein distance between the term and the substring
                         let distance = this.getLevenshteinDistance(term, substring);
@@ -240,23 +237,16 @@ export default {
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
+                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
-                                    i,
-                                    i + term.length,
-                                )}</span>`;
+                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalSubstring}</span>`;
 
-                            let end = i + term.length;
-                            lastIndex = end;
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
 
-                            // Move the loop index to skip over the matched substring
-                            i = lastIndex;
                             scrollIndex++;
-
-                            // Break out of the loop to avoid matching the same context multiple times
-                            break;
                         } else {
                             i++;
                         }
@@ -277,7 +267,9 @@ export default {
             }
 
             // Iterate over all elements and apply the highlight to their innerText
-            doc.body.querySelectorAll('*').forEach((element) => {
+            let allElements = doc.body.querySelectorAll('*');
+
+            allElements.forEach((element) => {
                 if (element.childElementCount === 0 && element.innerText.trim() !== '') {
                     highlightInnerText.call(this, element);
                 } else if (element.childElementCount > 0) {
