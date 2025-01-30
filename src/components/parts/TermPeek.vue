@@ -202,6 +202,11 @@ export default {
                             isFirstHighlight = false;
                             let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
+                            console.log('context', context, 'substring', substring, 'distance', distance);
+                            console.log('originalSubstring', originalSubstring);
+                            console.log('lastIndex', lastIndex, 'i', i);
+                            console.log('beginning part', originalInnerText.substring(lastIndex, i));
+
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalSubstring}</span>`;
@@ -226,7 +231,6 @@ export default {
                         return;
                     }
 
-                    let lastIndex = 0;
                     let i = 0;
                     while (i <= innerText.length - windowLength) {
                         let substring = innerText.substring(i, i + windowLength);
@@ -272,6 +276,12 @@ export default {
             allElements.forEach((element) => {
                 if (element.childElementCount === 0 && element.innerText.trim() !== '') {
                     highlightInnerText.call(this, element);
+                } else if (element.childElementCount > 0) {
+                    element.childNodes.forEach((child) => {
+                        if (child.nodeType === 3 && child.textContent.trim() !== '') {
+                            highlightInnerText.call(this, child);
+                        }
+                    });
                 }
             });
 
