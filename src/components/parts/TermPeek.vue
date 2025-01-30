@@ -586,7 +586,8 @@ export default {
 
 .highlighted-context-term.scrolled,
 .highlighted-context.scrolled {
-    background-color: #0088ff81;
+    text-decoration: underline;
+    text-decoration-color: #0b4b99;
     font-weight: bold;
 }
 </style>
