@@ -68,7 +68,7 @@ export default {
             alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
-            isLodingHighlights: true,
+            isLodingHighlights: false,
         };
     },
     methods: {
