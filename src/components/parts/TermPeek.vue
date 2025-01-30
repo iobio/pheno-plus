@@ -25,12 +25,16 @@
             <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
             <div v-else-if="noteSelected.html" id="note-html-container" v-html="noteSelected.html"></div>
         </div>
-
         <div class="sub-container">
             <h3 class="header-white">Notes With Term</h3>
-            <div class="note-title-row" v-if="hpoItemObj" v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()">
+            <div
+                @click="showLoadingAndParseHtml(noteTIDPair[1])"
+                class="note-title-row"
+                v-if="hpoItemObj"
+                v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()"
+            >
                 <div class="exp-btn">
-                    <svg @click="showFullTermContext(noteTIDPair[1])" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <title>show full note</title>
                         <path
                             d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z"
@@ -78,7 +82,30 @@ export default {
                 this.scrolledIndex = 0;
             }
         },
-        showFullTermContext(tid) {
+        showLoadingAndParseHtml(tid) {
+            // Grab the term-peek-div and add the loading indicator
+            let loadingDiv = document.createElement('div');
+            loadingDiv.setAttribute('id', 'loading-highlights-indicator');
+            loadingDiv.innerText = 'Loading Highlights...';
+            document.getElementById('term-peek-div').appendChild(loadingDiv);
+
+            // Force the DOM to update before executing showFullTermContext
+            setTimeout(() => {
+                this.showFullTermContext(tid)
+                    .catch((error) => {
+                        // Just log the error for now
+                        console.log('Error showing full term context:', error);
+                    })
+                    .finally(() => {
+                        // Remove the loading indicator no matter what
+                        let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                        if (loadingIndicator) {
+                            loadingIndicator.remove();
+                        }
+                    });
+            }, 50);
+        },
+        async showFullTermContext(tid) {
             let selectedNote;
             selectedNote = this.notesList.find((note) => note.getId() == tid);
             this.noteSelected = selectedNote;
@@ -100,28 +127,28 @@ export default {
             }
 
             // Ensure DOM updates are complete before scrolling
-            this.$nextTick(() => {
-                let firstHighlight = document.getElementById('context-highlight-0');
-                if (firstHighlight) {
-                    let scrollableParent = document.querySelector('.full-note-overlay');
-                    if (scrollableParent) {
-                        //account for the sticky header
-                        let header = document.querySelector('.header-white');
-                        let headerHeight = header ? header.clientHeight : 0;
-                        scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+            await this.$nextTick();
 
-                        //also add the scrolled class to the first highlight
-                        firstHighlight.classList.add('scrolled');
-                    }
+            let firstHighlight = document.getElementById('context-highlight-0');
+            if (firstHighlight) {
+                let scrollableParent = document.querySelector('.full-note-overlay');
+                if (scrollableParent) {
+                    //account for the sticky header
+                    let header = document.querySelector('.header-white');
+                    let headerHeight = header ? header.clientHeight : 0;
+                    scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+
+                    //also add the scrolled class to the first highlight
+                    firstHighlight.classList.add('scrolled');
                 }
+            }
 
-                let noteHTMLParent = document.getElementById('note-html-container');
-                //set the z index of all content to be below the header
-                noteHTMLParent.style.zIndex = 1;
+            let noteHTMLParent = document.getElementById('note-html-container');
+            //set the z index of all content to be below the header
+            noteHTMLParent.style.zIndex = 1;
 
-                //for sanity just remove all images from the note
-                noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
-            });
+            //for sanity just remove all images from the note
+            noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
@@ -174,65 +201,64 @@ export default {
 
                 //if the innerText is two letters shorter than the term then don't try to match just ignore
                 if (innerText.length < term.length - 1) {
-                    return;
+                    return element;
                 }
 
                 let lastIndex = 0; // Track the last index of the original innerText that was copied to the highlightedText
+                let i = 0;
 
                 //FIRST: We go through the whole context first
                 for (let context of contexts) {
-                    // Adjust the threshold as needed (e.g., 15% of the context's length)
-                    let threshold = Math.floor(context.length * 0.15);
+                    // Adjust the threshold as needed (e.g., 20% of the context's length)
+                    let threshold = Math.floor(context.length * 0.2);
+                    let windowLength = context.length;
 
-                    let i = 0;
-                    while (i <= innerText.length - (context.length - 1)) {
-                        //If a context is too short then don't try to match it
-                        if (context.length < term.length - 1) {
-                            continue;
-                        }
+                    if (windowLength > innerText.length) {
+                        //Go to the next context if the context is longer than the innerText
+                        continue;
+                    } else if (windowLength < term.length) {
+                        //Go to the next context if the context is shorter than the term
+                        continue;
+                    }
 
-                        let substring = innerText.substring(i, i + context.length);
-
-                        // Calculate the Levenshtein distance between the term and the substring
+                    while (i <= innerText.length - windowLength) {
+                        let substring = innerText.substring(i, i + windowLength);
                         let distance = this.getLevenshteinDistance(context, substring);
 
                         if (distance <= threshold) {
-                            // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
+                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalInnerText.substring(
-                                    i,
-                                    i + context.length,
-                                )}</span>`;
+                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalSubstring}</span>`;
 
-                            let end = i + context.length;
-                            // Update the lastIndex to the end of the matched substring, the highlight is only the size of the context
-                            lastIndex = end;
+                            //Jump to the end of the matched substring
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
 
-                            // Move the loop index to skip over the matched substring
-                            i = lastIndex;
                             scrollIndex++;
-
-                            // Break out of the loop to avoid matching the same context multiple times
-                            break;
                         } else {
                             i++;
                         }
                     }
 
-                    if (!isFirstHighlight) {
-                        break;
-                    }
+                    //Reset I to the last highlight index so that we can check the other contexts within the remaining innerText
+                    i = lastIndex;
                 }
 
                 //If we didn't highlight a context then we can try to highlight the term
                 if (isFirstHighlight) {
                     let termThreshold = Math.floor(term.length * 0.1);
+                    let windowLength = term.length;
+
+                    if (windowLength > innerText.length) {
+                        return;
+                    }
+
                     let i = 0;
-                    while (i <= innerText.length - (term.length - 1)) {
-                        let substring = innerText.substring(i, i + term.length);
+                    while (i <= innerText.length - windowLength) {
+                        let substring = innerText.substring(i, i + windowLength);
 
                         // Calculate the Levenshtein distance between the term and the substring
                         let distance = this.getLevenshteinDistance(term, substring);
@@ -240,23 +266,16 @@ export default {
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
+                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalInnerText.substring(
-                                    i,
-                                    i + term.length,
-                                )}</span>`;
+                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalSubstring}</span>`;
 
-                            let end = i + term.length;
-                            lastIndex = end;
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
 
-                            // Move the loop index to skip over the matched substring
-                            i = lastIndex;
                             scrollIndex++;
-
-                            // Break out of the loop to avoid matching the same context multiple times
-                            break;
                         } else {
                             i++;
                         }
@@ -277,7 +296,9 @@ export default {
             }
 
             // Iterate over all elements and apply the highlight to their innerText
-            doc.body.querySelectorAll('*').forEach((element) => {
+            let allElements = doc.body.querySelectorAll('*');
+
+            allElements.forEach((element) => {
                 if (element.childElementCount === 0 && element.innerText.trim() !== '') {
                     highlightInnerText.call(this, element);
                 } else if (element.childElementCount > 0) {
@@ -375,6 +396,21 @@ export default {
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
+}
+
+#loading-highlights-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
+    z-index: 3;
 }
 
 #term-peek-div {
@@ -512,6 +548,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+}
+
+.note-title-row:hover {
+    background-color: #e2e2e2;
 }
 
 .exp-btn {
@@ -595,7 +636,9 @@ export default {
 
 .highlighted-context-term.scrolled,
 .highlighted-context.scrolled {
-    background-color: #0088ff81;
+    text-decoration: underline;
+    text-decoration-color: #0b4b99;
+    text-decoration-thickness: 2px;
     font-weight: bold;
 }
 </style>
