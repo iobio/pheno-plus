@@ -86,13 +86,18 @@ export default {
 
             // Force the DOM to update before executing showFullTermContext
             setTimeout(() => {
-                this.showFullTermContext(tid).then(() => {
-                    // Remove the loading indicator once the function completes
-                    let loadingIndicator = document.getElementById('loading-highlights-indicator');
-                    if (loadingIndicator) {
-                        loadingIndicator.remove();
-                    }
-                });
+                this.showFullTermContext(tid)
+                    .catch((error) => {
+                        // Just log the error for now
+                        console.log('Error showing full term context:', error);
+                    })
+                    .finally(() => {
+                        // Remove the loading indicator no matter what
+                        let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                        if (loadingIndicator) {
+                            loadingIndicator.remove();
+                        }
+                    });
             }, 0);
         },
         async showFullTermContext(tid) {
