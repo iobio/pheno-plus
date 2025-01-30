@@ -86,7 +86,7 @@ export default {
             setTimeout(() => {
                 this.showFullTermContext(tid);
                 this.isLoadingHighlights = false;
-            }, 100);
+            }, 500);
         },
         async showFullTermContext(tid) {
             let selectedNote;
