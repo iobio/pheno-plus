@@ -202,11 +202,6 @@ export default {
                             isFirstHighlight = false;
                             let originalSubstring = originalInnerText.substring(i, i + windowLength);
 
-                            console.log('context', context, 'substring', substring, 'distance', distance);
-                            console.log('originalSubstring', originalSubstring);
-                            console.log('lastIndex', lastIndex, 'i', i);
-                            console.log('beginning part', originalInnerText.substring(lastIndex, i));
-
                             highlightedText +=
                                 originalInnerText.substring(lastIndex, i) +
                                 `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalSubstring}</span>`;
