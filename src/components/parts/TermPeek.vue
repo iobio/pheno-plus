@@ -375,14 +375,16 @@ export default {
 }
 
 #loading-highlights-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
-    font-size: 1.5em;
-    font-weight: bold;
-    animation: fadeIn infinite 1s;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 2;
 }
 
 @keyframes fadeIn {
