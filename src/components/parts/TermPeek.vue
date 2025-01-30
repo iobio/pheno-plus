@@ -1,6 +1,5 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
-        <div id="loading-highlights-indicator" v-if="isLoadingHighlights">Loading Highlights...</div>
         <div class="full-note-overlay" v-if="fullNoteShown && noteSelected">
             <div @click="closeAndResetNote" class="close-note-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -68,7 +67,6 @@ export default {
             alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
-            isLoadingHighlights: false,
         };
     },
     methods: {
@@ -79,14 +77,22 @@ export default {
                 this.scrolledIndex = 0;
             }
         },
-        async showLoadingAndParseHtml(tid) {
-            this.isLoadingHighlights = true;
+        showLoadingAndParseHtml(tid) {
+            //grab the term-peek-div and add the loading indicator
+            let loadingDiv = document.createElement('div');
+            loadingDiv.setAttribute('id', 'loading-highlights-indicator');
+            loadingDiv.innerText = 'Loading Highlights...';
 
-            //Hacky way to show the loading indicator
-            setTimeout(() => {
-                await this.showFullTermContext(tid);
-                this.isLoadingHighlights = false;
-            }, 500);
+            document.getElementById('term-peek-div').appendChild(loadingDiv);
+
+            //wait for the loading indicator to be added
+            this.$nextTick(
+                async function () {
+                    await this.showFullTermContext(tid);
+                    //remove the loading indicator
+                    document.getElementById('loading-highlights-indicator').remove();
+                }.bind(this),
+            );
         },
         async showFullTermContext(tid) {
             let selectedNote;
