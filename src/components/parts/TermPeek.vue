@@ -1,6 +1,6 @@
 <template>
     <div id="term-peek-div" :class="{ visible: hpoItemObj }">
-        <div id="loading-highlights-indicator" v-show="isLodingHighlights">Loading Highlights...</div>
+        <div id="loading-highlights-indicator" v-show="isLoadingHighlights">Loading Highlights...</div>
         <div class="full-note-overlay" v-if="fullNoteShown && noteSelected">
             <div @click="closeAndResetNote" class="close-note-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ export default {
             alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
-            isLodingHighlights: false,
+            isLoadingHighlights: false,
         };
     },
     methods: {
@@ -80,7 +80,7 @@ export default {
             }
         },
         showFullTermContext(tid) {
-            this.isLodingHighlights = true;
+            this.isLoadingHighlights = true;
 
             let selectedNote;
             selectedNote = this.notesList.find((note) => note.getId() == tid);
@@ -124,9 +124,8 @@ export default {
 
                 //for sanity just remove all images from the note
                 noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+                this.isLoadingHighlights = false;
             });
-
-            this.isLodingHighlights = false;
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
