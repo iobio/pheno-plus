@@ -182,8 +182,8 @@ export default {
 
                 //FIRST: We go through the whole context first
                 for (let context of contexts) {
-                    // Adjust the threshold as needed (e.g., 15% of the context's length)
-                    let threshold = Math.floor(context.length * 0.15);
+                    // Adjust the threshold as needed (e.g., 20% of the context's length)
+                    let threshold = Math.floor(context.length * 0.2);
                     let windowLength = context.length;
 
                     if (windowLength > innerText.length) {
@@ -215,7 +215,8 @@ export default {
                             i++;
                         }
                     }
-                    //Reset I to the last highlight index
+
+                    //Reset I to the last highlight index so that we can check the other contexts within the remaining innerText
                     i = lastIndex;
                 }
 
