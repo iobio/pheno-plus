@@ -398,18 +398,9 @@ export default {
     font-weight: bold;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
     z-index: 3;
-    animation: glow 0.9s infinite alternate;
-}
-
-@keyframes glow {
-    from {
-        color: rgba(0, 0, 0, 0.1);
-    }
-    to {
-        color: rgb(0, 0, 0, 1);
-    }
 }
 
 #term-peek-div {
