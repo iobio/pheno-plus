@@ -1,39 +1,49 @@
-class ChartItem{
-    constructor(phenotypeData, notesPresentIn=[]) {
+class ChartItem {
+    constructor(phenotypeData, notesPresentIn = []) {
         if (!phenotypeData) {
             return;
         }
 
-        this.hpoId = phenotypeData["HPO ID"] || phenotypeData.term_id;
-        if (this.hpoId === undefined) {
+        this.hpoId = phenotypeData['HPO ID'] || phenotypeData.term_id;
+        if (!this.hpoId) {
             return;
         }
 
-        this.phenotypeName = phenotypeData["Phenotype name"] || phenotypeData.name;
+        this.phenotypeName = phenotypeData['Phenotype name'] || phenotypeData.name;
         if (this.phenotypeName === undefined) {
             return;
         }
 
-        this.numOccurrences = parseInt(phenotypeData["No. occurrences"]) || 0;
-        
-        this.earliness = []
-        if (phenotypeData["Earliness (lower = earlier)"] !== undefined && !Array.isArray(phenotypeData["Earliness (lower = earlier)"])) {
-            this.earliness.push(phenotypeData["Earliness (lower = earlier)"]);
-        } else if (phenotypeData["Earliness (lower = earlier)"] !== undefined) {
-            this.earliness = this.earliness.concat(phenotypeData["Earliness (lower = earlier)"]);
+        this.numOccurrences = parseInt(phenotypeData['No. occurrences']) || 0;
+
+        this.earliness = [];
+        if (
+            phenotypeData['Earliness (lower = earlier)'] !== undefined &&
+            !Array.isArray(phenotypeData['Earliness (lower = earlier)'])
+        ) {
+            //This should never happen but if it does, add the single value to the array
+            this.earliness.push(phenotypeData['Earliness (lower = earlier)']);
+        } else if (
+            phenotypeData['Earliness (lower = earlier)'] !== undefined &&
+            Array.isArray(phenotypeData['Earliness (lower = earlier)'])
+        ) {
+            this.earliness = phenotypeData['Earliness (lower = earlier)'];
         }
 
-        this.exampleSentence = []
-        if (phenotypeData["Example sentence"] !== undefined && !Array.isArray(phenotypeData["Example sentence"])) {
-            this.exampleSentence.push([phenotypeData["Example sentence"], 1]);
-        } else if (phenotypeData["Example sentence"] !== undefined) {
-            // If the example sentence is an array, then it is an array of arrays
-            for (let i = 0; i < phenotypeData["Example sentence"].length; i++) {
-                this.exampleSentence.push([phenotypeData["Example sentence"][i], 1]);
+        this.exampleSentences = [];
+        if (phenotypeData['Example sentence'] !== undefined && !Array.isArray(phenotypeData['Example sentence'])) {
+            //This should never happen but if it does, add the single value to the array
+            this.exampleSentences.push([phenotypeData['Example sentence'], 1]);
+        } else if (phenotypeData['Example sentence'] !== undefined && Array.isArray(phenotypeData['Example sentence'])) {
+            for (let example of phenotypeData['Example sentence']) {
+                //If the example sentence is an array, add each element to the example sentence array as long as it is a string
+                if (typeof example === 'string' && example.length > 2) {
+                    this.exampleSentences.push([example, 1]);
+                }
             }
         }
 
-        if (notesPresentIn.length > 0) {
+        if (notesPresentIn.length > 0 && Array.isArray(notesPresentIn)) {
             this.notesPresentIn = notesPresentIn;
         } else {
             this.notesPresentIn = [];
@@ -60,8 +70,8 @@ class ChartItem{
     getEarliness() {
         return this.earliness;
     }
-    getExampleSentence() {
-        return this.exampleSentence;
+    getExampleSentences() {
+        return this.exampleSentences || [];
     }
     getSeverity() {
         return this.severity;
@@ -108,32 +118,38 @@ class ChartItem{
         this.numOccurrences = numOccurrences;
     }
     addToNumOccurrences(numOccurrences) {
-        numOccurrences = parseInt(numOccurrences)
+        numOccurrences = parseInt(numOccurrences);
         this.numOccurrences += numOccurrences;
     }
     setEarliness(earliness) {
         this.earliness = earliness;
     }
     addToEarliness(earliness) {
+        //Add the earliness to the array, expects a singular value
         this.earliness.push(earliness);
     }
-    setExampleSentence(exampleSentence) {
-        this.exampleSentence = exampleSentence;
+    setExampleSentences(exampleSentence) {
+        this.exampleSentences = [exampleSentence, 1];
     }
-    addToExampleSentence(exampleSentence) {
-        if (Array.isArray(exampleSentence)) {
-            this.exampleSentence = this.exampleSentence.concat(exampleSentence);
-            return;
-        } else {
-            exampleSentence = [exampleSentence, 1];
-            this.exampleSentence.push(exampleSentence);
+    addToExampleSentences(exampleSentence) {
+        /**
+         * Expects a string as the example sentence to be added to the exampleSentences array
+         * Not to be used to add an array of example sentences must be used to add a single example sentence
+         */
+        if (typeof exampleSentence === 'string') {
+            this.exampleSentences.push([exampleSentence, 1]);
         }
     }
     addToNotesPresentIn(note) {
+        //Dont add the same note twice
+        if (this.notesPresentIn.includes(note)) {
+            return;
+        }
+
         this.notesPresentIn.push(note);
     }
     addToTimesSeen(index) {
-        this.exampleSentence[index][1] += 1;
+        this.exampleSentences[index][1] += 1;
     }
 }
 export default ChartItem;
