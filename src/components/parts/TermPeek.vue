@@ -81,9 +81,6 @@ export default {
         },
         async showLoadingAndParseHtml(tid) {
             this.isLoadingHighlights = true;
-            await this.$nextTick();
-            await this.showFullTermContext(tid);
-            this.isLoadingHighlights = false;
         },
         async showFullTermContext(tid) {
             let selectedNote;
