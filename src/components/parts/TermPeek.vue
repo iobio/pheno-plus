@@ -346,6 +346,7 @@ export default {
                 }
             }
             
+            // Return the bottom-right value of the matrix
             return matrix[b.length][a.length];
         },
     },
