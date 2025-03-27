@@ -326,31 +326,26 @@ export default {
             return doc.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
-            //Commonly use NLP algorithm to find the distance between two strings
-            const matrix = [];
-
-            for (let i = 0; i <= b.length; i++) {
-                matrix[i] = [i];
-            }
-            for (let j = 0; j <= a.length; j++) {
-                matrix[0][j] = j;
-            }
-
-            // Fill in the matrix
+            // Create a matrix of size (b.length+1) × (a.length+1)
+            const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
+            
+            // Initialize first row and column
+            for (let i = 0; i <= b.length; i++) matrix[i][0] = i;
+            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+            
+            // Fill the matrix
             for (let i = 1; i <= b.length; i++) {
                 for (let j = 1; j <= a.length; j++) {
-                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                        matrix[i][j] = matrix[i - 1][j - 1];
-                    } else {
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j - 1] + 1, // substitution
-                            matrix[i][j - 1] + 1, // insertion
-                            matrix[i - 1][j] + 1, // deletion
-                        );
-                    }
+                    const cost = b.charAt(i - 1) === a.charAt(j - 1) ? 0 : 1;
+                    
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,      // deletion (cost to delete from b)
+                        matrix[i][j - 1] + 1,      // insertion (cost to insert into b)
+                        matrix[i - 1][j - 1] + cost // substitution or match
+                    );
                 }
             }
-
+            
             return matrix[b.length][a.length];
         },
     },
