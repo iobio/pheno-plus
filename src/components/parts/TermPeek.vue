@@ -262,9 +262,7 @@ export default {
 
                         // Calculate the Levenshtein distance between the term and the substring
                         let distance = this.getLevenshteinDistance(term, substring);
-                        console.log('distance', distance);
 
-                        console.log('threshold', termThreshold);
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
@@ -300,17 +298,27 @@ export default {
             // Iterate over all elements and apply the highlight to their innerText
             let allElements = doc.body.querySelectorAll('*');
 
-            allElements.forEach((element) => {
-                if (element.childElementCount === 0 && element.innerText.trim() !== '') {
-                    highlightInnerText.call(this, element);
-                } else if (element.childElementCount > 0) {
-                    element.childNodes.forEach((child) => {
-                        if (child.nodeType === 3 && child.textContent.trim() !== '') {
-                            highlightInnerText.call(this, child);
-                        }
-                    });
-                }
-            });
+            function processElementsRecusively(elements) {
+                elements.forEach((element) => {
+                    if (element.childElementCount === 0 && element.innerText.trim() !== '') {
+                        highlightInnerText.call(this, element);
+                    } else if (element.childElementCount > 0) {
+                        processElementsRecursively(element.childNodes);
+                    }
+                });
+            }
+            processElementsRecusively(allElements);
+            // allElements.forEach((element) => {
+            //     if (element.childElementCount === 0 && element.innerText.trim() !== '') {
+            //         highlightInnerText.call(this, element);
+            //     } else if (element.childElementCount > 0) {
+            //         element.childNodes.forEach((child) => {
+            //             if (child.nodeType === 3 && child.textContent.trim() !== '') {
+            //                 highlightInnerText.call(this, child);
+            //             }
+            //         });
+            //     }
+            // });
 
             this.lenOfIndexes = scrollIndex;
 
