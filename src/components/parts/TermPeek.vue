@@ -293,6 +293,7 @@ export default {
                 }
 
                 element.innerHTML = highlightedText;
+                return element;
             }
 
             // Iterate over all elements and apply the highlight to their innerText
@@ -304,6 +305,11 @@ export default {
                         highlightInnerText.call(this, element);
                     } else if (element.childElementCount > 0) {
                         processElementsRecursively(element.childNodes);
+                    }
+                    // Even if the element has child elements, we still want to check its innerText
+                    // and highlight it if it contains the term
+                    if (element.innerText.trim() !== '' && element.childElementCount > 0) {
+                        highlightInnerText.call(this, element);
                     }
                 });
             }
