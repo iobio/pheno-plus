@@ -262,7 +262,9 @@ export default {
 
                         // Calculate the Levenshtein distance between the term and the substring
                         let distance = this.getLevenshteinDistance(term, substring);
+                        console.log('distance', distance);
 
+                        console.log('threshold', termThreshold);
                         if (distance <= termThreshold) {
                             // If within the threshold, wrap the original substring in a highlight span
                             isFirstHighlight = false;
