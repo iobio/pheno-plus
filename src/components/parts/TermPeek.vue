@@ -408,7 +408,7 @@ export default {
                     let [tag, index] = part.split('[');
                     if (index) {
                         index = parseInt(index.replace(']', '')) + 1; // Convert to 1-based index
-                        selector += `${tag}:nth-of-type(${index}) > `;
+                        selector += `${tag}:nth-child(${index}) > `;
                     } else {
                         selector += `${tag} > `;
                     }
