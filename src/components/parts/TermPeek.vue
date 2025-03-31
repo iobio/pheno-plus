@@ -252,11 +252,14 @@ export default {
                                 fullSpan.setAttribute('class', 'highlighted-context');
                                 fullSpan.innerHTML = '';
 
+                                let combinedHtml = '';
                                 for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                                     let el = map[k];
                                     let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                                     
-                                    fullSpan.innerHTML = element.innerHTML;
+                                    if (element) {
+                                        combinedHtml += element.innerHTML;  
+                                    }
                                     
                                     //if it isnt the first i element then remove it
                                     if (k != iMatchIndex) {
@@ -264,11 +267,10 @@ export default {
                                     } 
                                 }
 
+                                fullSpan.innerHTML = combinedHtml;
+
                                 // Append the full span to the first element
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                console.log(highlightedHtml);
-                                console.log(_transformPath(iMatch.parentPath));
-                                console.log("element?", iElement);
                                 iElement.innerHTML = '';
                                 iElement.appendChild(fullSpan);
                             }
