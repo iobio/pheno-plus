@@ -311,7 +311,7 @@ function _cleanText(text) {
         let cleaned = text;
 
         // Clean up the text remove number and special characters
-        cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
+        cleaned = cleaned.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
         cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
         cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
         cleaned = cleaned.replace(/°F/g, '');
