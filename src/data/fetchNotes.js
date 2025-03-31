@@ -158,8 +158,8 @@ export default async function fetchNotes(client, patientId) {
                 const pulledItems = _pullTextContent(noteContent);
 
                 noteText = pulledItems.text;
-                // allText = pulledItems.allText;
-                // textNodeMap = pulledItems.textNodeMap;
+                allText = pulledItems.allText;
+                textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
                 //If there is an error then skip this note
                 continue;
@@ -220,22 +220,20 @@ function _pullTextContent(html) {
     let textNodeMap = [];
     let allText = "";
 
-    // // Start processing from body
-    // const returned = _processNode(doc.body);
-    // allText = returned.text;
-    // textNodeMap = returned.textNodeMap;
-
-    // console.log('Text:', text);
+    // Start processing from body
+    const returned = _processNode(doc.body, doc);
+    allText = returned.text;
+    textNodeMap = returned.textNodeMap;
 
     return {
         text: text,
-        // allText: allText,
-        // textNodeMap: textNodeMap,
+        allText: allText,
+        textNodeMap: textNodeMap,
     };
 }
 
 // Function to recursively process text nodes
-function _processNode(node) {
+function _processNode(node, doc) {
     let textNodeMap = [];
     let allText = "";
 
@@ -252,13 +250,14 @@ function _processNode(node) {
                     cleanedText: cleanedText,
                     startOffset: allText.length,
                     endOffset: allText.length + cleanedText.length,
-                    parentPath: _getNodePath(node.parentNode)
+                    parentPath: _getNodePath(node.parentNode, doc)
                 });
                 
                 // Add to combined text
                 allText += cleanedText + " "; // Add space between nodes
             }
         }
+        
     } else if (node.nodeType === Node.ELEMENT_NODE) {
         // Skip script and style elements
         if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') {
@@ -267,7 +266,9 @@ function _processNode(node) {
         
         // Process children
         for (let child of node.childNodes) {
-            _processNode(child, textNodeMap, allText);
+            let returned = _processNode(child);
+            allText += returned.text;
+            textNodeMap = textNodeMap.concat(returned.textNodeMap);
         }
     }
 
@@ -276,7 +277,7 @@ function _processNode(node) {
 }
 
 // Function to create a DOM path to a node
-function _getNodePath(node) {
+function _getNodePath(node, doc) {
     let path = [];
     while (node && node !== doc.body) {
         let index = 0;
