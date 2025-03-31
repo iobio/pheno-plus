@@ -260,19 +260,24 @@ export default {
                                     if (element) {
                                         combinedHtml += element.innerHTML;  
                                     }
-                                    
-                                    //if it isnt the first i element then remove it
-                                    if (k != iMatchIndex) {
-                                        element.remove();
-                                    } 
                                 }
 
                                 fullSpan.innerHTML = combinedHtml;
-
-                                // Append the full span to the first element
+                                
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                iElement.innerHTML = '';
-                                iElement.appendChild(fullSpan);
+                                if (iElement) {
+                                    for (let k = iMatchIndex + 1; k <= jMatchIndex; k++) {
+                                        let el = map[k];
+                                        let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                        if (element) {
+                                            element.remove();
+                                        }
+                                    }
+                                    
+                                    // Now set the first element's content
+                                    iElement.innerHTML = '';
+                                    iElement.appendChild(fullSpan);
+                                }
                             }
 
                             lastIndex = j;
