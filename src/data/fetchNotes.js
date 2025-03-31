@@ -241,7 +241,7 @@ function _processNode(node, context) {
             
             if (cleanedText) {
                 // Store mapping information
-                textNodeMap.push({
+                context.textNodeMap.push({
                     node: node,
                     originalText: originalText,
                     cleanedText: cleanedText,
@@ -263,7 +263,7 @@ function _processNode(node, context) {
         
         // Process children
         for (let child of node.childNodes) {
-            _processNode(child);
+            _processNode(child, context);
         }
     }
 }
