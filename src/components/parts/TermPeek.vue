@@ -159,18 +159,20 @@ export default {
         },
         highlightContexts(note) {
             const htmlMapping = note.getHtmlMapping();
+            console.log('HTML Mapping:', note);
             const rawText = note.getText();
             const parser = new DOMParser();
             const html = parser.parseFromString(note.html, 'text/html');
             const contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
             const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
 
+            const self = this;
+
             let isFirstHighlight = true;
             let scrollIndex = 0;
 
             // Function to highlight text within the text of elements
             function _highlightInnerText(rawText, html, map) {
-                console.log("highlight being called")
                 let text = rawText.toLowerCase(); // Get the text for case-insensitive matching
                 let highlightedHtml = html.cloneNode(true); // Clone the original HTML to modify it
 
@@ -185,7 +187,7 @@ export default {
                     if (windowLength > text.length || windowLength < term.length) {
                         continue;
                     }
-
+                    
                     while (i <= text.length - threshold) {
                         let substring;
                         let j;
@@ -197,7 +199,7 @@ export default {
                             j = i + windowLength;
                         }
 
-                        let distance = this.getLevenshteinDistance(context, substring);
+                        let distance = self.getLevenshteinDistance(context, substring);
                     
                         if (distance <= threshold) {
                             isFirstHighlight = false;
@@ -304,7 +306,7 @@ export default {
                         }
 
                         // Calculate the Levenshtein distance between the term and the substring
-                        let distance = this.getLevenshteinDistance(term, substring);
+                        let distance = self.getLevenshteinDistance(term, substring);
 
                         if (distance <= termThreshold) {
                             isFirstHighlight = false;
@@ -412,12 +414,17 @@ export default {
                 return selector.slice(0, -3); // Remove the last ' > '
             }
 
-            const newHtml = _highlightInnerText(rawText, html, htmlMapping);
-            console.log(newHtml); //Remove
+            let newHtml = html.cloneNode(true);
+            try {
+                newHtml = _highlightInnerText(rawText, html, htmlMapping);
+            } catch (e) {
+                console.log('Error highlighting inner text:', e);
+            }
+            
             this.lenOfIndexes = scrollIndex;
 
             // Return the updated HTML as a string
-            return html.body.innerHTML;
+            return newHtml.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
             // Create a matrix of size (b.length+1) × (a.length+1)
