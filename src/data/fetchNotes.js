@@ -155,7 +155,7 @@ export default async function fetchNotes(client, patientId) {
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
                 const pulledItems = _pullTextContent(noteContent);
-
+                updatedHtml = pulledItems.html;
                 allText = pulledItems.allText;
                 textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
@@ -164,7 +164,7 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, allText, noteTitle, noteContent, textNodeMap);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, allText, noteTitle, updatedHtml, textNodeMap);
             notesList.push(noteObj);
         }
     }
@@ -247,6 +247,7 @@ function _pullTextContent(html) {
     return {
         allText: context.allText,
         textNodeMap: context.textNodeMap,
+        html: doc.body.innerHTML,
     };
 }
 
