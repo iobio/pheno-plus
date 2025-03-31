@@ -392,12 +392,10 @@ export default {
                 }
 
                 if (isFirstHighlight) {
-                    this.alertShown = true;
+                    self.alertShown = true;
                 } else {
-                    this.alertShown = false;
+                    self.alertShown = false;
                 }
-
-                console.log("highlightedHtml", highlightedHtml);
 
                 return highlightedHtml;
             }
