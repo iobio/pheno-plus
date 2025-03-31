@@ -158,8 +158,8 @@ export default async function fetchNotes(client, patientId) {
                 const pulledItems = _pullTextContent(noteContent);
 
                 noteText = pulledItems.text;
-                allText = pulledItems.allText;
-                textNodeMap = pulledItems.textNodeMap;
+                // allText = pulledItems.allText;
+                // textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
                 //If there is an error then skip this note
                 continue;
@@ -220,17 +220,17 @@ function _pullTextContent(html) {
     let textNodeMap = [];
     let allText = "";
 
-    // Start processing from body
-    const returned = _processNode(doc.body);
-    allText = returned.text;
-    textNodeMap = returned.textNodeMap;
+    // // Start processing from body
+    // const returned = _processNode(doc.body);
+    // allText = returned.text;
+    // textNodeMap = returned.textNodeMap;
 
-    console.log('Text:', text);
+    // console.log('Text:', text);
 
     return {
         text: text,
-        allText: allText,
-        textNodeMap: textNodeMap,
+        // allText: allText,
+        // textNodeMap: textNodeMap,
     };
 }
 
