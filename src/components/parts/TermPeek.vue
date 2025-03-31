@@ -159,7 +159,6 @@ export default {
         },
         highlightContexts(note) {
             const htmlMapping = note.getHtmlMapping();
-            console.log('HTML Mapping:', note);
             const rawText = note.getText();
             const parser = new DOMParser();
             const html = parser.parseFromString(note.html, 'text/html');
@@ -215,7 +214,6 @@ export default {
                             } else {
                                 const sliceMap = map.slice(iMatchIndex + 1);
                                 jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                let jMatchIndex = map.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
                                 jMatch = map[jMatchIndex + iMatchIndex + 1];
                             }
 
@@ -234,7 +232,7 @@ export default {
                                 iElement.innerHTML = '';
                                 iElement.appendChild(span);
                             } else if (jMatchIndex - iMatchIndex == 1) {
-                               let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                                 let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
                                 //Highlight the text of the element
@@ -322,7 +320,6 @@ export default {
                             } else {
                                 const sliceMap = map.slice(iMatchIndex + 1);
                                 jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                let jMatchIndex = map.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
                                 jMatch = map[jMatchIndex + iMatchIndex + 1];
                             }
 
@@ -341,7 +338,7 @@ export default {
                                 iElement.innerHTML = '';
                                 iElement.appendChild(span);
                             } else if (jMatchIndex - iMatchIndex == 1) {
-                               let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                                 let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
                                 //Highlight the text of the element
