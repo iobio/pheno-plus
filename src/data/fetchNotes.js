@@ -154,10 +154,9 @@ export default async function fetchNotes(client, patientId) {
                 //Try to get the text content of the note from the binary url
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
-                console.log('Note content pulled');
-                console.log(noteContent);
                 const pulledItems = _pullTextContent(noteContent);
                 noteText = pulledItems.text;
+                allText = pulledItems.allText;
                 textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
                 //If there is an error then skip this note
@@ -165,7 +164,7 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent, textNodeMap);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent, textNodeMap, allText);
             notesList.push(noteObj);
         }
     }
@@ -213,7 +212,8 @@ async function fetchEntries(client, url) {
 function _pullTextContent(html) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(html, 'text/html');
-    // var text = doc.body.textContent || '';
+    var text = doc.body.textContent || '';
+    text = _cleanText(text);
 
     let textNodeMap = [];
     let allText = "";
@@ -224,7 +224,8 @@ function _pullTextContent(html) {
     textNodeMap = returned.textNodeMap;
     
     return {
-        text: allText,
+        text: text,
+        allText: allText,
         textNodeMap: textNodeMap,
     };
 }
