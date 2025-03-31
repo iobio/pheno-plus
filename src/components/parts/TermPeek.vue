@@ -76,78 +76,51 @@ export default {
     },
     methods: {
         incrementScrollIndex() {
-            if (this.scrolledIndex < this.lenOfIndexes - 1) {
-                this.scrolledIndex++;
-            } else {
-                this.scrolledIndex = 0;
-            }
+            this.scrolledIndex = (this.scrolledIndex + 1) % this.lenOfIndexes;
         },
         showLoadingAndParseHtml(tid) {
-            // Grab the term-peek-div and add the loading indicator
-            let loadingDiv = document.createElement('div');
-            loadingDiv.setAttribute('id', 'loading-highlights-indicator');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-highlights-indicator';
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            // Force the DOM to update before executing showFullTermContext
             setTimeout(() => {
                 this.showFullTermContext(tid)
-                    .catch((error) => {
-                        // Just log the error for now
-                        console.log('Error showing full term context:', error);
-                    })
+                    .catch((error) => console.error('Error showing full term context:', error))
                     .finally(() => {
-                        // Remove the loading indicator no matter what
-                        let loadingIndicator = document.getElementById('loading-highlights-indicator');
-                        if (loadingIndicator) {
-                            loadingIndicator.remove();
-                        }
+                        const loadingIndicator = document.getElementById('loading-highlights-indicator');
+                        if (loadingIndicator) loadingIndicator.remove();
                     });
             }, 50);
         },
         async showFullTermContext(tid) {
-            let selectedNote;
-            selectedNote = this.notesList.find((note) => note.getId() == tid);
+            const selectedNote = this.notesList.find((note) => note.getId() === tid);
             this.noteSelected = selectedNote;
             this.fullNoteShown = true;
 
-            // Highlight the contexts in the note
             try {
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
-
-                if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
+                if (!this.currentHighlightedHtml) {
                     this.alertShown = true;
-                    let parser = new DOMParser();
-                    this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
+                    this.currentHighlightedHtml = selectedNote.html;
                 }
-            } catch (e) {
+            } catch {
                 this.alertShown = true;
-                let parser = new DOMParser();
-                this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
+                this.currentHighlightedHtml = selectedNote.html;
             }
 
-            // Ensure DOM updates are complete before scrolling
             await this.$nextTick();
 
-            let firstHighlight = document.getElementById('context-highlight-0');
+            const firstHighlight = document.getElementById('context-highlight-0');
             if (firstHighlight) {
-                let scrollableParent = document.querySelector('.full-note-overlay');
-                if (scrollableParent) {
-                    //account for the sticky header
-                    let header = document.querySelector('.header-white');
-                    let headerHeight = header ? header.clientHeight : 0;
-                    scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
-
-                    //also add the scrolled class to the first highlight
-                    firstHighlight.classList.add('scrolled');
-                }
+                const scrollableParent = document.querySelector('.full-note-overlay');
+                const headerHeight = document.querySelector('.header-white')?.clientHeight || 0;
+                scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+                firstHighlight.classList.add('scrolled');
             }
 
-            let noteHTMLParent = document.getElementById('note-html-container');
-            //set the z index of all content to be below the header
+            const noteHTMLParent = document.getElementById('note-html-container');
             noteHTMLParent.style.zIndex = 1;
-
-            //for sanity just remove all images from the note
             noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
         },
         closeAndResetNote() {
@@ -159,305 +132,91 @@ export default {
         },
         highlightContexts(note) {
             const htmlMapping = note.getHtmlMapping();
-            const rawText = note.getText();
+            const rawText = note.getText().toLowerCase();
             const parser = new DOMParser();
             const html = parser.parseFromString(note.html, 'text/html');
             const contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
             const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
 
-            const self = this;
-
-            let isFirstHighlight = true;
             let scrollIndex = 0;
+            const highlightSpans = [];
 
-            // Function to highlight text within the text of elements
-            function _highlightInnerText(rawText, html, map) {
-                let text = rawText.toLowerCase(); // Get the text for case-insensitive matching
-                let highlightedHtml = html.cloneNode(true); // Clone the original HTML to modify it
-
-                let lastIndex = 0; // Track the last index of the original text that was copied to the highlightedText
-                let i = 0;
-
-                for (let context of contexts) {
-                    let windowLength = context.length;
-                    let threshold = Math.floor(windowLength * 0.2);
-                    
-                    // If the window length is greater than the text length or if the window length is less than the term length pass on this context
-                    if (windowLength > text.length || windowLength < term.length) {
-                        continue;
-                    }
-                    
-                    while (i <= text.length - threshold) {
-                        let substring;
-                        let j;
-                        if (i + windowLength > text.length) {
-                            substring = text.substring(i);
-                            j = text.length;
-                        } else {
-                            substring = text.substring(i, i + windowLength);
-                            j = i + windowLength;
-                        }
-
-                        let distance = self.getLevenshteinDistance(context, substring);
-                    
-                        if (distance <= threshold) {
-                            isFirstHighlight = false;
-
-                            let iMatchIndex = map.findIndex((el) => { return (i >= el.startOffset && i <= el.endOffset); });
-                            let iMatch = map[iMatchIndex];
-
-                            let jMatchIndex;
-                            let jMatch;
-                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                                jMatchIndex = iMatchIndex;
-                                jMatch = map[jMatchIndex];
-                            } else {
-                                const sliceMap = map.slice(iMatchIndex + 1);
-                                jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                                jMatch = map[jMatchIndex];
-                            }
-
-                            // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
-                            // We will have to do this for all elements in the mapping that are between i and j
-                            if (jMatchIndex - iMatchIndex == 0) {
-                                // We are dealing with a single element
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-
-                                //Highlight the text of the element
-                                let span = document.createElement('span');
-                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                span.setAttribute('class', 'highlighted-context');
-                                span.innerHTML = iElement.innerHTML;
-                                iElement.innerHTML = '';
-                                iElement.appendChild(span);
-                            } else if (jMatchIndex - iMatchIndex == 1) {
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-
-                                //Highlight the text of the element
-                                let span = document.createElement('span');
-                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                span.setAttribute('class', 'highlighted-context');
-                                span.innerHTML = iElement.innerHTML + jElement.innerHTML;
-
-                                iElement.innerHTML = '';
-                                jElement.remove();
-                                iElement.appendChild(span); 
-                            } else {
-                                // We are dealing with more than 2
-                                let fullSpan = document.createElement('span');
-                                fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                fullSpan.setAttribute('class', 'highlighted-context');
-                                fullSpan.innerHTML = '';
-
-                                let combinedHtml = '';
-                                for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                                    let el = map[k];
-                                    let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-
-                                    if (element) {
-                                        combinedHtml += element.innerHTML;  
-                                    }
-                                }
-                                fullSpan.innerHTML = combinedHtml;
-                                
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                if (iElement) {
-                                    for (let k = iMatchIndex + 1; k <= jMatchIndex; k++) {
-                                        let el = map[k];
-                                        let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                        if (element) {
-                                            element.remove();
-                                        }
-                                    }
-                                    
-                                    // Now set the first element's content
-                                    iElement.innerHTML = '';
-                                    iElement.appendChild(fullSpan);
-                                }
-                            }
-
-                            lastIndex = j;
-                            i = j;
-
-                            scrollIndex++;
-                        } else {
-                            i++;
-                        }
-                    }
-
-                    //Reset I to the last highlight index so that we can check the other contexts within the remaining text
-                    i = lastIndex;
-                }
-
-                //If we didn't highlight a context then we can try to highlight the term
-                if (isFirstHighlight) {
-                    let windowLength = term.length;
-                    let termThreshold = Math.floor(windowLength * 0.1);
-
-                    if (windowLength > text.length) {
-                        return;
-                    }
-
-                    let i = 0;
-                    while (i <= text.length - termThreshold) {
-                        let substring;
-                        let j;
-                        if (i + windowLength > text.length) {
-                            substring = text.substring(i);
-                            j = text.length;
-                        } else {
-                            // Get the substring of the text
-                            substring = text.substring(i, i + windowLength);
-                            j = i + windowLength;
-                        }
-
-                        // Calculate the Levenshtein distance between the term and the substring
-                        let distance = self.getLevenshteinDistance(term, substring);
-
-                        if (distance <= termThreshold) {
-                            isFirstHighlight = false;
-
-                            let iMatchIndex = map.findIndex((el) => { return (i >= el.startOffset && i <= el.endOffset); });
-                            let iMatch = map[iMatchIndex];
-
-                            let jMatchIndex;
-                            let jMatch;
-                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                                jMatchIndex = iMatchIndex;
-                                jMatch = map[jMatchIndex];
-                            } else {
-                                const sliceMap = map.slice(iMatchIndex + 1);
-                                jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                                jMatch = map[jMatchIndex];
-                            }
-
-                            // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
-                            // We will have to do this for all elements in the mapping that are between i and j
-                            if (jMatchIndex - iMatchIndex == 0) {
-                                // We are dealing with a single element
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-
-                                //Highlight the text of the element
-                                let span = document.createElement('span');
-                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                span.setAttribute('class', 'highlighted-context');
-                                span.innerHTML = iElement.innerHTML;
-
-                                iElement.innerHTML = '';
-                                iElement.appendChild(span);
-                            } else if (jMatchIndex - iMatchIndex == 1) {
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-
-                                //Highlight the text of the element
-                                let span = document.createElement('span');
-                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                span.setAttribute('class', 'highlighted-context');
-                                span.innerHTML = iElement.innerHTML + jElement.innerHTML;
-
-                                iElement.innerHTML = '';
-                                jElement.remove();
-                                iElement.appendChild(span); 
-                            } else {
-                                // We are dealing with more than 2
-                                let fullSpan = document.createElement('span');
-                                fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                fullSpan.setAttribute('class', 'highlighted-context');
-                                fullSpan.innerHTML = '';
-
-                                for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                                    let el = map[k];
-                                    let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                    fullSpan.innerHTML = element.innerHTML;
-                                    
-                                    //if it isnt the first i element then remove it
-                                    if (k != iMatchIndex) {
-                                        element.remove();
-                                    } 
-                                }
-
-                                // Append the full span to the first element
-                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                iElement.innerHTML = '';
-                                iElement.appendChild(fullSpan);
-                            }
-
-                            lastIndex = j;
-                            i = j;
-
-                            scrollIndex++;
-                        } else {
-                            i++;
-                        }
+            const highlightText = (text, termOrContext, threshold, className) => {
+                const termLength = termOrContext.length;
+                const matches = [];
+                for (let i = 0; i <= text.length - termLength; i++) {
+                    const substring = text.slice(i, i + termLength);
+                    if (this.getLevenshteinDistance(termOrContext, substring) <= threshold) {
+                        matches.push({ start: i, end: i + termLength });
+                        i += termLength - 1; // Skip overlapping matches
                     }
                 }
+                return matches;
+            };
 
-                if (isFirstHighlight) {
-                    self.alertShown = true;
-                } else {
-                    self.alertShown = false;
-                }
+            const matches = contexts.flatMap((context) =>
+                highlightText(rawText, context, Math.floor(context.length * 0.2), 'highlighted-context')
+            );
 
-                return highlightedHtml;
+            if (!matches.length) {
+                matches.push(
+                    ...highlightText(rawText, term, Math.floor(term.length * 0.1), 'highlighted-context-term')
+                );
             }
 
-            function _transformPath(parentPath) {
-                // Transform the parent path to a CSS selector
-                let selector = '';
-                let parts = parentPath.split(' > ');
+            matches.forEach(({ start, end }) => {
+                const startMatch = htmlMapping.find((m) => start >= m.startOffset && start <= m.endOffset);
+                const endMatch = htmlMapping.find((m) => end >= m.startOffset && end <= m.endOffset);
 
-                for (let part of parts) {
-                    let [tag, index] = part.split('[');
-                    if (index) {
-                        index = parseInt(index.replace(']', '')) + 1; // Convert to 1-based index
-                        selector += `${tag}:nth-child(${index}) > `;
-                    } else {
-                        selector += `${tag} > `;
+                if (startMatch && endMatch) {
+                    const startElement = html.querySelector(this._transformPath(startMatch.parentPath));
+                    const endElement = html.querySelector(this._transformPath(endMatch.parentPath));
+
+                    if (startElement && endElement) {
+                        const span = document.createElement('span');
+                        span.id = `context-highlight-${scrollIndex++}`;
+                        span.className = 'highlighted-context';
+                        span.innerHTML = startElement.innerHTML + endElement.innerHTML;
+
+                        startElement.innerHTML = '';
+                        startElement.appendChild(span);
+                        if (startElement !== endElement) endElement.remove();
                     }
                 }
+            });
 
-                return selector.slice(0, -3); // Remove the last ' > '
-            }
-
-            let newHtml = html.cloneNode(true);
-            try {
-                newHtml = _highlightInnerText(rawText, html, htmlMapping);
-            } catch (e) {
-                console.log('Error highlighting inner text:', e);
-            }
-            
             this.lenOfIndexes = scrollIndex;
+            this.alertShown = scrollIndex === 0;
 
-            // Return the updated HTML as a string
-            return newHtml.body.innerHTML;
+            return html.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
-            // Create a matrix of size (b.length+1) × (a.length+1)
-            const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
-            
-            // Initialize first row and column
-            for (let i = 0; i <= b.length; i++) matrix[i][0] = i;
-            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-            
-            // Fill the matrix
-            for (let i = 1; i <= b.length; i++) {
-                for (let j = 1; j <= a.length; j++) {
-                    const cost = b.charAt(i - 1) === a.charAt(j - 1) ? 0 : 1;
-                    
-                    matrix[i][j] = Math.min(
-                        matrix[i - 1][j] + 1,      // deletion (cost to delete from b)
-                        matrix[i][j - 1] + 1,      // insertion (cost to insert into b)
-                        matrix[i - 1][j - 1] + cost // substitution or match
+            const dp = Array.from({ length: b.length + 1 }, (_, i) => i);
+            for (let i = 1; i <= a.length; i++) {
+                let prev = dp[0];
+                dp[0] = i;
+                for (let j = 1; j <= b.length; j++) {
+                    const temp = dp[j];
+                    dp[j] = Math.min(
+                        dp[j] + 1,
+                        dp[j - 1] + 1,
+                        prev + (a[i - 1] === b[j - 1] ? 0 : 1)
                     );
+                    prev = temp;
                 }
             }
-            
-            // Return the bottom-right value of the matrix
-            return matrix[b.length][a.length];
+            return dp[b.length];
         },
+        _transformPath(parentPath) {
+            return parentPath
+                .split(' > ')
+                .map((part) => {
+                    const [tag, index] = part.split('[');
+                    return index ? `${tag}:nth-child(${+index.replace(']', '') + 1})` : tag;
+                })
+                .join(' > ');
+        },
+    },
     },
     computed: {
         exampleSentences() {
@@ -473,6 +232,7 @@ export default {
         },
         scrolledIndex: function (newVal, oldVal) {
             let scrollHighlight = document.getElementById(`context-highlight-${this.scrolledIndex}`);
+            console.log('scrollHighlight', scrollHighlight);
             if (scrollHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
                 if (scrollableParent) {
