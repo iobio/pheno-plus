@@ -167,6 +167,7 @@ export default async function fetchNotes(client, patientId) {
             notesList.push(noteObj);
         }
     }
+    console.log(notesList);
     return { notesList: notesList, totalNotes: totalNotes };
 }
 
@@ -230,7 +231,7 @@ function _pullTextContent(html) {
 function _processNode(node) {
     let textNodeMap = [];
     let allText = "";
-    
+
     if (node.nodeType === Node.TEXT_NODE) {
         if (node.textContent.trim()) {
             let originalText = node.textContent;
