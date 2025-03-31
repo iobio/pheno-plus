@@ -227,7 +227,10 @@ function _pullTextContent(html) {
 }
 
 // Function to recursively process text nodes
-function _processNode(node, textNodeMap, allText) {
+function _processNode(node) {
+    let textNodeMap = [];
+    let allText = "";
+    
     if (node.nodeType === Node.TEXT_NODE) {
         if (node.textContent.trim()) {
             let originalText = node.textContent;
