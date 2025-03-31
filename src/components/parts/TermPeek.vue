@@ -412,7 +412,7 @@ export default {
                 return selector.slice(0, -3); // Remove the last ' > '
             }
 
-            const newHtml = _highlightInnerText(rawText, highlightedHtml, htmlMapping);
+            const newHtml = _highlightInnerText(rawText, html, htmlMapping);
             console.log(newHtml); //Remove
             this.lenOfIndexes = scrollIndex;
 
