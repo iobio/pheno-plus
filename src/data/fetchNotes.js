@@ -148,19 +148,22 @@ export default async function fetchNotes(client, patientId) {
 
             let noteContent = null;
             let noteText = 'None pulled';
+            let textNodeMap = null;
 
             try {
                 //Try to get the text content of the note from the binary url
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
-                noteText = pullTextContent(noteContent);
+                const pulledItems = _pullTextContent(noteContent);
+                noteText = pulledItems.text;
+                textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
                 //If there is an error then skip this note
                 continue;
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent, textNodeMap);
             notesList.push(noteObj);
         }
     }
@@ -204,33 +207,105 @@ async function fetchEntries(client, url) {
     return noteEnteries;
 }
 
-function pullTextContent(html) {
-    var parser = new DOMParser(); //Use the DOMParser to parse the html because the source is the trusted FHIR server
-
+function _pullTextContent(html) {
+    var parser = new DOMParser();
     var doc = parser.parseFromString(html, 'text/html');
-    var text = doc.body.textContent || '';
+    // var text = doc.body.textContent || '';
 
-    // Clean up the text remove number and special characters
-    var textClean = text.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
-    textClean = textClean.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
-    textClean = textClean.replace(/[|]/g, ''); // No improvement from keeping
-    textClean = textClean.replace(/°F/g, '');
-    textClean = textClean.replace(/°C/g, '');
-    textClean = textClean.replace(/\( ?\)/g, '');
+    let textNodeMap = [];
+    let allText = "";
 
-    // Characters that explicitly cause issues with sending via URL
-    textClean = textClean.replace(/\?/g, '');
-    textClean = textClean.replace(/\!/g, '');
-    textClean = textClean.replace(/\%/g, '');
-    textClean = textClean.replace(/\#/g, '');
-    textClean = textClean.replace(/\=/g, '');
-    textClean = textClean.replace(/\&/g, '');
-    textClean = textClean.replace(/\@/g, '');
-    textClean = textClean.replace(/[\'\"]+/g, '');
+    // Start processing from body
+    const returned = _processNode(doc.body);
+    allText = returned.text;
+    textNodeMap = returned.textNodeMap;
+    
+    return {
+        text: allText,
+        textNodeMap: textNodeMap,
+    };
+}
 
-    // Standardize whitespace
-    textClean = textClean.replace(/\u200B/g, ''); // Zero-width space
-    textClean = textClean.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+// Function to recursively process text nodes
+function _processNode(node, textNodeMap, allText) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        if (node.textContent.trim()) {
+            let originalText = node.textContent;
+            let cleanedText = _cleanText(originalText);
+            
+            if (cleanedText) {
+                // Store mapping information
+                textNodeMap.push({
+                    node: node,
+                    originalText: originalText,
+                    cleanedText: cleanedText,
+                    startOffset: allText.length,
+                    endOffset: allText.length + cleanedText.length,
+                    parentPath: _getNodePath(node.parentNode)
+                });
+                
+                // Add to combined text
+                allText += cleanedText + " "; // Add space between nodes
+            }
+        }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+        // Skip script and style elements
+        if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') {
+            return;
+        }
+        
+        // Process children
+        for (let child of node.childNodes) {
+            _processNode(child, textNodeMap, allText);
+        }
+    }
 
-    return textClean;
+    // Return the combined text
+    return { text: allText.trim(), textNodeMap: textNodeMap };
+}
+
+// Function to create a DOM path to a node
+function _getNodePath(node) {
+    let path = [];
+    while (node && node !== doc.body) {
+        let index = 0;
+        let sibling = node;
+        while (sibling.previousElementSibling) {
+            sibling = sibling.previousElementSibling;
+            index++;
+        }
+        
+        let nodeName = node.nodeName.toLowerCase();
+        path.unshift(`${nodeName}[${index}]`);
+        node = node.parentNode;
+    }
+    return path.join(" > ");
+}
+
+function _cleanText(text) {
+        let cleaned = text;
+
+        // Clean up the text remove number and special characters
+        cleaned = text.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
+        cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
+        cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
+        cleaned = cleaned.replace(/°F/g, '');
+        cleaned = cleaned.replace(/°C/g, '');
+        cleaned = cleaned.replace(/\( ?\)/g, '');
+    
+        // Characters that explicitly cause issues with sending via URL
+        cleaned = cleaned.replace(/\?/g, '');
+        cleaned = cleaned.replace(/\!/g, '');
+        cleaned = cleaned.replace(/\%/g, '');
+        cleaned = cleaned.replace(/\#/g, '');
+        cleaned = cleaned.replace(/\=/g, '');
+        cleaned = cleaned.replace(/\&/g, '');
+        cleaned = cleaned.replace(/\@/g, '');
+        cleaned = cleaned.replace(/[\'\"]+/g, '');
+    
+        // Standardize whitespace
+        cleaned = cleaned.replace(/\u200B/g, ''); // Zero-width space
+        cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+
+        return cleaned.trim(); // Trim leading and trailing whitespace
 }

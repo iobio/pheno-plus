@@ -298,33 +298,17 @@ export default {
 
             // Iterate over all elements and apply the highlight to their innerText
             let allElements = doc.body.querySelectorAll('*');
-
-            function processElementsRecusively(elements) {
-                elements.forEach((element) => {
-                    if (element.childElementCount === 0 && element.innerText.trim() !== '') {
-                        highlightInnerText.call(this, element);
-                    } else if (element.childElementCount > 0) {
-                        processElementsRecursively(element.childNodes);
-                    }
-                    // Even if the element has child elements, we still want to check its innerText
-                    // and highlight it if it contains the term
-                    if (element.innerText.trim() !== '' && element.childElementCount > 0) {
-                        highlightInnerText.call(this, element);
-                    }
-                });
-            }
-            processElementsRecusively(allElements);
-            // allElements.forEach((element) => {
-            //     if (element.childElementCount === 0 && element.innerText.trim() !== '') {
-            //         highlightInnerText.call(this, element);
-            //     } else if (element.childElementCount > 0) {
-            //         element.childNodes.forEach((child) => {
-            //             if (child.nodeType === 3 && child.textContent.trim() !== '') {
-            //                 highlightInnerText.call(this, child);
-            //             }
-            //         });
-            //     }
-            // });
+            allElements.forEach((element) => {
+                if (element.childElementCount === 0 && element.innerText.trim() !== '') {
+                    highlightInnerText.call(this, element);
+                } else if (element.childElementCount > 0) {
+                    element.childNodes.forEach((child) => {
+                        if (child.nodeType === 3 && child.textContent.trim() !== '') {
+                            highlightInnerText.call(this, child);
+                        }
+                    });
+                }
+            });
 
             this.lenOfIndexes = scrollIndex;
 
