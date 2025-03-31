@@ -123,7 +123,7 @@ export default {
             } catch (e) {
                 this.alertShown = true;
                 let parser = new DOMParser();
-                this.currentHighlightedHtml = parser.parseFromString(note.html, 'text/html');
+                this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
             }
 
             // Ensure DOM updates are complete before scrolling
@@ -267,8 +267,8 @@ export default {
                                 iElement.appendChild(fullSpan);
                             }
 
-                            lastIndex = i + windowLength;
-                            i = i + windowLength;
+                            lastIndex = j;
+                            i = j;
 
                             scrollIndex++;
                         } else {
@@ -374,8 +374,8 @@ export default {
                                 iElement.appendChild(fullSpan);
                             }
 
-                            lastIndex = i + windowLength;
-                            i = i + windowLength;
+                            lastIndex = j;
+                            i = j;
 
                             scrollIndex++;
                         } else {
