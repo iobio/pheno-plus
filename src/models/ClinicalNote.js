@@ -1,6 +1,5 @@
 class ClinicalNote {
-    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null, htmlMapping=null, allText=null) {
-        this.allText = allText;
+    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null, htmlMapping=null) {
         this.id = id;
         this.date = date;
         this.encounterId = encounterId;

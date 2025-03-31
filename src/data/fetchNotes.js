@@ -147,9 +147,8 @@ export default async function fetchNotes(client, patientId) {
             }
 
             let noteContent = null;
-            let noteText = 'None pulled';
             let textNodeMap = null;
-            let allText = null;
+            let allText = 'None pulled';
 
             try {
                 //Try to get the text content of the note from the binary url
@@ -157,7 +156,6 @@ export default async function fetchNotes(client, patientId) {
                 //If there is no error then pull the text content from the note (the note is in html format originally)
                 const pulledItems = _pullTextContent(noteContent);
 
-                noteText = pulledItems.text;
                 allText = pulledItems.allText;
                 textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
@@ -166,7 +164,7 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent, textNodeMap, allText);
+            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, allText, noteTitle, noteContent, textNodeMap);
             notesList.push(noteObj);
         }
     }
@@ -214,7 +212,6 @@ async function fetchEntries(client, url) {
 function _pullTextContent(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const text = _cleanText(doc.body.textContent || '');
 
     let context = {
         allText: '',
@@ -226,7 +223,6 @@ function _pullTextContent(html) {
     _processNode(doc.body, context);
 
     return {
-        text: text,
         allText: context.allText,
         textNodeMap: context.textNodeMap,
     };
