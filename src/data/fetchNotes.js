@@ -212,35 +212,32 @@ async function fetchEntries(client, url) {
 }
 
 function _pullTextContent(html) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(html, 'text/html');
-    var text = doc.body.textContent || '';
-    text = _cleanText(text);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const text = _cleanText(doc.body.textContent || '');
 
-    let textNodeMap = [];
-    let allText = "";
+    let context = {
+        allText: '',
+        textNodeMap: [],
+        doc: doc,
+    };
 
     // Start processing from body
-    const returned = _processNode(doc.body, doc);
-    allText = returned.text;
-    textNodeMap = returned.textNodeMap;
+    _processNode(doc.body, context);
 
     return {
         text: text,
-        allText: allText,
-        textNodeMap: textNodeMap,
+        allText: context.allText,
+        textNodeMap: context.textNodeMap,
     };
 }
 
 // Function to recursively process text nodes
-function _processNode(node, doc) {
-    let textNodeMap = [];
-    let allText = "";
-
+function _processNode(node, context) {
     if (node.nodeType === Node.TEXT_NODE) {
         if (node.textContent.trim()) {
-            let originalText = node.textContent;
-            let cleanedText = _cleanText(originalText);
+            const originalText = node.textContent;
+            const cleanedText = _cleanText(originalText);
             
             if (cleanedText) {
                 // Store mapping information
@@ -248,13 +245,13 @@ function _processNode(node, doc) {
                     node: node,
                     originalText: originalText,
                     cleanedText: cleanedText,
-                    startOffset: allText.length,
-                    endOffset: allText.length + cleanedText.length,
-                    parentPath: _getNodePath(node.parentNode, doc)
+                    startOffset: context.allText.length,
+                    endOffset: context.allText.length + cleanedText.length,
+                    parentPath: _getNodePath(node.parentNode, context.doc)
                 });
                 
                 // Add to combined text
-                allText += cleanedText + " "; // Add space between nodes
+                context.allText += cleanedText + " "; // Add space between nodes
             }
         }
         
@@ -266,14 +263,9 @@ function _processNode(node, doc) {
         
         // Process children
         for (let child of node.childNodes) {
-            let returned = _processNode(child);
-            allText += returned.text;
-            textNodeMap = textNodeMap.concat(returned.textNodeMap);
+            _processNode(child);
         }
     }
-
-    // Return the combined text
-    return { text: allText.trim(), textNodeMap: textNodeMap };
 }
 
 // Function to create a DOM path to a node
