@@ -253,13 +253,16 @@ export default {
                                 fullSpan.innerHTML = '';
 
                                 let combinedHtml = '';
+                                console.log("imatchIndex: ", iMatchIndex);
+                                console.log("jmatchIndex: ", jMatchIndex);
+                                console.log("map length: ", map.length);
                                 for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                                     let el = map[k];
                                     let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                                     
-                                    console.log(el);
-                                    console.log(element);
-                                    console.log(_transformPath(el.parentPath));
+                                    console.log("el", el);
+                                    console.log("element", element);
+                                    console.log("path", _transformPath(el.parentPath));
 
                                     if (element) {
                                         combinedHtml += element.innerHTML;  
