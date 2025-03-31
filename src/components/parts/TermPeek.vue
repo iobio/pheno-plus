@@ -162,7 +162,7 @@ export default {
             const rawText = note.getText();
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(note.html, 'text/html');
-            const contexts = this.hpoItemObj.getExampleSentences().map(s => s[0].toLowerCase());
+            const contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
             const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
             const self = this;
 
@@ -173,17 +173,15 @@ export default {
             const transformCache = new Map();
             function _transformPath(parentPath) {
                 if (transformCache.has(parentPath)) {
-                return transformCache.get(parentPath);
+                    return transformCache.get(parentPath);
                 }
                 const parts = parentPath.split(' > ');
                 const selector = parts
-                .map(part => {
-                    const [tag, idx] = part.split('[');
-                    return idx
-                    ? `${tag}:nth-child(${parseInt(idx.replace(']', ''), 10) + 1})`
-                    : tag;
-                })
-                .join(' > ');
+                    .map((part) => {
+                        const [tag, idx] = part.split('[');
+                        return idx ? `${tag}:nth-child(${parseInt(idx.replace(']', ''), 10) + 1})` : tag;
+                    })
+                    .join(' > ');
                 transformCache.set(parentPath, selector);
                 return selector;
             }
@@ -198,141 +196,141 @@ export default {
 
                 // Helper to wrap matching elements in a highlight span.
                 function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, isContextBlock) {
-                // For single or two-element matches we treat them separately.
-                if (jMatchIndex - iMatchIndex === 0) {
-                    const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    const span = document.createElement('span');
-                    span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    span.setAttribute('class', 'highlighted-context');
-                    span.innerHTML = elem.innerHTML;
-                    elem.innerHTML = '';
-                    elem.appendChild(span);
-                } else if (jMatchIndex - iMatchIndex === 1) {
-                    const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-                    const span = document.createElement('span');
-                    span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    span.setAttribute('class', 'highlighted-context');
-                    span.innerHTML = iElement.innerHTML + jElement.innerHTML;
-                    iElement.innerHTML = '';
-                    jElement.remove();
-                    iElement.appendChild(span);
-                } else {
-                    // For multiple elements, combine them differently for context vs. term.
-                    const fullSpan = document.createElement('span');
-                    fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    fullSpan.setAttribute('class', 'highlighted-context');
-                    if (isContextBlock) {
-                    let combinedHtml = '';
-                    for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                        const el = map[k];
-                        const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                        if (element) combinedHtml += element.innerHTML;
-                    }
-                    fullSpan.innerHTML = combinedHtml;
+                    // For single or two-element matches we treat them separately.
+                    if (jMatchIndex - iMatchIndex === 0) {
+                        const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        const span = document.createElement('span');
+                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        span.setAttribute('class', 'highlighted-context');
+                        span.innerHTML = elem.innerHTML;
+                        elem.innerHTML = '';
+                        elem.appendChild(span);
+                    } else if (jMatchIndex - iMatchIndex === 1) {
+                        const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+                        const span = document.createElement('span');
+                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        span.setAttribute('class', 'highlighted-context');
+                        span.innerHTML = iElement.innerHTML + jElement.innerHTML;
+                        iElement.innerHTML = '';
+                        jElement.remove();
+                        iElement.appendChild(span);
                     } else {
-                    // For term highlight, overwrite each element’s innerHTML and remove later ones.
-                    for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                        const el = map[k];
-                        const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                        if (element) {
-                        fullSpan.innerHTML = element.innerHTML;
-                        if (k !== iMatchIndex) element.remove();
+                        // For multiple elements, combine them differently for context vs. term.
+                        const fullSpan = document.createElement('span');
+                        fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        fullSpan.setAttribute('class', 'highlighted-context');
+                        if (isContextBlock) {
+                            let combinedHtml = '';
+                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                const el = map[k];
+                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                if (element) combinedHtml += element.innerHTML;
+                            }
+                            fullSpan.innerHTML = combinedHtml;
+                        } else {
+                            // For term highlight, overwrite each element’s innerHTML and remove later ones.
+                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                const el = map[k];
+                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                if (element) {
+                                    fullSpan.innerHTML = element.innerHTML;
+                                    if (k !== iMatchIndex) element.remove();
+                                }
+                            }
+                        }
+                        const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        if (firstElem) {
+                            firstElem.innerHTML = '';
+                            firstElem.appendChild(fullSpan);
                         }
                     }
-                    }
-                    const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    if (firstElem) {
-                    firstElem.innerHTML = '';
-                    firstElem.appendChild(fullSpan);
-                    }
-                }
-                scrollIndex++;
+                    scrollIndex++;
                 }
 
                 // Process each context pattern.
                 for (const context of contexts) {
-                const windowLength = context.length;
-                const threshold = Math.floor(windowLength * 0.2);
-                // Skip if context is longer than text or shorter than term.
-                if (windowLength > textLength || windowLength < term.length) continue;
+                    const windowLength = context.length;
+                    const threshold = Math.floor(windowLength * 0.2);
+                    // Skip if context is longer than text or shorter than term.
+                    if (windowLength > textLength || windowLength < term.length) continue;
 
-                while (i <= textLength - threshold) {
-                    let j, substring;
-                    if (i + windowLength > textLength) {
-                    substring = text.substring(i);
-                    j = textLength;
-                    } else {
-                    substring = text.substring(i, i + windowLength);
-                    j = i + windowLength;
+                    while (i <= textLength - threshold) {
+                        let j, substring;
+                        if (i + windowLength > textLength) {
+                            substring = text.substring(i);
+                            j = textLength;
+                        } else {
+                            substring = text.substring(i, i + windowLength);
+                            j = i + windowLength;
+                        }
+                        const distance = self.getLevenshteinDistance(context, substring);
+                        if (distance <= threshold) {
+                            isFirstHighlight = false;
+                            // Find matching mapping entries for start (i) and end (j).
+                            let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                            const iMatch = map[iMatchIndex];
+                            let jMatchIndex;
+                            let jMatch;
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                jMatchIndex = iMatchIndex;
+                                jMatch = map[jMatchIndex];
+                            } else {
+                                const sliceMap = map.slice(iMatchIndex + 1);
+                                jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                jMatch = map[jMatchIndex];
+                            }
+                            applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
+                            lastIndex = j;
+                            i = j;
+                        } else {
+                            i++;
+                        }
                     }
-                    const distance = self.getLevenshteinDistance(context, substring);
-                    if (distance <= threshold) {
-                    isFirstHighlight = false;
-                    // Find matching mapping entries for start (i) and end (j).
-                    let iMatchIndex = map.findIndex(el => i >= el.startOffset && i <= el.endOffset);
-                    const iMatch = map[iMatchIndex];
-                    let jMatchIndex;
-                    let jMatch;
-                    if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                        jMatchIndex = iMatchIndex;
-                        jMatch = map[jMatchIndex];
-                    } else {
-                        const sliceMap = map.slice(iMatchIndex + 1);
-                        jMatchIndex = sliceMap.findIndex(el => j >= el.startOffset && j <= el.endOffset);
-                        jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                        jMatch = map[jMatchIndex];
-                    }
-                    applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
-                    lastIndex = j;
-                    i = j;
-                    } else {
-                    i++;
-                    }
-                }
-                // Reset i to continue from last highlight position.
-                i = lastIndex;
+                    // Reset i to continue from last highlight position.
+                    i = lastIndex;
                 }
 
                 // If no context was highlighted, try highlighting the term.
                 if (isFirstHighlight) {
-                const windowLength = term.length;
-                const termThreshold = Math.floor(windowLength * 0.1);
-                if (windowLength <= textLength) {
-                    i = 0;
-                    while (i <= textLength - termThreshold) {
-                    let j, substring;
-                    if (i + windowLength > textLength) {
-                        substring = text.substring(i);
-                        j = textLength;
-                    } else {
-                        substring = text.substring(i, i + windowLength);
-                        j = i + windowLength;
-                    }
-                    const distance = self.getLevenshteinDistance(term, substring);
-                    if (distance <= termThreshold) {
-                        isFirstHighlight = false;
-                        let iMatchIndex = map.findIndex(el => i >= el.startOffset && i <= el.endOffset);
-                        const iMatch = map[iMatchIndex];
-                        let jMatchIndex;
-                        let jMatch;
-                        if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                        jMatchIndex = iMatchIndex;
-                        jMatch = map[jMatchIndex];
-                        } else {
-                        const sliceMap = map.slice(iMatchIndex + 1);
-                        jMatchIndex = sliceMap.findIndex(el => j >= el.startOffset && j <= el.endOffset);
-                        jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                        jMatch = map[jMatchIndex];
+                    const windowLength = term.length;
+                    const termThreshold = Math.floor(windowLength * 0.1);
+                    if (windowLength <= textLength) {
+                        i = 0;
+                        while (i <= textLength - termThreshold) {
+                            let j, substring;
+                            if (i + windowLength > textLength) {
+                                substring = text.substring(i);
+                                j = textLength;
+                            } else {
+                                substring = text.substring(i, i + windowLength);
+                                j = i + windowLength;
+                            }
+                            const distance = self.getLevenshteinDistance(term, substring);
+                            if (distance <= termThreshold) {
+                                isFirstHighlight = false;
+                                let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                                const iMatch = map[iMatchIndex];
+                                let jMatchIndex;
+                                let jMatch;
+                                if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                    jMatchIndex = iMatchIndex;
+                                    jMatch = map[jMatchIndex];
+                                } else {
+                                    const sliceMap = map.slice(iMatchIndex + 1);
+                                    jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                                    jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                    jMatch = map[jMatchIndex];
+                                }
+                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
+                                lastIndex = j;
+                                i = j;
+                            } else {
+                                i++;
+                            }
                         }
-                        applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
-                        lastIndex = j;
-                        i = j;
-                    } else {
-                        i++;
                     }
-                    }
-                }
                 }
 
                 self.alertShown = isFirstHighlight;
@@ -348,7 +346,7 @@ export default {
             this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
-        function getLevenshteinDistance(a, b) {
+        getLevenshteinDistance(a, b) {
             if (a === b) return 0;
             const aLen = a.length;
             const bLen = b.length;
@@ -376,19 +374,19 @@ export default {
                 currRow[0] = j;
                 const bChar = b[j - 1];
                 for (let i = 1; i <= shorterLen; i++) {
-                const cost = a[i - 1] === bChar ? 0 : 1;
-                currRow[i] = Math.min(
-                    currRow[i - 1] + 1,   // insertion
-                    prevRow[i] + 1,       // deletion
-                    prevRow[i - 1] + cost // substitution
-                );
+                    const cost = a[i - 1] === bChar ? 0 : 1;
+                    currRow[i] = Math.min(
+                        currRow[i - 1] + 1, // insertion
+                        prevRow[i] + 1, // deletion
+                        prevRow[i - 1] + cost, // substitution
+                    );
                 }
                 // Swap rows for next iteration
                 [prevRow, currRow] = [currRow, prevRow];
             }
 
             return prevRow[shorterLen];
-        }
+        },
     },
     computed: {
         exampleSentences() {
