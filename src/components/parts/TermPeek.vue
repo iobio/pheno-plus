@@ -390,6 +390,8 @@ export default {
                     this.alertShown = false;
                 }
 
+                console.log("highlightedHtml", highlightedHtml);
+
                 return highlightedHtml;
             }
 
