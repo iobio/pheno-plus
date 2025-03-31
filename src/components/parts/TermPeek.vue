@@ -205,6 +205,7 @@ export default {
 
                             let iMatchIndex = map.findIndex((el) => { return (i >= el.startOffset && i <= el.endOffset); });
                             let iMatch = map[iMatchIndex];
+                            console.log("Upper Imatch", iMatch);
 
                             let jMatchIndex;
                             let jMatch;
