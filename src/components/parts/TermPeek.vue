@@ -298,6 +298,7 @@ export default {
 
             // Iterate over all elements and apply the highlight to their innerText
             let allElements = doc.body.querySelectorAll('*');
+            console.log('all elements', allElements);
             allElements.forEach((element) => {
                 if (element.childElementCount === 0 && element.innerText.trim() !== '') {
                     highlightInnerText.call(this, element);
