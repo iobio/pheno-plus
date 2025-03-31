@@ -158,6 +158,7 @@ export default {
             this.lenOfIndexes = 0;
         },
         highlightContexts(note) {
+            console.log(note.htmlMapping);
             // Parse the HTML content of the note into a DOM structure
             let parser = new DOMParser();
             let doc = parser.parseFromString(note.html, 'text/html');
@@ -295,6 +296,16 @@ export default {
                 element.innerHTML = highlightedText;
                 return element;
             }
+
+            /**
+             * The rework will be as follows:
+             * We will iterate over the "text" for the note
+             * When we find something that matches the term or context we will highlight the html element(s) 
+             * that contain the text
+             * 
+             * We will know which because the elements have been mapped so we will use the notes htmlMapping to find the element(s)
+             */
+
 
             // Iterate over all elements and apply the highlight to their innerText
             let allElements = doc.body.querySelectorAll('*');
