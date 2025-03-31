@@ -168,7 +168,6 @@ export default async function fetchNotes(client, patientId) {
             notesList.push(noteObj);
         }
     }
-    console.log(notesList);
     return { notesList: notesList, totalNotes: totalNotes };
 }
 
