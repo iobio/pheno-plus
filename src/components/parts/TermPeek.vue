@@ -170,6 +170,7 @@ export default {
 
             // Function to highlight text within the text of elements
             function _highlightInnerText(rawText, html, map) {
+                console.log("highlight being called")
                 let text = rawText.toLowerCase(); // Get the text for case-insensitive matching
                 let highlightedHtml = html.cloneNode(true); // Clone the original HTML to modify it
 
@@ -411,9 +412,6 @@ export default {
                 return selector.slice(0, -3); // Remove the last ' > '
             }
 
-            console.log('rawText', rawText); //Remove
-            console.log('htmlMapping', htmlMapping); //Remove
-            console.log('contexts', contexts); //Remove
             const newHtml = _highlightInnerText(rawText, highlightedHtml, htmlMapping);
             console.log(newHtml); //Remove
             this.lenOfIndexes = scrollIndex;
