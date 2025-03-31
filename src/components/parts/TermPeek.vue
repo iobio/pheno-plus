@@ -159,16 +159,11 @@ export default {
         },
         highlightContexts(note) {
             const htmlMapping = note.getHtmlMapping();
-            console.log(htmlMapping); //Remove
             const rawText = note.getText();
-            console.log(rawText); //Remove
-
             const parser = new DOMParser();
-            let html = parser.parseFromString(note.html, 'text/html');
-
-            //Case insensitive matching
-            let contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
-            let term = this.hpoItemObj.getPhenotypeName().toLowerCase();
+            const html = parser.parseFromString(note.html, 'text/html');
+            const contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
+            const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
 
             let isFirstHighlight = true;
             let scrollIndex = 0;
@@ -416,7 +411,7 @@ export default {
                 return selector.slice(0, -3); // Remove the last ' > '
             }
 
-            const newHtml = _highlightInnerText(rawText, html, htmlMapping);
+            const newHtml = _highlightInnerText(rawText, highlightedHtml, htmlMapping);
             console.log(newHtml); //Remove
             this.lenOfIndexes = scrollIndex;
 
