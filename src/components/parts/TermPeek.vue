@@ -257,6 +257,10 @@ export default {
                                     let el = map[k];
                                     let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                                     
+                                    console.log(el);
+                                    console.log(element);
+                                    console.log(_transformPath(el.parentPath));
+
                                     if (element) {
                                         combinedHtml += element.innerHTML;  
                                     }
