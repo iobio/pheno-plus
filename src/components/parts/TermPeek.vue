@@ -228,7 +228,7 @@ export default {
                                 span.setAttribute('id', `context-highlight-${scrollIndex}`);
                                 span.setAttribute('class', 'highlighted-context');
                                 span.innerHTML = iElement.innerHTML;
-
+                                console.log(iElement);
                                 iElement.innerHTML = '';
                                 iElement.appendChild(span);
                             } else if (jMatchIndex - iMatchIndex == 1) {
@@ -255,6 +255,7 @@ export default {
                                 for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                                     let el = map[k];
                                     let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                    
                                     fullSpan.innerHTML = element.innerHTML;
                                     
                                     //if it isnt the first i element then remove it
@@ -265,6 +266,7 @@ export default {
 
                                 // Append the full span to the first element
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                console.log(iElement);
                                 iElement.innerHTML = '';
                                 iElement.appendChild(fullSpan);
                             }
