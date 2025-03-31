@@ -214,7 +214,8 @@ export default {
                             } else {
                                 const sliceMap = map.slice(iMatchIndex + 1);
                                 jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                jMatch = map[jMatchIndex + iMatchIndex + 1];
+                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                jMatch = map[jMatchIndex];
                             }
 
                             // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
@@ -339,7 +340,8 @@ export default {
                             } else {
                                 const sliceMap = map.slice(iMatchIndex + 1);
                                 jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
-                                jMatch = map[jMatchIndex + iMatchIndex + 1];
+                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                jMatch = map[jMatchIndex];
                             }
 
                             // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
