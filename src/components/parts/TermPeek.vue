@@ -179,7 +179,7 @@ export default {
                 for (let context of contexts) {
                     let windowLength = context.length;
                     let threshold = Math.floor(windowLength * 0.2);
-
+                    
                     // If the window length is greater than the text length or if the window length is less than the term length pass on this context
                     if (windowLength > text.length || windowLength < term.length) {
                         continue;
@@ -197,7 +197,7 @@ export default {
                         }
 
                         let distance = this.getLevenshteinDistance(context, substring);
-
+                        console.log('Distance:', distance); //Remove
                         if (distance <= threshold) {
                             isFirstHighlight = false;
 
