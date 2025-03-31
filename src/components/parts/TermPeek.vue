@@ -158,145 +158,6 @@ export default {
             this.lenOfIndexes = 0;
         },
         highlightContexts(note) {
-            console.log(note.htmlMapping);
-            // Parse the HTML content of the note into a DOM structure
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(note.html, 'text/html');
-
-            // Use Array.from to convert the NodeList to an array and reverse it
-            // This allows you replace the innermost tables first
-            Array.from(doc.querySelectorAll('table'))
-                .reverse()
-                .forEach((table) => {
-                    let tableDiv = document.createElement('div');
-                    tableDiv.classList.add('table-div');
-
-                    // Process all rows and cells within this table
-                    table.querySelectorAll('tr').forEach((row) => {
-                        let rowDiv = document.createElement('div');
-                        rowDiv.classList.add('table-row');
-                        row.querySelectorAll('td, th').forEach((cell) => {
-                            let cellDiv = document.createElement('div');
-                            cellDiv.innerHTML = cell.innerHTML; // Copy cell content
-                            rowDiv.appendChild(cellDiv);
-                        });
-                        tableDiv.appendChild(rowDiv);
-                    });
-
-                    // Replace the original table with the new div
-                    table.replaceWith(tableDiv);
-                });
-
-            let isFirstHighlight = true;
-            let scrollIndex = 0;
-
-            //get example sentances and make them all lowercase
-            let contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
-            let term = this.hpoItemObj.getPhenotypeName().toLowerCase(); // Convert term to lowercase
-
-            // Function to highlight text within the innerText of elements
-            function highlightInnerText(element) {
-                let innerText = element.innerText.toLowerCase(); // Get the innerText for case-insensitive matching
-                let originalInnerText = element.innerText; // Get the original innerText
-                let highlightedText = '';
-
-                //if the innerText is two letters shorter than the term then don't try to match just ignore
-                if (innerText.length < term.length - 1) {
-                    return element;
-                }
-
-                let lastIndex = 0; // Track the last index of the original innerText that was copied to the highlightedText
-                let i = 0;
-
-                //FIRST: We go through the whole context first
-                for (let context of contexts) {
-                    // Adjust the threshold as needed (e.g., 20% of the context's length)
-                    let threshold = Math.floor(context.length * 0.2);
-                    let windowLength = context.length;
-
-                    if (windowLength > innerText.length) {
-                        //Go to the next context if the context is longer than the innerText
-                        continue;
-                    } else if (windowLength < term.length) {
-                        //Go to the next context if the context is shorter than the term
-                        continue;
-                    }
-
-                    while (i <= innerText.length - windowLength) {
-                        let substring = innerText.substring(i, i + windowLength);
-                        let distance = this.getLevenshteinDistance(context, substring);
-
-                        if (distance <= threshold) {
-                            isFirstHighlight = false;
-                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
-
-                            highlightedText +=
-                                originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context">${originalSubstring}</span>`;
-
-                            //Jump to the end of the matched substring
-                            lastIndex = i + windowLength;
-                            i = i + windowLength;
-
-                            scrollIndex++;
-                        } else {
-                            i++;
-                        }
-                    }
-
-                    //Reset I to the last highlight index so that we can check the other contexts within the remaining innerText
-                    i = lastIndex;
-                }
-
-                //If we didn't highlight a context then we can try to highlight the term
-                if (isFirstHighlight) {
-                    let termThreshold = Math.floor(term.length * 0.1);
-                    let windowLength = term.length;
-
-                    if (windowLength > innerText.length) {
-                        return;
-                    }
-
-                    let i = 0;
-                    while (i <= innerText.length - windowLength) {
-                        let substring = innerText.substring(i, i + windowLength);
-
-                        // Calculate the Levenshtein distance between the term and the substring
-                        let distance = this.getLevenshteinDistance(term, substring);
-
-                        if (distance <= termThreshold) {
-                            // If within the threshold, wrap the original substring in a highlight span
-                            isFirstHighlight = false;
-                            let originalSubstring = originalInnerText.substring(i, i + windowLength);
-
-                            highlightedText +=
-                                originalInnerText.substring(lastIndex, i) +
-                                `<span id="context-highlight-${scrollIndex}" class="highlighted-context-term">${originalSubstring}</span>`;
-
-                            lastIndex = i + windowLength;
-                            i = i + windowLength;
-
-                            scrollIndex++;
-                        } else {
-                            i++;
-                        }
-                    }
-                }
-
-                if (isFirstHighlight) {
-                    // If no highlights were applied, append the original innerText
-                    highlightedText = originalInnerText;
-                    this.alertShown = true;
-                } else {
-                    // Append any remaining part of the original innerText
-                    highlightedText += originalInnerText.substring(lastIndex);
-                    this.alertShown = false;
-                }
-
-                element.innerHTML = highlightedText;
-                return element;
-            }
-
             /**
              * The rework will be as follows:
              * We will iterate over the "text" for the note
@@ -304,28 +165,278 @@ export default {
              * that contain the text
              * 
              * We will know which because the elements have been mapped so we will use the notes htmlMapping to find the element(s)
+             * I think we can take advantage of the fact that the htmlMapping is in order so we find the beginning and map to the end 
+             * 
+             * We will have to use a replacement syntax for the mapping to grab it but it is doable so we a parentPath that is el[0] > el[0] > el[x]
+             * If the number isnt 0 we will have to do el:nth-of-type(x + 1) to get the element the one is because nth-of-type is 1 indexed
              */
 
+            console.log(note.htmlMapping); //Remove
 
-            // Iterate over all elements and apply the highlight to their innerText
-            let allElements = doc.body.querySelectorAll('*');
-            console.log('all elements', allElements);
-            allElements.forEach((element) => {
-                if (element.childElementCount === 0 && element.innerText.trim() !== '') {
-                    highlightInnerText.call(this, element);
-                } else if (element.childElementCount > 0) {
-                    element.childNodes.forEach((child) => {
-                        if (child.nodeType === 3 && child.textContent.trim() !== '') {
-                            highlightInnerText.call(this, child);
+            const htmlMapping = note.getHtmlMapping();
+            const rawText = note.getText();
+
+            const parser = new DOMParser();
+            let html = parser.parseFromString(note.html, 'text/html');
+
+            //Case insensitive matching
+            let contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
+            let term = this.hpoItemObj.getPhenotypeName().toLowerCase();
+
+            let isFirstHighlight = true;
+            let scrollIndex = 0;
+
+            // Function to highlight text within the text of elements
+            function _highlightInnerText(rawText, html, map) {
+                let text = rawText.toLowerCase(); // Get the text for case-insensitive matching
+                let highlightedHtml = html.cloneNode(true); // Clone the original HTML to modify it
+
+                let lastIndex = 0; // Track the last index of the original text that was copied to the highlightedText
+                let i = 0;
+                let s = 0;
+                let e = 0;
+
+                for (let context of contexts) {
+                    let windowLength = context.length;
+                    let threshold = Math.floor(windowLength * 0.2);
+
+                    // If the window length is greater than the text length or if the window length is less than the term length pass on this context
+                    if (windowLength > text.length || windowLength < term.length) {
+                        continue;
+                    }
+
+                    while (i <= text.length - threshold) {
+                        let substring;
+                        let j;
+                        if (i + windowLength > text.length) {
+                            substring = text.substring(i);
+                            j = text.length;
+                        } else {
+                            substring = text.substring(i, i + windowLength);
+                            j = i + windowLength;
                         }
-                    });
-                }
-            });
 
+                        let distance = this.getLevenshteinDistance(context, substring);
+
+                        if (distance <= threshold) {
+                            isFirstHighlight = false;
+
+                            let iMatchIndex = map.findIndex((el) => { return (i >= el.startOffset && i <= el.endOffset); });
+                            let iMatch = map[iMatchIndex];
+
+                            let jMatchIndex;
+                            let jMatch;
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                jMatchIndex = iMatchIndex;
+                                jMatch = map[jMatchIndex];
+                            } else {
+                                const sliceMap = map.slice(iMatchIndex + 1);
+                                jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
+                                let jMatchIndex = map.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
+                                jMatch = map[jMatchIndex + iMatchIndex + 1];
+                            }
+
+                            // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
+                            // We will have to do this for all elements in the mapping that are between i and j
+                            if (jMatchIndex - iMatchIndex == 0) {
+                                // We are dealing with a single element
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+
+                                //Highlight the text of the element
+                                let span = document.createElement('span');
+                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                span.setAttribute('class', 'highlighted-context');
+                                span.innerHTML = iElement.innerHTML;
+
+                                iElement.innerHTML = '';
+                                iElement.appendChild(span);
+                            } else if (jMatchIndex - iMatchIndex == 1) {
+                               let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+
+                                //Highlight the text of the element
+                                let span = document.createElement('span');
+                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                span.setAttribute('class', 'highlighted-context');
+                                span.innerHTML = iElement.innerHTML + jElement.innerHTML;
+
+                                iElement.innerHTML = '';
+                                jElement.remove();
+                                iElement.appendChild(span); 
+                            } else {
+                                // We are dealing with more than 2
+                                let fullSpan = document.createElement('span');
+                                fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                fullSpan.setAttribute('class', 'highlighted-context');
+                                fullSpan.innerHTML = '';
+
+                                for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                    let el = map[k];
+                                    let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                    fullSpan.innerHTML = element.innerHTML;
+                                    
+                                    //if it isnt the first i element then remove it
+                                    if (k != iMatchIndex) {
+                                        element.remove();
+                                    } 
+                                }
+
+                                // Append the full span to the first element
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                iElement.innerHTML = '';
+                                iElement.appendChild(fullSpan);
+                            }
+
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
+
+                            scrollIndex++;
+                        } else {
+                            i++;
+                        }
+                    }
+
+                    //Reset I to the last highlight index so that we can check the other contexts within the remaining text
+                    i = lastIndex;
+                }
+
+                //If we didn't highlight a context then we can try to highlight the term
+                if (isFirstHighlight) {
+                    let windowLength = term.length;
+                    let termThreshold = Math.floor(windowLength * 0.1);
+
+                    if (windowLength > text.length) {
+                        return;
+                    }
+
+                    let i = 0;
+                    while (i <= text.length - termThreshold) {
+                        let substring;
+                        let j;
+                        if (i + windowLength > text.length) {
+                            substring = text.substring(i);
+                            j = text.length;
+                        } else {
+                            // Get the substring of the text
+                            substring = text.substring(i, i + windowLength);
+                            j = i + windowLength;
+                        }
+
+                        // Calculate the Levenshtein distance between the term and the substring
+                        let distance = this.getLevenshteinDistance(term, substring);
+
+                        if (distance <= termThreshold) {
+                            isFirstHighlight = false;
+
+                            let iMatchIndex = map.findIndex((el) => { return (i >= el.startOffset && i <= el.endOffset); });
+                            let iMatch = map[iMatchIndex];
+
+                            let jMatchIndex;
+                            let jMatch;
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                jMatchIndex = iMatchIndex;
+                                jMatch = map[jMatchIndex];
+                            } else {
+                                const sliceMap = map.slice(iMatchIndex + 1);
+                                jMatchIndex = sliceMap.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
+                                let jMatchIndex = map.findIndex((el) => { return (j >= el.startOffset && j <= el.endOffset); });
+                                jMatch = map[jMatchIndex + iMatchIndex + 1];
+                            }
+
+                            // What we want to do is grab the first iElement and the jElement and fully wrap them in a span that is a highlight
+                            // We will have to do this for all elements in the mapping that are between i and j
+                            if (jMatchIndex - iMatchIndex == 0) {
+                                // We are dealing with a single element
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+
+                                //Highlight the text of the element
+                                let span = document.createElement('span');
+                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                span.setAttribute('class', 'highlighted-context');
+                                span.innerHTML = iElement.innerHTML;
+
+                                iElement.innerHTML = '';
+                                iElement.appendChild(span);
+                            } else if (jMatchIndex - iMatchIndex == 1) {
+                               let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+
+                                //Highlight the text of the element
+                                let span = document.createElement('span');
+                                span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                span.setAttribute('class', 'highlighted-context');
+                                span.innerHTML = iElement.innerHTML + jElement.innerHTML;
+
+                                iElement.innerHTML = '';
+                                jElement.remove();
+                                iElement.appendChild(span); 
+                            } else {
+                                // We are dealing with more than 2
+                                let fullSpan = document.createElement('span');
+                                fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                fullSpan.setAttribute('class', 'highlighted-context');
+                                fullSpan.innerHTML = '';
+
+                                for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                    let el = map[k];
+                                    let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                    fullSpan.innerHTML = element.innerHTML;
+                                    
+                                    //if it isnt the first i element then remove it
+                                    if (k != iMatchIndex) {
+                                        element.remove();
+                                    } 
+                                }
+
+                                // Append the full span to the first element
+                                let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                iElement.innerHTML = '';
+                                iElement.appendChild(fullSpan);
+                            }
+
+                            lastIndex = i + windowLength;
+                            i = i + windowLength;
+
+                            scrollIndex++;
+                        } else {
+                            i++;
+                        }
+                    }
+                }
+
+                if (isFirstHighlight) {
+                    this.alertShown = true;
+                } else {
+                    this.alertShown = false;
+                }
+
+                return highlightedHtml;
+            }
+
+            function _transformPath(parentPath) {
+                // Transform the parent path to a CSS selector
+                let selector = '';
+                let parts = parentPath.split(' > ');
+
+                for (let part of parts) {
+                    let [tag, index] = part.split('[');
+                    if (index) {
+                        index = parseInt(index.replace(']', '')) + 1; // Convert to 1-based index
+                        selector += `${tag}:nth-of-type(${index}) > `;
+                    } else {
+                        selector += `${tag} > `;
+                    }
+                }
+
+                return selector.slice(0, -3); // Remove the last ' > '
+            }
+
+            const newHtml = _highlightInnerText(rawText, html, htmlMapping);
+            console.log(newHtml); //Remove
             this.lenOfIndexes = scrollIndex;
 
             // Return the updated HTML as a string
-            return doc.body.innerHTML;
+            return html.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
             // Create a matrix of size (b.length+1) × (a.length+1)
