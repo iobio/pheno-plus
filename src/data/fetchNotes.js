@@ -218,6 +218,29 @@ function _pullTextContent(html) {
         doc: doc,
     };
 
+    // Replace tables with divs
+    Array.from(doc.querySelectorAll('table'))
+        .reverse()
+        .forEach((table) => {
+            let tableDiv = doc.createElement('div');
+            tableDiv.classList.add('table-div');
+
+            // Process all rows and cells within this table
+            table.querySelectorAll('tr').forEach((row) => {
+                let rowDiv = doc.createElement('div');
+                rowDiv.classList.add('table-row');
+                row.querySelectorAll('td, th').forEach((cell) => {
+                    let cellDiv = doc.createElement('div');
+                    cellDiv.innerHTML = cell.innerHTML; // Copy cell content
+                    rowDiv.appendChild(cellDiv);
+                });
+                tableDiv.appendChild(rowDiv);
+            });
+
+            // Replace the table with the new div
+            table.replaceWith(tableDiv);
+        });
+
     // Start processing from body
     _processNode(doc.body, context);
 
