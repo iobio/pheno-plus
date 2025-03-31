@@ -149,13 +149,14 @@ export default async function fetchNotes(client, patientId) {
             let noteContent = null;
             let textNodeMap = null;
             let allText = 'None pulled';
+            let updatedHtml = '';
 
             try {
                 //Try to get the text content of the note from the binary url
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
                 const pulledItems = _pullTextContent(noteContent);
-                
+
                 updatedHtml = pulledItems.html;
                 allText = pulledItems.allText;
                 textNodeMap = pulledItems.textNodeMap;
