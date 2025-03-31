@@ -155,8 +155,8 @@ export default async function fetchNotes(client, patientId) {
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
                 const pulledItems = _pullTextContent(noteContent);
+                
                 updatedHtml = pulledItems.html;
-                console.log('Updated HTML:', updatedHtml);
                 allText = pulledItems.allText;
                 textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
@@ -220,7 +220,7 @@ function _pullTextContent(html) {
     };
 
     // Replace tables with divs
-    Array.from(doc.querySelectorAll('table'))
+    Array.from(context.doc.querySelectorAll('table'))
         .reverse()
         .forEach((table) => {
             let tableDiv = doc.createElement('div');
@@ -241,8 +241,6 @@ function _pullTextContent(html) {
             // Replace the table with the new div
             table.replaceWith(tableDiv);
         });
-
-    console.log("doc body before process", doc.body.innerHTML);
 
     // Start processing from body
     _processNode(doc.body, context);
