@@ -261,7 +261,7 @@ export default {
                                         combinedHtml += element.innerHTML;  
                                     }
                                 }
-
+                                console.log(combinedHtml);
                                 fullSpan.innerHTML = combinedHtml;
                                 
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
