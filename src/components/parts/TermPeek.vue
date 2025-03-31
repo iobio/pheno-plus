@@ -268,6 +268,7 @@ export default {
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                                 console.log(highlightedHtml);
                                 console.log(_transformPath(iMatch.parentPath));
+                                console.log("element?", iElement);
                                 iElement.innerHTML = '';
                                 iElement.appendChild(fullSpan);
                             }
