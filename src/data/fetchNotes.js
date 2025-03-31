@@ -247,7 +247,7 @@ function _pullTextContent(html) {
     return {
         allText: context.allText,
         textNodeMap: context.textNodeMap,
-        html: doc.body.innerHTML,
+        html: doc.body,
     };
 }
 
