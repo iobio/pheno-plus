@@ -242,6 +242,8 @@ function _pullTextContent(html) {
             table.replaceWith(tableDiv);
         });
 
+    console.log("doc body before process", doc.body.innerHTML);
+
     // Start processing from body
     _processNode(doc.body, context);
 
