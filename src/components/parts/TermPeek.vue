@@ -158,23 +158,10 @@ export default {
             this.lenOfIndexes = 0;
         },
         highlightContexts(note) {
-            /**
-             * The rework will be as follows:
-             * We will iterate over the "text" for the note
-             * When we find something that matches the term or context we will highlight the html element(s) 
-             * that contain the text
-             * 
-             * We will know which because the elements have been mapped so we will use the notes htmlMapping to find the element(s)
-             * I think we can take advantage of the fact that the htmlMapping is in order so we find the beginning and map to the end 
-             * 
-             * We will have to use a replacement syntax for the mapping to grab it but it is doable so we a parentPath that is el[0] > el[0] > el[x]
-             * If the number isnt 0 we will have to do el:nth-of-type(x + 1) to get the element the one is because nth-of-type is 1 indexed
-             */
-
-            console.log(note.htmlMapping); //Remove
-
             const htmlMapping = note.getHtmlMapping();
+            console.log(htmlMapping); //Remove
             const rawText = note.getText();
+            console.log(rawText); //Remove
 
             const parser = new DOMParser();
             let html = parser.parseFromString(note.html, 'text/html');
@@ -193,8 +180,6 @@ export default {
 
                 let lastIndex = 0; // Track the last index of the original text that was copied to the highlightedText
                 let i = 0;
-                let s = 0;
-                let e = 0;
 
                 for (let context of contexts) {
                     let windowLength = context.length;
