@@ -233,6 +233,7 @@ export default {
                                 iElement.appendChild(span);
                             } else if (jMatchIndex - iMatchIndex == 1) {
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                console.log(iElement);
                                 let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
                                 //Highlight the text of the element
