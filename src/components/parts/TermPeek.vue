@@ -266,6 +266,7 @@ export default {
 
                                 // Append the full span to the first element
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                                console.log(highlightedHtml);
                                 console.log(_transformPath(iMatch.parentPath));
                                 iElement.innerHTML = '';
                                 iElement.appendChild(fullSpan);
