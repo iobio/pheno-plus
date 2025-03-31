@@ -476,19 +476,40 @@ export default {
             if (scrollHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
                 if (scrollableParent) {
-                    //account for the sticky header
+                    // Account for the sticky header
                     let header = document.querySelector('.header-white');
                     let headerHeight = header ? header.clientHeight : 0;
-                    scrollableParent.scrollTop = scrollHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
-
-                    //remove the scrolled class from the previous highlight
+                    
+                    // Get the absolute position of the element relative to the document
+                    const rect = scrollHighlight.getBoundingClientRect();
+                    const scrollRect = scrollableParent.getBoundingClientRect();
+                    
+                    // Calculate the scroll position needed to center the element in view
+                    // accounting for any nested table structures or other containers
+                    const elementTop = rect.top + window.pageYOffset;
+                    const containerTop = scrollRect.top + window.pageYOffset;
+                    const relativeTop = elementTop - containerTop;
+                    
+                    // Scroll with offset for header and some padding
+                    scrollableParent.scrollTop = relativeTop - headerHeight - 20;
+                    
+                    // Handle visual highlighting 
+                    // Remove highlight from previous element
                     let prevHighlight = document.getElementById(`context-highlight-${oldVal}`);
                     if (prevHighlight) {
                         prevHighlight.classList.remove('scrolled');
                     }
-
-                    //also add the scrolled class to the first highlight
+                    
+                    // Add highlight to current element
                     scrollHighlight.classList.add('scrolled');
+                    
+                    // Additional visual indicator for deeply nested elements
+                    // Briefly flash the background to draw attention
+                    const originalBg = scrollHighlight.style.backgroundColor;
+                    scrollHighlight.style.backgroundColor = '#ffd700'; // Gold flash
+                    setTimeout(() => {
+                        scrollHighlight.style.backgroundColor = originalBg;
+                    }, 600);
                 }
             }
         },
