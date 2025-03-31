@@ -229,12 +229,10 @@ export default {
                                 span.setAttribute('id', `context-highlight-${scrollIndex}`);
                                 span.setAttribute('class', 'highlighted-context');
                                 span.innerHTML = iElement.innerHTML;
-                                console.log(iElement);
                                 iElement.innerHTML = '';
                                 iElement.appendChild(span);
                             } else if (jMatchIndex - iMatchIndex == 1) {
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                                console.log(iElement);
                                 let jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
                                 //Highlight the text of the element
@@ -254,22 +252,14 @@ export default {
                                 fullSpan.innerHTML = '';
 
                                 let combinedHtml = '';
-                                console.log("imatchIndex: ", iMatchIndex);
-                                console.log("jmatchIndex: ", jMatchIndex);
-                                console.log("map length: ", map.length);
                                 for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                                     let el = map[k];
                                     let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                    
-                                    console.log("el", el);
-                                    console.log("element", element);
-                                    console.log("path", _transformPath(el.parentPath));
 
                                     if (element) {
                                         combinedHtml += element.innerHTML;  
                                     }
                                 }
-                                console.log(combinedHtml);
                                 fullSpan.innerHTML = combinedHtml;
                                 
                                 let iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
