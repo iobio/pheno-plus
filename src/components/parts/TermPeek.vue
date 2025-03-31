@@ -170,6 +170,9 @@ export default {
 
             // Function to highlight text within the text of elements
             function _highlightInnerText(rawText, html, map) {
+                console.log('rawText', rawText); //Remove
+                console.log('html', html); //Remove
+                console.log('map', map); //Remove
                 let text = rawText.toLowerCase(); // Get the text for case-insensitive matching
                 let highlightedHtml = html.cloneNode(true); // Clone the original HTML to modify it
 
@@ -197,7 +200,7 @@ export default {
                         }
 
                         let distance = this.getLevenshteinDistance(context, substring);
-                        console.log('Distance:', distance); //Remove
+                    
                         if (distance <= threshold) {
                             isFirstHighlight = false;
 
