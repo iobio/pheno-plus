@@ -55,5 +55,5 @@ button {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    min-width: 0;
+    min-width: fit-content;
 }
