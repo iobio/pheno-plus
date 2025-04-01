@@ -42,20 +42,16 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
 }
 
 .table-div .table-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
 }
 
 .table-div .table-row div {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
 }
