@@ -45,9 +45,10 @@ button {
 }
 
 .table-div .table-row {
-    display: flex;
+    display: inline-flex;
     justify-content: left;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
 .table-div .table-row div {
