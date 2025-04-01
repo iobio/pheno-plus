@@ -40,18 +40,18 @@ button {
 .table-div {
     display: flex;
     flex-direction: column;
-    justify-content: right;
-    align-items: right;
+    justify-content: left;
+    align-items: left;
 }
 
 .table-div .table-row {
     display: flex;
-    justify-content: right;
+    justify-content: left;
     align-items: center;
 }
 
 .table-div .table-row div {
     display: flex;
-    justify-content: right;
+    justify-content: left;
     align-items: center;
 }
