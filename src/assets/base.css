@@ -45,14 +45,15 @@ button {
 }
 
 .table-div .table-row {
-    display: inline-flex;
-    justify-content: left;
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: nowrap;
 }
 
 .table-div .table-row div {
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
     align-items: center;
+    min-width: 0;
 }
