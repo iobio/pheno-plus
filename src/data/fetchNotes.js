@@ -166,7 +166,16 @@ export default async function fetchNotes(client, patientId) {
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, allText, noteTitle, updatedHtml, textNodeMap);
+            let noteObj = new ClinicalNote(
+                noteId,
+                noteDate,
+                noteEncounterId,
+                noteUrlBinary,
+                allText,
+                noteTitle,
+                updatedHtml,
+                textNodeMap,
+            );
             notesList.push(noteObj);
         }
     }
@@ -221,27 +230,27 @@ function _pullTextContent(html) {
     };
 
     // Replace tables with divs
-    // Array.from(context.doc.querySelectorAll('table'))
-    //     .reverse()
-    //     .forEach((table) => {
-    //         let tableDiv = doc.createElement('div');
-    //         tableDiv.classList.add('table-div');
+    Array.from(context.doc.querySelectorAll('table'))
+        .reverse()
+        .forEach((table) => {
+            let tableDiv = doc.createElement('div');
+            tableDiv.classList.add('table-div');
 
-    //         // Process all rows and cells within this table
-    //         table.querySelectorAll('tr').forEach((row) => {
-    //             let rowDiv = doc.createElement('div');
-    //             rowDiv.classList.add('table-row');
-    //             row.querySelectorAll('td, th').forEach((cell) => {
-    //                 let cellDiv = doc.createElement('div');
-    //                 cellDiv.innerHTML = cell.innerHTML; // Copy cell content
-    //                 rowDiv.appendChild(cellDiv);
-    //             });
-    //             tableDiv.appendChild(rowDiv);
-    //         });
+            // Process all rows and cells within this table
+            table.querySelectorAll('tr').forEach((row) => {
+                let rowDiv = doc.createElement('div');
+                rowDiv.classList.add('table-row');
+                row.querySelectorAll('td, th').forEach((cell) => {
+                    let cellDiv = doc.createElement('div');
+                    cellDiv.innerHTML = cell.innerHTML; // Copy cell content
+                    rowDiv.appendChild(cellDiv);
+                });
+                tableDiv.appendChild(rowDiv);
+            });
 
-    //         // Replace the table with the new div
-    //         table.replaceWith(tableDiv);
-    //     });
+            // Replace the table with the new div
+            table.replaceWith(tableDiv);
+        });
 
     // Start processing from body
     _processNode(doc.body, context);
@@ -259,7 +268,7 @@ function _processNode(node, context) {
         if (node.textContent.trim()) {
             const originalText = node.textContent;
             const cleanedText = _cleanText(originalText);
-            
+
             if (cleanedText) {
                 // Store mapping information
                 context.textNodeMap.push({
@@ -268,20 +277,19 @@ function _processNode(node, context) {
                     cleanedText: cleanedText,
                     startOffset: context.allText.length,
                     endOffset: context.allText.length + cleanedText.length,
-                    parentPath: _getNodePath(node.parentNode, context.doc)
+                    parentPath: _getNodePath(node.parentNode, context.doc),
                 });
-                
+
                 // Add to combined text
-                context.allText += cleanedText + " "; // Add space between nodes
+                context.allText += cleanedText + ' '; // Add space between nodes
             }
         }
-        
     } else if (node.nodeType === Node.ELEMENT_NODE) {
         // Skip script and style elements
         if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') {
             return;
         }
-        
+
         // Process children
         for (let child of node.childNodes) {
             _processNode(child, context);
@@ -299,38 +307,38 @@ function _getNodePath(node, doc) {
             sibling = sibling.previousElementSibling;
             index++;
         }
-        
+
         let nodeName = node.nodeName.toLowerCase();
         path.unshift(`${nodeName}[${index}]`);
         node = node.parentNode;
     }
-    return path.join(" > ");
+    return path.join(' > ');
 }
 
 function _cleanText(text) {
-        let cleaned = text;
+    let cleaned = text;
 
-        // Clean up the text remove number and special characters
-        cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
-        cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
-        cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
-        cleaned = cleaned.replace(/°F/g, '');
-        cleaned = cleaned.replace(/°C/g, '');
-        cleaned = cleaned.replace(/\( ?\)/g, '');
-    
-        // Characters that explicitly cause issues with sending via URL
-        cleaned = cleaned.replace(/\?/g, '');
-        cleaned = cleaned.replace(/\!/g, '');
-        cleaned = cleaned.replace(/\%/g, '');
-        cleaned = cleaned.replace(/\#/g, '');
-        cleaned = cleaned.replace(/\=/g, '');
-        cleaned = cleaned.replace(/\&/g, '');
-        cleaned = cleaned.replace(/\@/g, '');
-        cleaned = cleaned.replace(/[\'\"]+/g, '');
-    
-        // Standardize whitespace
-        cleaned = cleaned.replace(/\u200B/g, ''); // Zero-width space
-        cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+    // Clean up the text remove number and special characters
+    cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
+    cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
+    cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
+    cleaned = cleaned.replace(/°F/g, '');
+    cleaned = cleaned.replace(/°C/g, '');
+    cleaned = cleaned.replace(/\( ?\)/g, '');
 
-        return cleaned.trim(); // Trim leading and trailing whitespace
+    // Characters that explicitly cause issues with sending via URL
+    cleaned = cleaned.replace(/\?/g, '');
+    cleaned = cleaned.replace(/\!/g, '');
+    cleaned = cleaned.replace(/\%/g, '');
+    cleaned = cleaned.replace(/\#/g, '');
+    cleaned = cleaned.replace(/\=/g, '');
+    cleaned = cleaned.replace(/\&/g, '');
+    cleaned = cleaned.replace(/\@/g, '');
+    cleaned = cleaned.replace(/[\'\"]+/g, '');
+
+    // Standardize whitespace
+    cleaned = cleaned.replace(/\u200B/g, ''); // Zero-width space
+    cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+
+    return cleaned.trim(); // Trim leading and trailing whitespace
 }
