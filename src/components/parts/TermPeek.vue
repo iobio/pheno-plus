@@ -409,18 +409,17 @@ export default {
                     let header = document.querySelector('.header-white');
                     let headerHeight = header ? header.clientHeight : 0;
 
-                    // Get the absolute position of the element relative to the document
-                    const rect = scrollHighlight.getBoundingClientRect();
-                    const scrollRect = scrollableParent.getBoundingClientRect();
+                    // Use a simpler, more direct approach to calculate scroll position
+                    // This positions the highlight at the top of the viewport (accounting for header)
+                    const highlightRect = scrollHighlight.getBoundingClientRect();
+                    const containerRect = scrollableParent.getBoundingClientRect();
 
-                    // Calculate the scroll position needed to center the element in view
-                    // accounting for any nested table structures or other containers
-                    const elementTop = rect.top + window.pageYOffset;
-                    const containerTop = scrollRect.top + window.pageYOffset;
-                    const relativeTop = elementTop - containerTop;
+                    // Calculate how much we need to scroll to bring the highlight to the top
+                    // (just below the header)
+                    const offsetNeeded = highlightRect.top - containerRect.top - headerHeight - 10;
 
-                    // Scroll with offset for header and some padding
-                    scrollableParent.scrollTop = relativeTop - headerHeight - 20;
+                    // Apply the scroll
+                    scrollableParent.scrollTop += offsetNeeded;
 
                     // Handle visual highlighting
                     // Remove highlight from previous element
@@ -432,13 +431,18 @@ export default {
                     // Add highlight to current element
                     scrollHighlight.classList.add('scrolled');
 
-                    // Additional visual indicator for deeply nested elements
-                    // Briefly flash the background to draw attention
-                    const originalBg = scrollHighlight.style.backgroundColor;
+                    // Enhance visibility for deeply nested elements
+                    scrollHighlight.style.outline = '2px solid #0b4b99';
+                    scrollHighlight.style.boxShadow = '0 0 8px rgba(11, 75, 153, 0.6)';
+
+                    // Flash effect
+                    const originalBg = scrollHighlight.style.backgroundColor || '#fff19583';
                     scrollHighlight.style.backgroundColor = '#ffd700'; // Gold flash
                     setTimeout(() => {
                         scrollHighlight.style.backgroundColor = originalBg;
-                    }, 600);
+                        scrollHighlight.style.outline = 'none';
+                        scrollHighlight.style.boxShadow = 'none';
+                    }, 800);
                 }
             }
         },
