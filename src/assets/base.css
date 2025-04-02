@@ -49,7 +49,7 @@ button {
 .table-div > .table-row {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: stretch;
     overflow: hidden;
     width: 100%;
     flex-wrap: wrap;
