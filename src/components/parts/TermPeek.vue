@@ -357,6 +357,14 @@ export default {
                 console.log('Error highlighting inner text:', e);
             }
 
+            //Grab all the highlights
+            let highlights = newHtml.querySelectorAll('highlighted-context');
+            //update all of the ids going 0-> n
+            highlights.forEach((highlight, index) => {
+                highlight.setAttribute('id', `context-highlight-${index}`);
+            });
+            //set the scroll index to the number of highlights
+            scrollIndex = highlights.length;
             this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
