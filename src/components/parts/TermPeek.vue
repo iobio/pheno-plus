@@ -129,11 +129,6 @@ export default {
             // Ensure DOM updates are complete before scrolling
             await this.$nextTick();
 
-            //grab all the highlights and print them so we can see what is up
-            let highlights = this.currentHighlightedHtml.querySelectorAll('.highlighted-context');
-            console.log('highlights:', highlights);
-            console.log(this.scrolledIndex);
-
             let firstHighlight = document.getElementById('context-highlight-0');
             if (firstHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
