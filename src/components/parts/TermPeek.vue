@@ -356,9 +356,7 @@ export default {
             } catch (e) {
                 console.log('Error highlighting inner text:', e);
             }
-            //Grab all the "highlighted-context" elements
-            let highlights = newHtml.querySelectorAll('.highlighted-context');
-            console.log('highlights', highlights);
+
             this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
