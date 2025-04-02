@@ -202,7 +202,7 @@ export default {
                         const span = document.createElement('span');
                         span.setAttribute('id', `context-highlight-${scrollIndex}`);
                         span.setAttribute('class', 'highlighted-context');
-                        span.innerHTML = elem.innerHTML;
+                        span.innerText = elem.innerText;
                         elem.innerHTML = '';
                         elem.appendChild(span);
                     } else if (jMatchIndex - iMatchIndex === 1) {
@@ -211,7 +211,7 @@ export default {
                         const span = document.createElement('span');
                         span.setAttribute('id', `context-highlight-${scrollIndex}`);
                         span.setAttribute('class', 'highlighted-context');
-                        span.innerHTML = iElement.innerHTML + jElement.innerHTML;
+                        span.innerText = iElement.innerText + jElement.innerText;
                         iElement.innerHTML = '';
                         jElement.remove();
                         iElement.appendChild(span);
