@@ -638,6 +638,7 @@ export default {
     overflow-x: auto;
     overflow-y: auto;
     position: absolute;
+    box-sizing: border-box;
     width: 99%;
     height: 99%;
     z-index: 2;
