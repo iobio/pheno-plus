@@ -632,7 +632,6 @@ export default {
 .full-note-overlay {
     align-items: flex-start;
     background-color: white;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -644,10 +643,9 @@ export default {
     z-index: 2;
 }
 
-.full-note-overlay * {
+.full-note-overlay > * {
     max-width: 100%;
     max-height: 100%;
-    box-sizing: border-box;
     overflow-wrap: break-word; /* Ensure long words break instead of overflowing */
 }
 
