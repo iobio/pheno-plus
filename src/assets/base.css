@@ -66,5 +66,5 @@ button {
 }
 
 .table-div > .table-row > * > * {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
 }
