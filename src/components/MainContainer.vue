@@ -651,6 +651,7 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 }
 
 #loading-overlay p {
@@ -670,6 +671,7 @@ h3 {
     width: 150px;
     height: 150px;
     position: relative;
+    box-sizing: border-box;
 }
 
 #spinner {
@@ -678,6 +680,7 @@ h3 {
     top: 0px;
     left: -20px;
     z-index: 100;
+    box-sizing: border-box;
 }
 
 @keyframes spin {
