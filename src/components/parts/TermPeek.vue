@@ -451,22 +451,6 @@ export default {
 </script>
 
 <style>
-.table-div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-}
-
-.table-row {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-}
-
 #loading-highlights-indicator {
     position: absolute;
     top: 0;
@@ -694,6 +678,7 @@ export default {
     border-radius: 3px;
     padding: 1px 0px;
     margin: 0px;
+    display: inline-block;
 }
 
 .highlighted-context-term {

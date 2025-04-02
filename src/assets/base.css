@@ -49,11 +49,9 @@ button {
 .table-div > .table-row {
     display: flex;
     justify-content: flex-start;
-    align-items: stretch;
     overflow: hidden;
-    width: 100%;
+    width: fit-content;
     max-width: 100%;
-    flex-wrap: nowrap;
 }
 
 .table-div > .table-row > .table-cell {
@@ -81,11 +79,3 @@ button {
     flex: 1 1 auto;
     min-width: 0;
 }
-
-/* .table-div > .table-row > .table-cell > * * {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex: 0 1 auto;
-    min-width: 0;
-} */
