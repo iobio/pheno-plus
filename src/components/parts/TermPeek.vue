@@ -196,18 +196,24 @@ export default {
 
                 // Helper to wrap matching elements in a highlight span.
                 function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, isContextBlock) {
+                    let elementCreated = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        if (!elem) return;
+
                         const span = document.createElement('span');
                         span.setAttribute('id', `context-highlight-${scrollIndex}`);
                         span.setAttribute('class', 'highlighted-context');
                         span.innerText = elem.innerText;
                         elem.innerHTML = '';
                         elem.appendChild(span);
+                        elementCreated = true;
                     } else if (jMatchIndex - iMatchIndex === 1) {
                         const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+                        if (!iElement || !jElement) return;
+
                         const span = document.createElement('span');
                         span.setAttribute('id', `context-highlight-${scrollIndex}`);
                         span.setAttribute('class', 'highlighted-context');
@@ -215,11 +221,13 @@ export default {
                         iElement.innerHTML = '';
                         jElement.remove();
                         iElement.appendChild(span);
+                        elementCreated = true;
                     } else {
                         // For multiple elements, combine them differently for context vs. term.
                         const fullSpan = document.createElement('span');
                         fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
                         fullSpan.setAttribute('class', 'highlighted-context');
+
                         if (isContextBlock) {
                             let combinedText = '';
                             for (let k = iMatchIndex; k <= jMatchIndex; k++) {
@@ -240,13 +248,17 @@ export default {
                                 }
                             }
                         }
+
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         if (firstElem) {
                             firstElem.innerHTML = '';
                             firstElem.appendChild(fullSpan);
+                            elementCreated = true;
                         }
                     }
-                    scrollIndex++;
+                    if (elementCreated) {
+                        scrollIndex++;
+                    }
                 }
 
                 // Process each context pattern.
@@ -347,7 +359,7 @@ export default {
             //Grab all the "highlighted-context" elements
             let highlights = newHtml.querySelectorAll('.highlighted-context');
             console.log('highlights', highlights);
-            this.lenOfIndexes = scroll;
+            this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
