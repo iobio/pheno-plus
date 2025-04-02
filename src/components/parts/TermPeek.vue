@@ -167,7 +167,7 @@ export default {
             const self = this;
 
             let isFirstHighlight = true;
-            let scrollIndex = 0;
+            // let scrollIndex = 0;
 
             // Cache for transformed paths to avoid recomputation.
             const transformCache = new Map();
@@ -246,7 +246,7 @@ export default {
                             firstElem.appendChild(fullSpan);
                         }
                     }
-                    scrollIndex++;
+                    // scrollIndex++;
                 }
 
                 // Process each context pattern.
@@ -344,7 +344,9 @@ export default {
             } catch (e) {
                 console.log('Error highlighting inner text:', e);
             }
-            this.lenOfIndexes = scrollIndex;
+            //Grab all the "highlighted-context" elements
+            let highlights = newHtml.querySelectorAll('.highlighted-context');
+            this.lenOfIndexes = highlights.length;
             return newHtml.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
