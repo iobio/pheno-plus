@@ -40,8 +40,15 @@ button {
 .table-div {
     display: flex;
     flex-direction: column;
-    justify-content: left;
-    align-items: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.table-div > * {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    display: flex;
 }
 
 .table-div .table-row {
