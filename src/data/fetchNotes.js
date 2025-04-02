@@ -242,6 +242,7 @@ function _pullTextContent(html) {
                 rowDiv.classList.add('table-row');
                 row.querySelectorAll('td, th').forEach((cell) => {
                     let cellDiv = doc.createElement('div');
+                    cellDiv.classList.add('table-cell');
                     cellDiv.innerHTML = cell.innerHTML; // Copy cell content
                     rowDiv.appendChild(cellDiv);
                 });
