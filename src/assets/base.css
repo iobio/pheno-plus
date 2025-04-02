@@ -43,6 +43,14 @@ button {
     justify-content: flex-start;
     align-items: flex-start;
     overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+.table-div {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .table-div .table-row {
