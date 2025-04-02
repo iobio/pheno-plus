@@ -53,7 +53,7 @@ button {
     overflow-wrap: break-word;
 }
 
-.table-div .table-row {
+.table-div > .table-row {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -62,7 +62,7 @@ button {
     max-width: 100%;
 }
 
-.table-div .table-row * {
+.table-div > .table-row * {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
