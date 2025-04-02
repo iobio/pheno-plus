@@ -104,6 +104,9 @@ export default {
     background-color: white;
     transition: height 0.3s ease-in-out;
 }
+#clip-board-box-container * {
+    box-sizing: border-box;
+}
 #clip-board-box-container.closed {
     height: 0px;
     padding: 0px;
