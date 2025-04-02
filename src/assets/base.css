@@ -71,9 +71,5 @@ button {
     justify-content: flex-start;
     flex: 0 1 auto;
     min-width: 0;
-}
-
-.table-div > .table-row > * > span {
-    display: inline;
     padding: 0px 5px;
 }
