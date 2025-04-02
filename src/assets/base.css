@@ -60,11 +60,7 @@ button {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    flex: 0 1 0;
+    flex: 0 1 auto;
     min-width: 0;
     flex-direction: column;
-}
-
-.table-div > .table-row > * > * {
-    flex: 0 1 auto;
 }
