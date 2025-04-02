@@ -64,3 +64,15 @@ button {
     min-width: 0;
     flex-direction: column;
 }
+
+.table-div > .table-row > * > div {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex: 0 1 0;
+    min-width: 0;
+}
+
+.table-div > .table-row > * > span {
+    display: inline;
+}
