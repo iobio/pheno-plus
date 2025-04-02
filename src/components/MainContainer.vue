@@ -421,6 +421,7 @@ h3 {
 #full-width-box-container {
     border: 1px solid transparent;
     border-radius: 5px;
+    box-sizing: border-box;
     transition:
         flex-grow 0.3s ease-in-out,
         border 0.4s ease-in-out;
