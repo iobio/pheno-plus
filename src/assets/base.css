@@ -47,12 +47,6 @@ button {
     max-width: 100%;
 }
 
-.table-div * {
-    max-width: 100%;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
 .table-div > .table-row {
     display: flex;
     justify-content: flex-start;
@@ -62,7 +56,7 @@ button {
     max-width: 100%;
 }
 
-.table-div > .table-row * {
+.table-div > .table-row > * {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
