@@ -61,7 +61,7 @@ button {
     max-width: 100%;
 }
 
-.table-div .table-row > * {
+.table-div .table-row * {
     margin: 0;
     padding: 0;
     max-width: 100%;
@@ -69,7 +69,7 @@ button {
     display: flex;
 }
 
-.table-div .table-row > div {
+.table-div .table-row div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
