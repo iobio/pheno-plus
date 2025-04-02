@@ -74,6 +74,14 @@ button {
     padding: 0px 10px 0px 0px;
 }
 
+.table-div > .table-row > .table-cell .highlighted-context {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 /* .table-div > .table-row > .table-cell > * * {
     display: flex;
     align-items: flex-start;
