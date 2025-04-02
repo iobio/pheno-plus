@@ -343,6 +343,7 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    box-sizing: border-box;
 
     flex-grow: 1;
     height: 100%;
