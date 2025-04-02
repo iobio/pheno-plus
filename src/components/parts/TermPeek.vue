@@ -470,6 +470,7 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     width: 0px;
     background-color: white;
     border-radius: 3px;
