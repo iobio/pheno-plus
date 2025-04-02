@@ -67,5 +67,4 @@ button {
 
 .table-div > .table-row > * > * {
     flex: 0 1 0;
-    align-self: stretch;
 }
