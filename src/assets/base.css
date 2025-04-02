@@ -63,6 +63,10 @@ button {
     flex-direction: column;
 }
 
+.table-cell * {
+    max-width: 100% !important;
+}
+
 .table-div > .table-row > .table-cell > * {
     display: flex;
     align-items: flex-start;
