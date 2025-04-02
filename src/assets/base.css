@@ -47,7 +47,7 @@ button {
     max-width: 100%;
 }
 
-.table-div {
+.table-div * {
     max-width: 100%;
     word-wrap: break-word;
     overflow-wrap: break-word;
