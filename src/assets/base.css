@@ -43,6 +43,7 @@ button {
 .table-div > .table-row {
     display: flex;
     justify-content: flex-start;
+    flex-direction: row;
     overflow: hidden;
     width: fit-content;
     max-width: 100%;
@@ -53,7 +54,6 @@ button {
     align-items: flex-start;
     justify-content: flex-start;
     flex: 0 1 content;
-    min-width: 0;
     flex-direction: column;
 }
 
