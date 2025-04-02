@@ -366,7 +366,7 @@ export default {
             });
             //set the scroll index to the number of highlights
             scrollIndex = highlights.length;
-            console.log('scrollIndex', scrollIndex);
+
             this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
