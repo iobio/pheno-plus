@@ -261,24 +261,30 @@ export default {
                     }
                 }
 
-                // Process each context pattern.
+                let contextList = [];
                 for (const context of contexts) {
-                    const windowLength = context.length;
-                    const threshold = Math.floor(windowLength * 0.2);
-                    // Skip if context is longer than text or shorter than term.
-                    if (windowLength > textLength || windowLength < term.length) continue;
+                    let newContext = {
+                        text: context.toLowerCase(),
+                        length: context.length,
+                        threshold: Math.floor(context.length * 0.2),
+                    };
+                    contextList.push(newContext);
+                }
 
-                    while (i <= textLength - threshold) {
-                        let j, substring;
-                        if (i + windowLength > textLength) {
+                while (i <= textLength) {
+                    let j, substring;
+
+                    for (const context of contextList) {
+                        if (i + context.length > textLength) {
                             substring = text.substring(i);
                             j = textLength;
                         } else {
-                            substring = text.substring(i, i + windowLength);
-                            j = i + windowLength;
+                            substring = text.substring(i, i + context.length);
+                            j = i + context.length;
                         }
-                        const distance = self.getLevenshteinDistance(context, substring);
-                        if (distance <= threshold) {
+
+                        const distance = self.getLevenshteinDistance(context.text, substring);
+                        if (distance <= context.threshold) {
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
                             let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
@@ -297,12 +303,9 @@ export default {
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
                             lastIndex = j;
                             i = j;
-                        } else {
-                            i++;
                         }
                     }
-                    // Reset i to continue from last highlight position.
-                    i = lastIndex;
+                    i++;
                 }
 
                 // If no context was highlighted, try highlighting the term.
