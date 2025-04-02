@@ -221,13 +221,14 @@ export default {
                         fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
                         fullSpan.setAttribute('class', 'highlighted-context');
                         if (isContextBlock) {
-                            let combinedHtml = '';
+                            let combinedText = '';
                             for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                                 const el = map[k];
                                 const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                if (element) combinedHtml += element.innerHTML;
+                                if (element) combinedText += element.innerText;
+                                if (k !== iMatchIndex) element.remove();
                             }
-                            fullSpan.innerHTML = combinedHtml;
+                            fullSpan.innerText = combinedText;
                         } else {
                             // For term highlight, overwrite each element’s innerHTML and remove later ones.
                             for (let k = iMatchIndex; k <= jMatchIndex; k++) {
