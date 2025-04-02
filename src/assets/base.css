@@ -52,7 +52,7 @@ button {
     align-items: stretch;
     overflow: hidden;
     width: 100%;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .table-div > .table-row > * {
@@ -63,4 +63,8 @@ button {
     min-width: 0;
     max-width: 100%;
     overflow-wrap: break-word;
+}
+
+.table-div > .table-row > * > * {
+    flex: 1 1 auto;
 }
