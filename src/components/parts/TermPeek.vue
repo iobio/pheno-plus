@@ -359,7 +359,7 @@ export default {
 
             //Grab all the highlights
             let highlights = newHtml.querySelectorAll('.highlighted-context');
-            console.log('highlights', highlights);
+
             //update all of the ids going 0-> n
             highlights.forEach((highlight, index) => {
                 highlight.setAttribute('id', `context-highlight-${index}`);
