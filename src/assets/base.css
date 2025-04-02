@@ -65,6 +65,10 @@ button {
 
 .table-cell * {
     max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: content;
 }
 
 .table-div > .table-row > .table-cell > * {
