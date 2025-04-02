@@ -579,6 +579,7 @@ export default {
     width: 100%;
     text-align: center;
     position: sticky;
+    box-sizing: border-box;
     top: 0;
     margin-top: 0px;
     background-color: white;
