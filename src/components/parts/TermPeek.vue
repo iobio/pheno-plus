@@ -186,148 +186,166 @@ export default {
                 return selector;
             }
 
-            // Common highlighting logic.
-            function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, isContextBlock) {
-                let elementCreated = false;
-                if (jMatchIndex - iMatchIndex === 0) {
-                    const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    if (!elem) return;
-                    const span = document.createElement('span');
-                    span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    span.setAttribute('class', 'highlighted-context');
-                    span.innerText = elem.innerText;
-                    elem.innerHTML = '';
-                    elem.appendChild(span);
-                    elementCreated = true;
-                } else if (jMatchIndex - iMatchIndex === 1) {
-                    const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-                    if (!iElement || !jElement) return;
-                    const span = document.createElement('span');
-                    span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    span.setAttribute('class', 'highlighted-context');
-                    span.innerText = iElement.innerText + jElement.innerText;
-                    iElement.innerHTML = '';
-                    jElement.remove();
-                    iElement.appendChild(span);
-                    elementCreated = true;
-                } else {
-                    const fullSpan = document.createElement('span');
-                    fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
-                    fullSpan.setAttribute('class', 'highlighted-context');
-                    if (isContextBlock) {
-                        let combinedText = '';
-                        for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                            const el = htmlMapping[k];
-                            const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                            if (element) combinedText += element.innerText;
-                            if (k !== iMatchIndex) element.remove();
-                        }
-                        fullSpan.innerText = combinedText;
-                    } else {
-                        for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                            const el = htmlMapping[k];
-                            const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                            if (element) {
-                                fullSpan.innerHTML = element.innerHTML;
-                                if (k !== iMatchIndex) element.remove();
-                            }
-                        }
-                    }
-                    const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                    if (firstElem) {
-                        firstElem.innerHTML = '';
-                        firstElem.appendChild(fullSpan);
-                        elementCreated = true;
-                    }
-                }
-                if (elementCreated) {
-                    scrollIndex++;
-                }
-            }
-
-            // Revised inner text highlighter: single pass through the document.
+            // _highlightInnerText now encloses the common highlight logic.
             function _highlightInnerText(rawText, html, map) {
                 const text = rawText.toLowerCase();
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
-                let i = 0;
                 let lastIndex = 0;
+                let i = 0;
 
-                // Precompute context parameters.
-                const contextInfos = contexts
-                    .map((context) => {
-                        const windowLength = context.length;
-                        return { context, windowLength, threshold: Math.floor(context.length * 0.2) };
-                    })
-                    .filter((info) => info.windowLength <= textLength && info.windowLength >= term.length);
+                // Helper to wrap matching elements in a highlight span.
+                function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, isContextBlock) {
+                    let elementCreated = false;
+                    // For single or two-element matches we treat them separately.
+                    if (jMatchIndex - iMatchIndex === 0) {
+                        const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        if (!elem) return;
 
-                const termWindowLength = term.length;
-                const termThreshold = Math.floor(termWindowLength * 0.1);
+                        const span = document.createElement('span');
+                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        span.setAttribute('class', 'highlighted-context');
+                        span.innerText = elem.innerText;
+                        elem.innerHTML = '';
+                        elem.appendChild(span);
+                        elementCreated = true;
+                    } else if (jMatchIndex - iMatchIndex === 1) {
+                        const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+                        if (!iElement || !jElement) return;
 
-                // Single pass loop: at each text position, check all contexts (and term if needed)
-                while (i < textLength) {
-                    let matchFound = false;
-                    let bestMatch = null; // { start, end, type: 'context'|'term' }
-                    // Check each context
-                    for (const info of contextInfos) {
-                        let j, substring;
-                        if (i + info.windowLength > textLength) {
-                            substring = text.substring(i);
-                            j = textLength;
-                        } else {
-                            substring = text.substring(i, i + info.windowLength);
-                            j = i + info.windowLength;
-                        }
-                        const distance = self.getLevenshteinDistance(info.context, substring);
-                        if (distance <= info.threshold) {
-                            bestMatch = { start: i, end: j, type: 'context' };
-                            matchFound = true;
-                            break; // take the first matching context
-                        }
-                    }
-                    // If no context match and no highlight has yet been applied, try the term.
-                    if (!matchFound && isFirstHighlight && termWindowLength <= textLength) {
-                        let j, substring;
-                        if (i + termWindowLength > textLength) {
-                            substring = text.substring(i);
-                            j = textLength;
-                        } else {
-                            substring = text.substring(i, i + termWindowLength);
-                            j = i + termWindowLength;
-                        }
-                        const distance = self.getLevenshteinDistance(term, substring);
-                        if (distance <= termThreshold) {
-                            bestMatch = { start: i, end: j, type: 'term' };
-                            matchFound = true;
-                        }
-                    }
-                    if (matchFound && bestMatch) {
-                        // Find matching mapping entries for bestMatch.start and bestMatch.end.
-                        let iMatchIndex = map.findIndex(
-                            (el) => bestMatch.start >= el.startOffset && bestMatch.start <= el.endOffset,
-                        );
-                        const iMatch = map[iMatchIndex];
-                        let jMatchIndex;
-                        let jMatch;
-                        if (iMatch && bestMatch.end >= iMatch.startOffset && bestMatch.end <= iMatch.endOffset) {
-                            jMatchIndex = iMatchIndex;
-                            jMatch = map[jMatchIndex];
-                        } else {
-                            const sliceMap = map.slice(iMatchIndex + 1);
-                            jMatchIndex = sliceMap.findIndex(
-                                (el) => bestMatch.end >= el.startOffset && bestMatch.end <= el.endOffset,
-                            );
-                            jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                            jMatch = map[jMatchIndex];
-                        }
-                        applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, bestMatch.type === 'context');
-                        lastIndex = bestMatch.end;
-                        i = bestMatch.end; // jump to end of match
+                        const span = document.createElement('span');
+                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        span.setAttribute('class', 'highlighted-context');
+                        span.innerText = iElement.innerText + jElement.innerText;
+                        iElement.innerHTML = '';
+                        jElement.remove();
+                        iElement.appendChild(span);
+                        elementCreated = true;
                     } else {
-                        i++;
+                        // For multiple elements, combine them differently for context vs. term.
+                        const fullSpan = document.createElement('span');
+                        fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        fullSpan.setAttribute('class', 'highlighted-context');
+
+                        if (isContextBlock) {
+                            let combinedText = '';
+                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                const el = map[k];
+                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                if (element) combinedText += element.innerText;
+                                if (k !== iMatchIndex) element.remove();
+                            }
+                            fullSpan.innerText = combinedText;
+                        } else {
+                            // For term highlight, overwrite each element’s innerHTML and remove later ones.
+                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                                const el = map[k];
+                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                                if (element) {
+                                    fullSpan.innerHTML = element.innerHTML;
+                                    if (k !== iMatchIndex) element.remove();
+                                }
+                            }
+                        }
+
+                        const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        if (firstElem) {
+                            firstElem.innerHTML = '';
+                            firstElem.appendChild(fullSpan);
+                            elementCreated = true;
+                        }
+                    }
+                    if (elementCreated) {
+                        scrollIndex++;
                     }
                 }
+
+                // Process each context pattern.
+                for (const context of contexts) {
+                    const windowLength = context.length;
+                    const threshold = Math.floor(windowLength * 0.2);
+                    // Skip if context is longer than text or shorter than term.
+                    if (windowLength > textLength || windowLength < term.length) continue;
+
+                    while (i <= textLength - threshold) {
+                        let j, substring;
+                        if (i + windowLength > textLength) {
+                            substring = text.substring(i);
+                            j = textLength;
+                        } else {
+                            substring = text.substring(i, i + windowLength);
+                            j = i + windowLength;
+                        }
+                        const distance = self.getLevenshteinDistance(context, substring);
+                        if (distance <= threshold) {
+                            isFirstHighlight = false;
+                            // Find matching mapping entries for start (i) and end (j).
+                            let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                            const iMatch = map[iMatchIndex];
+                            let jMatchIndex;
+                            let jMatch;
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                jMatchIndex = iMatchIndex;
+                                jMatch = map[jMatchIndex];
+                            } else {
+                                const sliceMap = map.slice(iMatchIndex + 1);
+                                jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                jMatch = map[jMatchIndex];
+                            }
+                            applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
+                            lastIndex = j;
+                            i = j;
+                        } else {
+                            i++;
+                        }
+                    }
+                    // Reset i to continue from last highlight position.
+                    i = lastIndex;
+                }
+
+                // If no context was highlighted, try highlighting the term.
+                if (isFirstHighlight) {
+                    const windowLength = term.length;
+                    const termThreshold = Math.floor(windowLength * 0.1);
+                    if (windowLength <= textLength) {
+                        i = 0;
+                        while (i <= textLength - termThreshold) {
+                            let j, substring;
+                            if (i + windowLength > textLength) {
+                                substring = text.substring(i);
+                                j = textLength;
+                            } else {
+                                substring = text.substring(i, i + windowLength);
+                                j = i + windowLength;
+                            }
+                            const distance = self.getLevenshteinDistance(term, substring);
+                            if (distance <= termThreshold) {
+                                isFirstHighlight = false;
+                                let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                                const iMatch = map[iMatchIndex];
+                                let jMatchIndex;
+                                let jMatch;
+                                if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                    jMatchIndex = iMatchIndex;
+                                    jMatch = map[jMatchIndex];
+                                } else {
+                                    const sliceMap = map.slice(iMatchIndex + 1);
+                                    jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                                    jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                    jMatch = map[jMatchIndex];
+                                }
+                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
+                                lastIndex = j;
+                                i = j;
+                            } else {
+                                i++;
+                            }
+                        }
+                    }
+                }
+
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
@@ -339,12 +357,16 @@ export default {
                 console.log('Error highlighting inner text:', e);
             }
 
-            // Update highlight IDs sequentially.
+            //Grab all the highlights
             let highlights = newHtml.querySelectorAll('.highlighted-context');
+
+            //update all of the ids going 0-> n
             highlights.forEach((highlight, index) => {
                 highlight.setAttribute('id', `context-highlight-${index}`);
             });
+            //set the scroll index to the number of highlights
             scrollIndex = highlights.length;
+
             this.lenOfIndexes = scrollIndex;
             return newHtml.body.innerHTML;
         },
