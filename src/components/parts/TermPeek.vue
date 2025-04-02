@@ -115,11 +115,6 @@ export default {
             try {
                 this.currentHighlightedHtml = this.highlightContexts(selectedNote);
 
-                //grab all the highlights and print them so we can see what is up
-                let highlights = this.currentHighlightedHtml.querySelectorAll('.highlighted-context');
-                console.log('highlights:', highlights);
-                console.log(this.scrolledIndex);
-
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
                     this.alertShown = true;
                     let parser = new DOMParser();
@@ -133,6 +128,11 @@ export default {
 
             // Ensure DOM updates are complete before scrolling
             await this.$nextTick();
+
+            //grab all the highlights and print them so we can see what is up
+            let highlights = this.currentHighlightedHtml.querySelectorAll('.highlighted-context');
+            console.log('highlights:', highlights);
+            console.log(this.scrolledIndex);
 
             let firstHighlight = document.getElementById('context-highlight-0');
             if (firstHighlight) {
