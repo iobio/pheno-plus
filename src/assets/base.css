@@ -42,6 +42,7 @@ button {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    overflow: hidden;
 }
 
 .table-div > * {
@@ -49,7 +50,7 @@ button {
     padding: 0;
     max-width: 100%;
     display: flex;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .table-div .table-row {
