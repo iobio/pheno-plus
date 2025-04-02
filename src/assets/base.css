@@ -74,11 +74,10 @@ button {
     padding: 0px 10px 0px 0px;
 }
 
-.table-div > .table-row > * > span > div {
+.table-div > .table-row > * > * > * {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     flex: 0 1 auto;
     min-width: 0;
-    padding: 0px 10px 0px 0px;
 }
