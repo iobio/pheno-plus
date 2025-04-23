@@ -147,20 +147,35 @@ export default async function fetchNotes(client, patientId) {
             }
 
             let noteContent = null;
-            let noteText = 'None pulled';
+            let textNodeMap = null;
+            let allText = 'None pulled';
+            let updatedHtml = '';
 
             try {
                 //Try to get the text content of the note from the binary url
                 noteContent = await client.request(String(noteUrlBinary));
                 //If there is no error then pull the text content from the note (the note is in html format originally)
-                noteText = pullTextContent(noteContent);
+                const pulledItems = _pullTextContent(noteContent);
+
+                updatedHtml = pulledItems.html;
+                allText = pulledItems.allText;
+                textNodeMap = pulledItems.textNodeMap;
             } catch (error) {
                 //If there is an error then skip this note
                 continue;
             }
 
             // Create a new ClinicalNote object and add it to the notesList
-            let noteObj = new ClinicalNote(noteId, noteDate, noteEncounterId, noteUrlBinary, noteText, noteTitle, noteContent);
+            let noteObj = new ClinicalNote(
+                noteId,
+                noteDate,
+                noteEncounterId,
+                noteUrlBinary,
+                allText,
+                noteTitle,
+                updatedHtml,
+                textNodeMap,
+            );
             notesList.push(noteObj);
         }
     }
@@ -204,33 +219,127 @@ async function fetchEntries(client, url) {
     return noteEnteries;
 }
 
-function pullTextContent(html) {
-    var parser = new DOMParser(); //Use the DOMParser to parse the html because the source is the trusted FHIR server
+function _pullTextContent(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
 
-    var doc = parser.parseFromString(html, 'text/html');
-    var text = doc.body.textContent || '';
+    let context = {
+        allText: '',
+        textNodeMap: [],
+        doc: doc,
+    };
+
+    // Replace tables with divs
+    Array.from(context.doc.querySelectorAll('table'))
+        .reverse()
+        .forEach((table) => {
+            let tableDiv = doc.createElement('div');
+            tableDiv.classList.add('table-div');
+
+            // Process all rows and cells within this table
+            table.querySelectorAll('tr').forEach((row) => {
+                let rowDiv = doc.createElement('div');
+                rowDiv.classList.add('table-row');
+                row.querySelectorAll('td, th').forEach((cell) => {
+                    let cellDiv = doc.createElement('div');
+                    cellDiv.classList.add('table-cell');
+                    cellDiv.innerHTML = cell.innerHTML; // Copy cell content
+                    rowDiv.appendChild(cellDiv);
+                });
+                tableDiv.appendChild(rowDiv);
+            });
+
+            // Replace the table with the new div
+            table.replaceWith(tableDiv);
+        });
+
+    // Start processing from body
+    _processNode(doc.body, context);
+
+    return {
+        allText: context.allText,
+        textNodeMap: context.textNodeMap,
+        html: context.doc.body.innerHTML,
+    };
+}
+
+// Function to recursively process text nodes
+function _processNode(node, context) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        if (node.textContent.trim()) {
+            const originalText = node.textContent;
+            const cleanedText = _cleanText(originalText);
+
+            if (cleanedText) {
+                // Store mapping information
+                context.textNodeMap.push({
+                    node: node,
+                    originalText: originalText,
+                    cleanedText: cleanedText,
+                    startOffset: context.allText.length,
+                    endOffset: context.allText.length + cleanedText.length,
+                    parentPath: _getNodePath(node.parentNode, context.doc),
+                });
+
+                // Add to combined text
+                context.allText += cleanedText + ' '; // Add space between nodes
+            }
+        }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+        // Skip script and style elements
+        if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') {
+            return;
+        }
+
+        // Process children
+        for (let child of node.childNodes) {
+            _processNode(child, context);
+        }
+    }
+}
+
+// Function to create a DOM path to a node
+function _getNodePath(node, doc) {
+    let path = [];
+    while (node && node !== doc.body) {
+        let index = 0;
+        let sibling = node;
+        while (sibling.previousElementSibling) {
+            sibling = sibling.previousElementSibling;
+            index++;
+        }
+
+        let nodeName = node.nodeName.toLowerCase();
+        path.unshift(`${nodeName}[${index}]`);
+        node = node.parentNode;
+    }
+    return path.join(' > ');
+}
+
+function _cleanText(text) {
+    let cleaned = text;
 
     // Clean up the text remove number and special characters
-    var textClean = text.replace(/[0-9\[\]\*\ã\<\>\,\-]+/g, '');
-    textClean = textClean.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
-    textClean = textClean.replace(/[|]/g, ''); // No improvement from keeping
-    textClean = textClean.replace(/°F/g, '');
-    textClean = textClean.replace(/°C/g, '');
-    textClean = textClean.replace(/\( ?\)/g, '');
+    cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
+    cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
+    cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
+    cleaned = cleaned.replace(/°F/g, '');
+    cleaned = cleaned.replace(/°C/g, '');
+    cleaned = cleaned.replace(/\( ?\)/g, '');
 
     // Characters that explicitly cause issues with sending via URL
-    textClean = textClean.replace(/\?/g, '');
-    textClean = textClean.replace(/\!/g, '');
-    textClean = textClean.replace(/\%/g, '');
-    textClean = textClean.replace(/\#/g, '');
-    textClean = textClean.replace(/\=/g, '');
-    textClean = textClean.replace(/\&/g, '');
-    textClean = textClean.replace(/\@/g, '');
-    textClean = textClean.replace(/[\'\"]+/g, '');
+    cleaned = cleaned.replace(/\?/g, '');
+    cleaned = cleaned.replace(/\!/g, '');
+    cleaned = cleaned.replace(/\%/g, '');
+    cleaned = cleaned.replace(/\#/g, '');
+    cleaned = cleaned.replace(/\=/g, '');
+    cleaned = cleaned.replace(/\&/g, '');
+    cleaned = cleaned.replace(/\@/g, '');
+    cleaned = cleaned.replace(/[\'\"]+/g, '');
 
     // Standardize whitespace
-    textClean = textClean.replace(/\u200B/g, ''); // Zero-width space
-    textClean = textClean.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+    cleaned = cleaned.replace(/\u200B/g, ''); // Zero-width space
+    cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
 
-    return textClean;
+    return cleaned.trim(); // Trim leading and trailing whitespace
 }

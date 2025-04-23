@@ -104,6 +104,9 @@ export default {
     background-color: white;
     transition: height 0.3s ease-in-out;
 }
+#clip-board-box-container * {
+    box-sizing: border-box;
+}
 #clip-board-box-container.closed {
     height: 0px;
     padding: 0px;
@@ -172,8 +175,8 @@ button {
 }
 
 #hpo-term-clipboard {
-    width: 100%;
-    height: 95%;
+    width: 95%;
+    height: 90%;
     border: rgb(215, 215, 215) 1px solid;
     overflow-y: auto;
     font-size: 1em;
