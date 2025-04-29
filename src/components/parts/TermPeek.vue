@@ -219,7 +219,7 @@ export default {
                         span.setAttribute('class', 'highlighted-context');
                         span.innerText = iElement.innerText + jElement.innerText;
                         iElement.innerHTML = '';
-                        jElement.remove();
+                        if (jElement) jElement.remove();
                         iElement.appendChild(span);
                         elementCreated = true;
                     } else {
@@ -234,7 +234,7 @@ export default {
                                 const el = map[k];
                                 const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                                 if (element) combinedText += element.innerText;
-                                if (k !== iMatchIndex) element.remove();
+                                if (k !== iMatchIndex && element) element.remove();
                             }
                             fullSpan.innerText = combinedText;
                         } else {
@@ -244,7 +244,7 @@ export default {
                                 const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                                 if (element) {
                                     fullSpan.innerHTML = element.innerHTML;
-                                    if (k !== iMatchIndex) element.remove();
+                                    if (k !== iMatchIndex && element) element.remove();
                                 }
                             }
                         }
