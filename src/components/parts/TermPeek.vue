@@ -451,7 +451,7 @@ export default {
                     // Handle visual highlighting
                     // Remove highlight from previous element
                     let prevHighlight = document.getElementById(`context-highlight-${oldVal}`);
-                    if (prevHighlight) {
+                    if (prevHighlight && prevHighlight.classList.contains('scrolled')) {
                         prevHighlight.classList.remove('scrolled');
                     }
 
