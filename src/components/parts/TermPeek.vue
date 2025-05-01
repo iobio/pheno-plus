@@ -201,57 +201,44 @@ export default {
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         if (!elem) return;
 
-                        const span = document.createElement('span');
-                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                        span.setAttribute('class', 'highlighted-context');
-                        span.innerText = elem.innerText;
-                        elem.innerHTML = '';
-                        elem.appendChild(span);
+                        elem.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        elem.setAttribute('class', 'highlighted-context');
                         elementCreated = true;
-                    } else if (jMatchIndex - iMatchIndex === 1) {
+
+                    } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
                         const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
                         if (!iElement || !jElement) return;
 
-                        const span = document.createElement('span');
-                        span.setAttribute('id', `context-highlight-${scrollIndex}`);
-                        span.setAttribute('class', 'highlighted-context');
-                        span.innerText = iElement.innerText + jElement.innerText;
-                        iElement.innerHTML = '';
-                        if (jElement) jElement.remove();
-                        iElement.appendChild(span);
+                        let iText = iElement.innerText;
+                        let jText = jElement.innerText;
+
+                        iElement.setAttribute('id', `context-highlight-${scrollIndex}`);
+                        iElement.setAttribute('class', 'highlighted-context');
+                        iElement.innerText = iText + ' ' + jText;
+
+                        jElement.innerText = '';
+                        jElement.setAttribute('class', 'silent');
                         elementCreated = true;
                     } else {
-                        // For multiple elements, combine them differently for context vs. term.
-                        const fullSpan = document.createElement('span');
-                        fullSpan.setAttribute('id', `context-highlight-${scrollIndex}`);
-                        fullSpan.setAttribute('class', 'highlighted-context');
-
-                        if (isContextBlock) {
-                            let combinedText = '';
-                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                                const el = map[k];
-                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                if (element) combinedText += element.innerText;
-                                if (k !== iMatchIndex && element) element.remove();
-                            }
-                            fullSpan.innerText = combinedText;
-                        } else {
-                            // For term highlight, overwrite each element’s innerHTML and remove later ones.
-                            for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                                const el = map[k];
-                                const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                                if (element) {
-                                    fullSpan.innerHTML = element.innerHTML;
-                                    if (k !== iMatchIndex && element) element.remove();
-                                }
+                        let combinedText = '';
+                        for (let k = iMatchIndex; k <= jMatchIndex; k++) {
+                            const el = map[k];
+                            const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                            if (element) combinedText += element.innerText;
+                            if (k !== iMatchIndex) {
+                                element.innerText = ''; // Clear innerText of non-first elements
+                                element.setAttribute('class', 'silent');
                             }
                         }
+                        fullSpan.innerText = combinedText;
 
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         if (firstElem) {
-                            firstElem.innerHTML = '';
-                            firstElem.appendChild(fullSpan);
+                            firstElem.setAttribute('id', `context-highlight-${scrollIndex}`);
+                            firstElem.setAttribute('class', 'highlighted-context');
+                            firstElem.innerText = combinedText;
+
                             elementCreated = true;
                         }
                     }
@@ -303,7 +290,6 @@ export default {
                                 jMatch = map[jMatchIndex];
                             }
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
-                            // i = j + 1; // Move past the context match
                             i = jMatch.endOffset + 1; // Move past the context match
                         }
                     }
@@ -316,9 +302,9 @@ export default {
                     const termThreshold = Math.floor(windowLength * 0.1);
                     if (windowLength <= textLength) {
                         i = 0;
-                        while (i <= textLength - termThreshold) {
+                        while (i < textLength - termThreshold) {
                             let j, substring;
-                            if (i + windowLength > textLength) {
+                            if (i + windowLength > textLength - 1) {
                                 substring = text.substring(i);
                                 j = textLength;
                             } else {
@@ -330,7 +316,8 @@ export default {
                                 console.log('term', map)
                                 isFirstHighlight = false;
                                 let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
-                                const iMatch = map[iMatchIndex];
+                                let iMatch = map[iMatchIndex];
+
                                 let jMatchIndex;
                                 let jMatch;
                                 if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
@@ -343,8 +330,7 @@ export default {
                                     jMatch = map[jMatchIndex];
                                 }
                                 applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
-                                // i = j + 1; // Well... no we want this to move past the endOffset of the jMatch item
-                                i = jMatch.endOffset + 1; // Move past the term match
+                                i = jMatch.endOffset + 1; // Move past the element that was matched
                             } else {
                                 i++;
                             }
@@ -725,5 +711,13 @@ export default {
     text-decoration-color: #0b4b99;
     text-decoration-thickness: 2px;
     font-weight: bold;
+}
+.silent {
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
 }
 </style>
