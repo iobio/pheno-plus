@@ -303,7 +303,8 @@ export default {
                                 jMatch = map[jMatchIndex];
                             }
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
-                            i = j + 1; // Move past the context match
+                            // i = j + 1; // Move past the context match
+                            i = jMatch.endOffset + 1; // Move past the context match
                         }
                     }
                     i++;
@@ -342,7 +343,8 @@ export default {
                                     jMatch = map[jMatchIndex];
                                 }
                                 applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
-                                i = j + 1;
+                                // i = j + 1; // Well... no we want this to move past the endOffset of the jMatch item
+                                i = jMatch.endOffset + 1; // Move past the term match
                             } else {
                                 i++;
                             }
