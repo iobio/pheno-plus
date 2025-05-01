@@ -270,7 +270,6 @@ export default {
 
                         const distance = self.getLevenshteinDistance(context.text, substring);
                         if (distance <= context.threshold) {
-                            console.log('context', map)
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
                             let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
