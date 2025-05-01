@@ -231,7 +231,6 @@ export default {
                                 element.setAttribute('class', 'silent');
                             }
                         }
-                        fullSpan.innerText = combinedText;
 
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         if (firstElem) {
