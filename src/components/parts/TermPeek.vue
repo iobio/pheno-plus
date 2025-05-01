@@ -191,7 +191,6 @@ export default {
                 const text = rawText.toLowerCase();
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
-                let lastIndex = 0;
                 let i = 0;
 
                 // Helper to wrap matching elements in a highlight span.
@@ -271,11 +270,11 @@ export default {
                     contextList.push(newContext);
                 }
 
-                while (i <= textLength) {
+                while (i < textLength) {
                     let j, substring;
 
                     for (const context of contextList) {
-                        if (i + context.length > textLength) {
+                        if (i + context.length > textLength - 1) {
                             substring = text.substring(i);
                             j = textLength;
                         } else {
@@ -289,10 +288,12 @@ export default {
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
                             let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
-                            const iMatch = map[iMatchIndex];
+                            //TODO: We may want to go ahead and remove all the elements before this one map is actually an array of objects
+                            //Make sure that we don't modify our original map though
+                            let iMatch = map[iMatchIndex];
                             let jMatchIndex;
                             let jMatch;
-                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) { //The start and end are in the same element
                                 jMatchIndex = iMatchIndex;
                                 jMatch = map[jMatchIndex];
                             } else {
@@ -302,8 +303,7 @@ export default {
                                 jMatch = map[jMatchIndex];
                             }
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
-                            lastIndex = j;
-                            i = j;
+                            i = j + 1; // Move past the context match
                         }
                     }
                     i++;
@@ -342,8 +342,7 @@ export default {
                                     jMatch = map[jMatchIndex];
                                 }
                                 applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
-                                lastIndex = j;
-                                i = j;
+                                i = j + 1;
                             } else {
                                 i++;
                             }
