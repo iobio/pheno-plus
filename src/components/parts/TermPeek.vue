@@ -82,28 +82,27 @@ export default {
                 this.scrolledIndex = 0;
             }
         },
-        showLoadingAndParseHtml(tid) {
+        async showLoadingAndParseHtml(tid) {
             // Grab the term-peek-div and add the loading indicator
             let loadingDiv = document.createElement('div');
             loadingDiv.setAttribute('id', 'loading-highlights-indicator');
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            // Force the DOM to update before executing showFullTermContext
-            setTimeout(() => {
-                this.showFullTermContext(tid)
-                    .catch((error) => {
-                        // Just log the error for now
-                        console.log('Error showing full term context:', error);
-                    })
-                    .finally(() => {
-                        // Remove the loading indicator no matter what
-                        let loadingIndicator = document.getElementById('loading-highlights-indicator');
-                        if (loadingIndicator) {
-                            loadingIndicator.remove();
-                        }
-                    });
-            }, 50);
+            let parser = new DOMParser();
+            this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
+
+            this.showFullTermContext(tid).then(() => {
+                }).catch((error) => {
+                    console.error('Error showing full term context:', error);
+                    this.alertShown = true;
+                }).finally(() => {
+                    // Remove the loading indicator no matter what
+                    let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                    if (loadingIndicator) {
+                        loadingIndicator.remove();
+                    }
+                });
         },
         async showFullTermContext(tid) {
             let selectedNote;
@@ -357,7 +356,6 @@ export default {
                 scrollIndex = highlights.length;
 
                 this.lenOfIndexes = highlights.length;
-                console.log('the returned', newHtml.body.innerHTML)
                 return newHtml.body.innerHTML;
             }).catch((error) => {
                 console.error('Error highlighting inner text:', error);
