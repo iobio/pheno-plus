@@ -94,7 +94,7 @@ export default {
 
             let parser = new DOMParser();
             this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-            
+
             setTimeout(() => {
                 void (async () => {
                     try {
@@ -419,6 +419,7 @@ export default {
             this.closeAndResetNote();
         },
         scrolledIndex: function (newVal, oldVal) {
+            console.log('Scrolled index changed:', newVal);
             let scrollHighlight = document.getElementById(`context-highlight-${this.scrolledIndex}`);
             if (scrollHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
