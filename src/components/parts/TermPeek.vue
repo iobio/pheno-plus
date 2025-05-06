@@ -45,7 +45,7 @@
                     <span>{{ noteTIDPair[0] }}</span>
                 </div>
                 <div class="context-snip" v-for="note in this.notesList.find((note) => note.getId() == noteTIDPair[1]).getContexts(hpoItemObj.getHpoId())">
-                    <span>{{ (exampleSentences.find((ex) => ex[0].toLowerCase() == note.toLowerCase()) || [null, '0'])[1] }} copies: </span>
+                    <span class="seen-tag">{{ (exampleSentences.find((ex) => ex[0].toLowerCase().strip() == note.toLowerCase().strip()) || [null, '0'])[1] }} copies: </span>
                     {{ note }}
                 </div>
             </div>
