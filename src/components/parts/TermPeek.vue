@@ -110,6 +110,7 @@ export default {
                     loadingIndicator.remove();
                 }
             } )();
+            return true;
         },
         async showFullTermContext() {
             this.fullNoteShown = true;
