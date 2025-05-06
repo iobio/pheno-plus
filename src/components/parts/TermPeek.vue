@@ -96,7 +96,7 @@ export default {
             let parser = new DOMParser();
             this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
 
-            this.showFullTermContext(tid).then(() => {
+            this.showFullTermContext().then(() => {
                 }).catch((error) => {
                     console.error('Error showing full term context:', error);
                     this.alertShown = true;
@@ -108,14 +108,11 @@ export default {
                     }
                 });
         },
-        async showFullTermContext(tid) {
+        async showFullTermContext() {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
             this.highlightContexts(this.noteSelected).then(async (html) => {
-                //wait a second to make sure the DOM is updated
-                await this.$nextTick();
-                console.log('HTML with highlights:', html);
                 this.currentHighlightedHtml = html;
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
@@ -146,7 +143,6 @@ export default {
                 }
 
                 let noteHTMLParent = document.getElementById('note-html-container');
-                //set the z index of all content to be below the header
                 noteHTMLParent.style.zIndex = 1;
 
                 //for sanity just remove all images from the note
@@ -337,7 +333,6 @@ export default {
                         }
                     }
                 }
-                console.log('isFirstHighlight:', highlightedHtml);
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
