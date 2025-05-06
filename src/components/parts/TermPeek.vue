@@ -89,15 +89,16 @@ export default {
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            let selectedNote;
-            selectedNote = this.notesList.find((note) => note.getId() == tid);
-            this.noteSelected = selectedNote;
-
-            let parser = new DOMParser();
-            this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-
+            // I want to make this click triggered event fire something immediately
+            // and then wait for the DOM to be fully updated before running the rest of the code
             void ( async () => {
                 try {
+                    let selectedNote;
+                    selectedNote = this.notesList.find((note) => note.getId() == tid);
+                    this.noteSelected = selectedNote;
+
+                    let parser = new DOMParser();
+                    this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
                     // Wait for the DOM to be fully updated
                     this.currentHighlightedHtml = await this.showFullTermContext();
                 } catch (error) {
