@@ -45,6 +45,7 @@ class ClinicalNote {
             return;
         }
         this.contexts[hpoId] = [context];
+        console.log('New contexts: ' + JSON.stringify(this.contexts));
     }
 
     //getters
