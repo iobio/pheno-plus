@@ -419,8 +419,8 @@ export default {
             this.closeAndResetNote();
         },
         scrolledIndex: function (newVal, oldVal) {
-            console.log('Scrolled index changed:', newVal);
-            let scrollHighlight = document.getElementById(`context-highlight-${this.scrolledIndex}`);
+            let scrollHighlight = document.getElementById(`context-highlight-${newVal}`);
+            console.log('scrollHighlight', scrollHighlight);
             if (scrollHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
                 if (scrollableParent) {
@@ -436,14 +436,14 @@ export default {
                     const offsetNeeded = highlightRect.top - containerRect.top - headerHeight - 10;
                     scrollableParent.scrollTop += offsetNeeded;
 
+                    // Add highlight to current element
+                    scrollHighlight.classList.add('scrolled');
+
                     // Remove highlight from previous element
                     let prevHighlight = document.getElementById(`context-highlight-${oldVal}`);
                     if (prevHighlight && prevHighlight.classList.contains('scrolled')) {
                         prevHighlight.classList.remove('scrolled');
                     }
-
-                    // Add highlight to current element
-                    scrollHighlight.classList.add('scrolled');
                 }
             }
         },
