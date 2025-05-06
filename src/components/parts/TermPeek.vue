@@ -190,6 +190,9 @@ export default {
 
             // _highlightInnerText now encloses the common highlight logic.
             async function _highlightInnerText(rawText, html, map) {
+                //grab anything that has 'context-highlight' in the id
+                let contextHighlights = html.querySelectorAll('[id^="context-highlight"]');
+                console.log('contextHighlights pre-iteration', contextHighlights);
                 const text = rawText.toLowerCase();
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
@@ -349,7 +352,6 @@ export default {
 
                 //update all of the ids going 0-> n
                 highlights.forEach((highlight, index) => {
-                    console.log('highlight', highlight);
                     highlight.setAttribute('id', `context-highlight-${index}`);
                 });
 
@@ -418,7 +420,6 @@ export default {
         },
         scrolledIndex: function (newVal, oldVal) {
             let scrollHighlight = document.getElementById(`context-highlight-${newVal}`);
-            console.log('scrollHighlight', scrollHighlight);
             if (scrollHighlight) {
                 let scrollableParent = document.querySelector('.full-note-overlay');
                 if (scrollableParent) {
