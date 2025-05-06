@@ -278,6 +278,7 @@ export default {
                     }
                     
                     for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                        let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
                         let noteContexts = this.selectedNote.getContexts(key);
                         if (noteContexts) {
                             let alreadyInList = false;
