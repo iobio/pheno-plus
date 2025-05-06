@@ -235,8 +235,6 @@ export default {
                             } else {
                                 element.innerText = ''; // Clear innerText of non-first elements
                                 element.setAttribute('class', 'silent');
-                                //No ids on this element
-                                element.setAttribute('id', '');
                             }
                         }
 
@@ -351,6 +349,12 @@ export default {
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
+                //Remove all the silent elements
+                highlights.forEach((highlight) => {
+                    if (highlight.classList.contains('silent')) {
+                        highlight.remove();
+                    }
+                });
 
                 //update all of the ids going 0-> n
                 highlights.forEach((highlight, index) => {
@@ -697,12 +701,5 @@ export default {
     text-decoration-color: #0b4b99;
     text-decoration-thickness: 2px;
     font-weight: bold;
-}
-.silent {
-    margin: 0px;
-    padding: 0px;
-    width: 0px;
-    height: 0px;
-    overflow: hidden;
 }
 </style>
