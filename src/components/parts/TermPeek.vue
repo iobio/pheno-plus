@@ -606,11 +606,14 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border: .5px solid transparent;
 }
 
 .note-title-column:hover {
     border: .5px solid #e2e2e2;
     border-radius: 5px;
+    background-color: #f6f6f6;
+    cursor: pointer;
 }
 
 .note-title-row {
@@ -619,6 +622,7 @@ export default {
     align-items: center;
     width: 100%;
     padding: 5px 0px;
+    pointer-events: none;
 }
 
 .exp-btn {
@@ -717,5 +721,6 @@ export default {
     background-color: #f6f6f6;
     border-radius: 5px;
     width: 80%;
+    pointer-events: none;
 }
 </style>
