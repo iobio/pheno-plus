@@ -167,7 +167,7 @@ export default {
             const rawText = note.getText();
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(note.html, 'text/html');
-            const contexts = this.hpoItemObj.getExampleSentences().map((s) => s[0].toLowerCase());
+            const contexts = note.getContexts(this.hpoItemObj.getHpoId());
             console.log('contexts:', this.hpoItemObj.getExampleSentences());
             const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
             const self = this;
