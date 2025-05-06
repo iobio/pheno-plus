@@ -190,9 +190,6 @@ export default {
 
             // _highlightInnerText now encloses the common highlight logic.
             async function _highlightInnerText(rawText, html, map) {
-                //grab anything that has 'context-highlight' in the id
-                let contextHighlights = html.querySelectorAll('[id^="context-highlight"]');
-                console.log('contextHighlights pre-iteration', contextHighlights);
                 const text = rawText.toLowerCase();
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
@@ -246,6 +243,7 @@ export default {
                             newScroll = true;
                         }
                     }
+
                     if (newScroll) {
                         scrollIndex++;
                     }
@@ -253,6 +251,7 @@ export default {
 
                 let contextList = [];
                 for (const context of contexts) {
+                    console.log('context:', context);
                     let newContext = {
                         text: context.toLowerCase(),
                         length: context.length,
