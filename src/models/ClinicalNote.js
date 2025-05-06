@@ -1,5 +1,5 @@
 class ClinicalNote {
-    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null, htmlMapping=null) {
+    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null, htmlMapping=null, contexts={}) {
         this.id = id;
         this.date = date;
         this.encounterId = encounterId;
@@ -8,6 +8,7 @@ class ClinicalNote {
         this.title = title;
         this.html = html;
         this.htmlMapping = htmlMapping;
+        this.contexts = contexts;
     }
 
     //setters
@@ -32,6 +33,17 @@ class ClinicalNote {
     setHtmlMapping(htmlMapping) {
         this.htmlMapping = htmlMapping;
     }
+    setContexts(contexts) {
+        this.contexts = contexts;
+    }
+    addContext(hpoId, context) {
+        if (this.contexts.hasOwnProperty(hpoId)) {
+            //If the hpoId is already in the contexts, just add the context to the existing array
+            this.contexts[hpoId].push(context);
+            return;
+        }
+        this.contexts[hpoId] = [context];
+    }
 
     //getters
     getId() {
@@ -54,6 +66,16 @@ class ClinicalNote {
     }
     getHtmlMapping() {
         return this.htmlMapping;
+    }
+    getAllContexts() {
+        return this.contexts;
+    }
+    getContexts(hpoId) {
+        //If the hpoId is not in the contexts return null
+        if (!this.contexts.hasOwnProperty(hpoId)) {
+            return null;
+        }
+        return this.contexts[hpoId];
     }
 
 }
