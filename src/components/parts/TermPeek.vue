@@ -112,19 +112,19 @@ export default {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            this.highlightContexts(selectedNote).then((html) => {
+            this.highlightContexts(this.noteSelected).then((html) => {
                 console.log('HTML with highlights:', html);
                 this.currentHighlightedHtml = html;
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
                     this.alertShown = true;
                     let parser = new DOMParser();
-                    this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
+                    this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
                 }
             }).catch((error) => {
                 this.alertShown = true;
                 let parser = new DOMParser();
-                this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
+                this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
             }).finally(async () => {
                 // Ensure DOM updates are complete before scrolling
                 await this.$nextTick();
