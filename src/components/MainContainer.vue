@@ -223,7 +223,6 @@ export default {
 
             if (gru_data) {
                 const clinPhen = gru_data.clinPhenData;
-                console.log('note:', this.selectedNote);
                 //Clinphen is an object of objects, each object is a term the key is the hpo id
                 for (let key in clinPhen) {
                     if (this.hpoTermsObj[key]) {
@@ -277,26 +276,28 @@ export default {
                         this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
                         continue;
                     }
-                    //If the term is not already in the list we need to add it
-                    let noteContexts = this.selectedNote.getContexts(key);
-                    let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
-                    if (noteContexts) {
-                        let alreadyInList = false;
-                        for (let i = 0; i < noteContexts.length; i++) {
-                            let currContext = noteContexts[i].trim().toLowerCase();
-                            //Check if the sentence is already in the list
-                            if (currContext == clinPhenSen) {
-                                //Dont add it again
-                                alreadyInList = true;
+                    
+                    for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                        let noteContexts = this.selectedNote.getContexts(key);
+                        if (noteContexts) {
+                            let alreadyInList = false;
+                            for (let i = 0; i < noteContexts.length; i++) {
+                                let currContext = noteContexts[i].trim().toLowerCase();
+                                //Check if the sentence is already in the list
+                                if (currContext == clinPhenSen) {
+                                    //Dont add it again
+                                    alreadyInList = true;
+                                }
                             }
-                        }
-                        if (!alreadyInList) {
-                            //If this clinPhen sentence is not already in the list add it
+                            if (!alreadyInList) {
+                                //If this clinPhen sentence is not already in the list add it
+                                this.selectedNote.addContext(key, clinPhenSen);
+                            }
+                        } else {
                             this.selectedNote.addContext(key, clinPhenSen);
                         }
-                    } else {
-                        this.selectedNote.addContext(key, clinPhenSen);
                     }
+
                     //otherwise just add it to the list we haven't seen it before
                     let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
                     this.hpoTermsObj[key] = item;
