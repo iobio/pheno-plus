@@ -349,11 +349,10 @@ export default {
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
-                //Remove all the silent elements
-                highlights.forEach((highlight) => {
-                    if (highlight.classList.contains('silent')) {
-                        highlight.remove();
-                    }
+                let slilents = newHtml.querySelectorAll('.silent');
+                //remove all the silent elements
+                slilents.forEach((silent) => {
+                    silent.remove();
                 });
 
                 //update all of the ids going 0-> n
