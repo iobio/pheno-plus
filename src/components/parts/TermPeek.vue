@@ -112,7 +112,9 @@ export default {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            this.highlightContexts(this.noteSelected).then((html) => {
+            this.highlightContexts(this.noteSelected).then(async (html) => {
+                //wait a second to make sure the DOM is updated
+                await this.$nextTick();
                 console.log('HTML with highlights:', html);
                 this.currentHighlightedHtml = html;
 
