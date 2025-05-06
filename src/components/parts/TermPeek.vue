@@ -89,29 +89,27 @@ export default {
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    void (async () => {
-                        try {
-                            let selectedNote = this.notesList.find((note) => note.getId() == tid);
-                            this.noteSelected = selectedNote;
+            setTimeout(() => {
+                void (async () => {
+                    try {
+                        let selectedNote = this.notesList.find((note) => note.getId() == tid);
+                        this.noteSelected = selectedNote;
 
-                            let parser = new DOMParser();
-                            this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
+                        let parser = new DOMParser();
+                        this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
 
-                            this.currentHighlightedHtml = await this.showFullTermContext();
-                        } catch (error) {
-                            console.error('Error showing full term context:', error);
-                            this.alertShown = true;
-                        } finally {
-                            let loadingIndicator = document.getElementById('loading-highlights-indicator');
-                            if (loadingIndicator) {
-                                loadingIndicator.remove();
-                            }
+                        this.currentHighlightedHtml = await this.showFullTermContext();
+                    } catch (error) {
+                        console.error('Error showing full term context:', error);
+                        this.alertShown = true;
+                    } finally {
+                        let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                        if (loadingIndicator) {
+                            loadingIndicator.remove();
                         }
-                    })();
-                }, 10); 
-            });
+                    }
+                })();
+            }, 10); 
         },
         async showFullTermContext() {
             this.fullNoteShown = true;
