@@ -231,15 +231,15 @@ export default {
                             if (k !== iMatchIndex) {
                                 element.innerText = ''; // Clear innerText of non-first elements
                                 element.setAttribute('class', 'silent');
+                            } else {
+                                element.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                element.setAttribute('class', 'highlighted-context');
                             }
                         }
 
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         if (firstElem) {
-                            firstElem.setAttribute('id', `context-highlight-${scrollIndex}`);
-                            firstElem.setAttribute('class', 'highlighted-context');
                             firstElem.innerText = combinedText;
-
                             newScroll = true;
                         }
                     }
