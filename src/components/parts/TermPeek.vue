@@ -335,7 +335,7 @@ export default {
                         }
                     }
                 }
-                console.log('isFirstHighlight:', isFirstHighlight);
+                console.log('isFirstHighlight:', highlightedHtml);
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
@@ -343,6 +343,7 @@ export default {
             let newHtml = htmlDoc.cloneNode(true);
             _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
                 newHtml = highlightedHtml;
+                console.log('New HTML:', newHtml);
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
