@@ -343,7 +343,6 @@ export default {
             let newHtml = htmlDoc.cloneNode(true);
             return _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
                 newHtml = highlightedHtml;
-                console.log('New HTML:', newHtml);
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
