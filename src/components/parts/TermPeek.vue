@@ -717,4 +717,14 @@ export default {
     text-decoration-thickness: 2px;
     font-weight: bold;
 }
+
+.context-snip {
+    font-size: 10pt;
+    padding: 5px 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: #e2e2e2;
+    border-radius: 5px;
+    width: 100%;
+}
 </style>
