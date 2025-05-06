@@ -158,14 +158,11 @@ export default {
             this.lenOfIndexes = 0;
         },
         async highlightContexts(note) {
-            console.log(note)
             const htmlMapping = note.getHtmlMapping();
             const rawText = note.getText();
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(note.html, 'text/html');
-            console.log('hpoid', this.hpoItemObj.getHpoId());
-            const contexts = note.getContexts(this.hpoItemObj.getHpoId());;
-            console.log('contexts:', contexts);
+            const contexts = note.getContexts(this.hpoItemObj.getHpoId());
             const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
             const self = this;
 
@@ -252,7 +249,6 @@ export default {
 
                 let contextList = [];
                 for (const context of contexts) {
-                    console.log('context:', context);
                     let newContext = {
                         text: context.toLowerCase(),
                         length: context.length,
@@ -613,7 +609,8 @@ export default {
 }
 
 .note-title-column:hover {
-    background-color: #e2e2e2;
+    border: .5px solid #e2e2e2;
+    border-radius: 5px;
 }
 
 .note-title-row {
