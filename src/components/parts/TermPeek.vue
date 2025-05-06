@@ -29,20 +29,22 @@
             <h3 class="header-white">Notes With Term</h3>
             <div
                 @click="showLoadingAndParseHtml(noteTIDPair[1])"
-                class="note-title-row"
+                class="note-title-column"
                 v-if="hpoItemObj"
                 v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()"
             >
-                <div class="exp-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <title>show full note</title>
-                        <path
-                            d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z"
-                        />
-                    </svg>
+                <div>
+                    <div class="exp-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <title>show full note</title>
+                            <path
+                                d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z"
+                            />
+                        </svg>
+                    </div>
+                    <span>{{ noteTIDPair[0] }}</span>
                 </div>
-                <span>{{ noteTIDPair[0] }}</span>
-                <div>{{ this.notesList.find((note) => note.getId() == noteTIDPair[1]).getContexts(hpoItemObj.getHpoId()) }}</div>
+                <div class="context-snip" v-for="note in this.notesList.find((note) => note.getId() == noteTIDPair[1]).getContexts(hpoItemObj.getHpoId())">{{ note }}</div>
             </div>
         </div>
 
@@ -609,14 +611,15 @@ export default {
     margin-right: 5px;
 }
 
-.note-title-row {
+.note-title-column {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 
-.note-title-row:hover {
+.note-title-column:hover {
     background-color: #e2e2e2;
 }
 

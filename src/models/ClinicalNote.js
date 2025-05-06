@@ -37,15 +37,12 @@ class ClinicalNote {
         this.contexts = contexts;
     }
     addContext(hpoId, context) {
-        console.log('Adding context: ' + context + ' to hpoId: ' + hpoId);
-        console.log('Current contexts: ' + JSON.stringify(this.contexts));
         if (this.contexts.hasOwnProperty(hpoId)) {
             //If the hpoId is already in the contexts, just add the context to the existing array
             this.contexts[hpoId].push(context);
             return;
         }
         this.contexts[hpoId] = [context];
-        console.log('New contexts: ' + JSON.stringify(this.contexts));
     }
 
     //getters

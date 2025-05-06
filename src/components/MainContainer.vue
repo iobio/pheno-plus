@@ -223,6 +223,7 @@ export default {
 
             if (gru_data) {
                 const clinPhen = gru_data.clinPhenData;
+                console.log('note:', this.selectedNote);
                 //Clinphen is an object of objects, each object is a term the key is the hpo id
                 for (let key in clinPhen) {
                     if (this.hpoTermsObj[key]) {
