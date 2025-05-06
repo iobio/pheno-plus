@@ -346,15 +346,12 @@ export default {
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
-                console.log('highlights', highlights);
+
                 //update all of the ids going 0-> n
                 highlights.forEach((highlight, index) => {
                     console.log('highlight', highlight);
                     highlight.setAttribute('id', `context-highlight-${index}`);
                 });
-
-                //set the scroll index to the number of highlights
-                scrollIndex = highlights.length;
 
                 this.lenOfIndexes = highlights.length;
                 return newHtml.body.innerHTML;
@@ -699,7 +696,6 @@ export default {
     font-weight: bold;
 }
 .silent {
-    display: none;
     margin: 0px;
     padding: 0px;
     width: 0px;
