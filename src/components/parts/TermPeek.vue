@@ -427,19 +427,14 @@ export default {
                     let header = document.querySelector('.header-white');
                     let headerHeight = header ? header.clientHeight : 0;
 
-                    // Use a simpler, more direct approach to calculate scroll position
                     // This positions the highlight at the top of the viewport (accounting for header)
                     const highlightRect = scrollHighlight.getBoundingClientRect();
                     const containerRect = scrollableParent.getBoundingClientRect();
 
                     // Calculate how much we need to scroll to bring the highlight to the top
-                    // (just below the header)
                     const offsetNeeded = highlightRect.top - containerRect.top - headerHeight - 10;
-
-                    // Apply the scroll
                     scrollableParent.scrollTop += offsetNeeded;
 
-                    // Handle visual highlighting
                     // Remove highlight from previous element
                     let prevHighlight = document.getElementById(`context-highlight-${oldVal}`);
                     if (prevHighlight && prevHighlight.classList.contains('scrolled')) {
@@ -448,19 +443,6 @@ export default {
 
                     // Add highlight to current element
                     scrollHighlight.classList.add('scrolled');
-
-                    // Enhance visibility for deeply nested elements
-                    scrollHighlight.style.outline = '2px solid #0b4b99';
-                    scrollHighlight.style.boxShadow = '0 0 8px rgba(11, 75, 153, 0.6)';
-
-                    // Flash effect
-                    const originalBg = scrollHighlight.style.backgroundColor || '#fff19583';
-                    scrollHighlight.style.backgroundColor = '#ffd700'; // Gold flash
-                    setTimeout(() => {
-                        scrollHighlight.style.backgroundColor = originalBg;
-                        scrollHighlight.style.outline = 'none';
-                        scrollHighlight.style.boxShadow = 'none';
-                    }, 800);
                 }
             }
         },
