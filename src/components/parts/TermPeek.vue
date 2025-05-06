@@ -42,7 +42,7 @@
                     </svg>
                 </div>
                 <span>{{ noteTIDPair[0] }}</span>
-                <div>{{ this.notesList.find((note) => note.getId() == tid).getContexts(hpoItemObj.getHpoId()) }}</div>
+                <div>{{ this.notesList.find((note) => note.getId() == noteTIDPair[1]).getContexts(hpoItemObj.getHpoId()) }}</div>
             </div>
         </div>
 
