@@ -268,6 +268,8 @@ export default {
                                     this.selectedNote.addContext(key, clinPhenSen);
                                 }
                             } else {
+                                console.log('no note context');
+                                console.log(this.selectedNote);
                                 this.selectedNote.addContext(key, clinPhenSen);
                             }
                         }
