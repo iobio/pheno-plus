@@ -123,6 +123,7 @@ export default {
                     let parser = new DOMParser();
                     this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
                 }
+
             }).catch((error) => {
                 this.alertShown = true;
                 let parser = new DOMParser();
@@ -161,6 +162,7 @@ export default {
             this.lenOfIndexes = 0;
         },
         async highlightContexts(note) {
+            console.log(note)
             const htmlMapping = note.getHtmlMapping();
             const rawText = note.getText();
             const parser = new DOMParser();
