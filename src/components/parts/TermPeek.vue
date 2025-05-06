@@ -112,43 +112,43 @@ export default {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            try {
-                this.currentHighlightedHtml = this.highlightContexts(selectedNote);
+            this.highlightContexts(selectedNote).then((html) => {
+                this.currentHighlightedHtml = html;
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
                     this.alertShown = true;
                     let parser = new DOMParser();
                     this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
                 }
-            } catch (e) {
+            }).catch((error) => {
                 this.alertShown = true;
                 let parser = new DOMParser();
                 this.currentHighlightedHtml = parser.parseFromString(selectedNote.html, 'text/html');
-            }
+            }).finally(async () => {
+                // Ensure DOM updates are complete before scrolling
+                await this.$nextTick();
 
-            // Ensure DOM updates are complete before scrolling
-            await this.$nextTick();
+                let firstHighlight = document.getElementById('context-highlight-0');
+                if (firstHighlight) {
+                    let scrollableParent = document.querySelector('.full-note-overlay');
+                    if (scrollableParent) {
+                        //account for the sticky header
+                        let header = document.querySelector('.header-white');
+                        let headerHeight = header ? header.clientHeight : 0;
+                        scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
 
-            let firstHighlight = document.getElementById('context-highlight-0');
-            if (firstHighlight) {
-                let scrollableParent = document.querySelector('.full-note-overlay');
-                if (scrollableParent) {
-                    //account for the sticky header
-                    let header = document.querySelector('.header-white');
-                    let headerHeight = header ? header.clientHeight : 0;
-                    scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
-
-                    //also add the scrolled class to the first highlight
-                    firstHighlight.classList.add('scrolled');
+                        //also add the scrolled class to the first highlight
+                        firstHighlight.classList.add('scrolled');
+                    }
                 }
-            }
 
-            let noteHTMLParent = document.getElementById('note-html-container');
-            //set the z index of all content to be below the header
-            noteHTMLParent.style.zIndex = 1;
+                let noteHTMLParent = document.getElementById('note-html-container');
+                //set the z index of all content to be below the header
+                noteHTMLParent.style.zIndex = 1;
 
-            //for sanity just remove all images from the note
-            noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+                //for sanity just remove all images from the note
+                noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+            });
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
@@ -157,7 +157,7 @@ export default {
             this.scrolledIndex = 0;
             this.lenOfIndexes = 0;
         },
-        highlightContexts(note) {
+        async highlightContexts(note) {
             const htmlMapping = note.getHtmlMapping();
             const rawText = note.getText();
             const parser = new DOMParser();
@@ -187,15 +187,15 @@ export default {
             }
 
             // _highlightInnerText now encloses the common highlight logic.
-            function _highlightInnerText(rawText, html, map) {
+            async function _highlightInnerText(rawText, html, map) {
                 const text = rawText.toLowerCase();
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
                 let i = 0;
 
                 // Helper to wrap matching elements in a highlight span.
-                function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, isContextBlock) {
-                    let elementCreated = false;
+                function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex) {
+                    let newScroll = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
@@ -203,7 +203,7 @@ export default {
 
                         elem.setAttribute('id', `context-highlight-${scrollIndex}`);
                         elem.setAttribute('class', 'highlighted-context');
-                        elementCreated = true;
+                        newScroll = true;
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
                         const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
@@ -219,7 +219,7 @@ export default {
 
                         jElement.innerText = '';
                         jElement.setAttribute('class', 'silent');
-                        elementCreated = true;
+                        newScroll = true;
                     } else {
                         let combinedText = '';
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
@@ -238,10 +238,10 @@ export default {
                             firstElem.setAttribute('class', 'highlighted-context');
                             firstElem.innerText = combinedText;
 
-                            elementCreated = true;
+                            newScroll = true;
                         }
                     }
-                    if (elementCreated) {
+                    if (newScroll) {
                         scrollIndex++;
                     }
                 }
@@ -287,7 +287,7 @@ export default {
                                 jMatchIndex = jMatchIndex + iMatchIndex + 1;
                                 jMatch = map[jMatchIndex];
                             }
-                            applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, true);
+                            applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
                             i = jMatch.endOffset + 1; // Move past the context match
                         }
                     }
@@ -311,7 +311,6 @@ export default {
                             }
                             const distance = self.getLevenshteinDistance(term, substring);
                             if (distance <= termThreshold) {
-                                console.log('term', map)
                                 isFirstHighlight = false;
                                 let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
                                 let iMatch = map[iMatchIndex];
@@ -327,7 +326,7 @@ export default {
                                     jMatchIndex = jMatchIndex + iMatchIndex + 1;
                                     jMatch = map[jMatchIndex];
                                 }
-                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex, false);
+                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
                                 i = jMatch.endOffset + 1; // Move past the element that was matched
                             } else {
                                 i++;
@@ -341,24 +340,29 @@ export default {
             }
 
             let newHtml = htmlDoc.cloneNode(true);
-            try {
-                newHtml = _highlightInnerText(rawText, htmlDoc, htmlMapping);
-            } catch (e) {
-                console.log('Error highlighting inner text:', e);
-            }
+            _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
+                newHtml = highlightedHtml;
 
-            //Grab all the highlights
-            let highlights = newHtml.querySelectorAll('.highlighted-context');
+                //Grab all the highlights
+                let highlights = newHtml.querySelectorAll('.highlighted-context');
 
-            //update all of the ids going 0-> n
-            highlights.forEach((highlight, index) => {
-                highlight.setAttribute('id', `context-highlight-${index}`);
+                //update all of the ids going 0-> n
+                highlights.forEach((highlight, index) => {
+                    highlight.setAttribute('id', `context-highlight-${index}`);
+                });
+
+                //set the scroll index to the number of highlights
+                scrollIndex = highlights.length;
+
+                this.lenOfIndexes = highlights.length;
+
+                return newHtml.body.innerHTML;
+            }).catch((error) => {
+                console.error('Error highlighting inner text:', error);
+                this.alertShown = true;
+                // Fallback to the original HTML if highlighting fails
+                return newHtml.body.innerHTML;
             });
-            //set the scroll index to the number of highlights
-            scrollIndex = highlights.length;
-
-            this.lenOfIndexes = scrollIndex;
-            return newHtml.body.innerHTML;
         },
         getLevenshteinDistance(a, b) {
             if (a === b) return 0;
