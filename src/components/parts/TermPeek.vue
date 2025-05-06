@@ -132,9 +132,7 @@ export default {
                 await this.$nextTick();
 
                 let firstHighlight = document.getElementById('context-highlight-0');
-                //grab anything that has 'context-highlight' in the id
-                let contextHighlights = document.querySelectorAll('[id^="context-highlight"]');
-                console.log('contextHighlights just overall', contextHighlights);
+
                 if (firstHighlight) {
                     let scrollableParent = document.querySelector('.full-note-overlay');
                     if (scrollableParent) {
@@ -228,15 +226,17 @@ export default {
                     } else {
                         let combinedText = '';
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                            const el = map[k];
-                            const element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                            let el = map[k];
+                            let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
                             if (element) combinedText += element.innerText;
-                            if (k !== iMatchIndex) {
-                                element.innerText = ''; // Clear innerText of non-first elements
-                                element.setAttribute('class', 'silent');
-                            } else {
+                            if (k === iMatchIndex) {
                                 element.setAttribute('id', `context-highlight-${scrollIndex}`);
                                 element.setAttribute('class', 'highlighted-context');
+                            } else {
+                                element.innerText = ''; // Clear innerText of non-first elements
+                                element.setAttribute('class', 'silent');
+                                //No ids on this element
+                                element.setAttribute('id', '');
                             }
                         }
 
