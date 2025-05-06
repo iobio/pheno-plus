@@ -113,6 +113,7 @@ export default {
 
             // Highlight the contexts in the note
             this.highlightContexts(selectedNote).then((html) => {
+                console.log('HTML with highlights:', html);
                 this.currentHighlightedHtml = html;
 
                 if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
@@ -334,7 +335,7 @@ export default {
                         }
                     }
                 }
-
+                console.log('isFirstHighlight:', isFirstHighlight);
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
