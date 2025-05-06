@@ -33,7 +33,7 @@
                 v-if="hpoItemObj"
                 v-for="noteTIDPair in hpoItemObj.getNotesPresentIn()"
             >
-                <div>
+                <div class="note-title-row">
                     <div class="exp-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <title>show full note</title>
@@ -621,6 +621,14 @@ export default {
 
 .note-title-column:hover {
     background-color: #e2e2e2;
+}
+
+.note-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 5px 0px;
 }
 
 .exp-btn {
