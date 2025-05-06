@@ -50,16 +50,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="sub-container">
-            <h3 class="header-white">Context Snips</h3>
-            <div v-for="exampleS in exampleSentences">
-                <span class="seen-tag"
-                    ><b>{{ exampleS[1] }}</b> copies</span
-                >
-                {{ exampleS[0] }}
-            </div>
-        </div>
     </div>
 </template>
 
