@@ -89,6 +89,10 @@ export default {
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
+            let selectedNote;
+            selectedNote = this.notesList.find((note) => note.getId() == tid);
+            this.noteSelected = selectedNote;
+
             let parser = new DOMParser();
             this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
 
@@ -105,9 +109,6 @@ export default {
                 });
         },
         async showFullTermContext(tid) {
-            let selectedNote;
-            selectedNote = this.notesList.find((note) => note.getId() == tid);
-            this.noteSelected = selectedNote;
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
