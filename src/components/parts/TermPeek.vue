@@ -625,7 +625,7 @@ export default {
 
 .note-title-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     padding: 5px 0px;
@@ -719,12 +719,13 @@ export default {
 }
 
 .context-snip {
+    align-self: flex-end;
     font-size: 10pt;
     padding: 5px 5px;
     margin-left: 5px;
     margin-right: 5px;
     background-color: #e2e2e2;
     border-radius: 5px;
-    width: 100%;
+    width: 80%;
 }
 </style>
