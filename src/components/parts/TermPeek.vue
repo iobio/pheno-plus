@@ -82,7 +82,7 @@ export default {
                 this.scrolledIndex = 0;
             }
         },
-        async showLoadingAndParseHtml(tid) {
+        showLoadingAndParseHtml(tid) {
             // Grab the term-peek-div and add the loading indicator
             let loadingDiv = document.createElement('div');
             loadingDiv.setAttribute('id', 'loading-highlights-indicator');
@@ -96,17 +96,19 @@ export default {
             let parser = new DOMParser();
             this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
 
-            this.showFullTermContext().then(() => {
-                }).catch((error) => {
+            void ( async () => {
+                try {
+                    // Wait for the DOM to be fully updated
+                    this.currentHighlightedHtml = await this.showFullTermContext();
+                } catch (error) {
                     console.error('Error showing full term context:', error);
                     this.alertShown = true;
-                }).finally(() => {
-                    // Remove the loading indicator no matter what
-                    let loadingIndicator = document.getElementById('loading-highlights-indicator');
-                    if (loadingIndicator) {
-                        loadingIndicator.remove();
-                    }
-                });
+                }
+                let loadingIndicator = document.getElementById('loading-highlights-indicator');
+                if (loadingIndicator) {
+                    loadingIndicator.remove();
+                }
+            } )();
         },
         async showFullTermContext() {
             this.fullNoteShown = true;
