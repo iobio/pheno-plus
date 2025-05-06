@@ -132,6 +132,9 @@ export default {
                 await this.$nextTick();
 
                 let firstHighlight = document.getElementById('context-highlight-0');
+                //grab anything that has 'context-highlight' in the id
+                let contextHighlights = document.querySelectorAll('[id^="context-highlight"]');
+                console.log('contextHighlights just overall', contextHighlights);
                 if (firstHighlight) {
                     let scrollableParent = document.querySelector('.full-note-overlay');
                     if (scrollableParent) {
