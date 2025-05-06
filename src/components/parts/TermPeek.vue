@@ -343,7 +343,7 @@ export default {
             }
 
             let newHtml = htmlDoc.cloneNode(true);
-            _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
+            return _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
                 newHtml = highlightedHtml;
                 console.log('New HTML:', newHtml);
 
