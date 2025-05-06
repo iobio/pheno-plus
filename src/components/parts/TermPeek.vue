@@ -357,7 +357,7 @@ export default {
                 scrollIndex = highlights.length;
 
                 this.lenOfIndexes = highlights.length;
-
+                console.log('the returned', newHtml.body.innerHTML)
                 return newHtml.body.innerHTML;
             }).catch((error) => {
                 console.error('Error highlighting inner text:', error);
