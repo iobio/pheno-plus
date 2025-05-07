@@ -207,6 +207,9 @@ export default {
                         newScroll = true;
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
+                        console.log("two elements");
+                        console.log("iMatch", iMatch);
+                        console.log("jMatch", jMatch);
                         const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
                         console.log("elements (i, j)", iElement, jElement);
@@ -277,8 +280,6 @@ export default {
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
                             let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
-                            //TODO: We may want to go ahead and remove all the elements before this one map is actually an array of objects
-                            //Make sure that we don't modify our original map though
                             let iMatch = map[iMatchIndex];
                             let jMatchIndex;
                             let jMatch;
