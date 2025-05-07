@@ -199,6 +199,7 @@ export default {
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                        console.log("element", elem);
                         if (!elem) return;
 
                         elem.setAttribute('id', `context-highlight-${scrollIndex}`);
@@ -208,6 +209,7 @@ export default {
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
                         const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                         const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+                        console.log("elements (i, j)", iElement, jElement);
                         if (!iElement || !jElement) return;
 
                         let iText = iElement.innerText;
@@ -225,6 +227,7 @@ export default {
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                             let el = map[k];
                             let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+                            console.log(`element ${k}`, element, el);
                             if (element) combinedText += element.innerText;
                             if (k === iMatchIndex) {
                                 element.setAttribute('id', `context-highlight-${scrollIndex}`);
