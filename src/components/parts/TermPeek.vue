@@ -199,7 +199,7 @@ export default {
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                        console.log("element", elem);
+
                         if (!elem) return;
 
                         elem.setAttribute('id', `context-highlight-${scrollIndex}`);
@@ -207,38 +207,51 @@ export default {
                         newScroll = true;
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
-                        console.log("two elements");
-                        console.log("iMatch", iMatch);
-                        console.log("jMatch", jMatch);
-                        const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                        const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-                        console.log("elements (i, j)", iElement, jElement);
-                        if (!iElement || !jElement) return;
+                        if (iMatchIndex.parentPath === jMatchIndex.parentPath) {
+                            //They are in the same element but the text was split somehow
+                            const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
 
-                        let iText = iElement.innerText;
-                        let jText = jElement.innerText;
+                            if (!elem) return;
 
-                        iElement.setAttribute('id', `context-highlight-${scrollIndex}`);
-                        iElement.setAttribute('class', 'highlighted-context');
-                        iElement.innerText = iText + ' ' + jText;
+                            elem.setAttribute('id', `context-highlight-${scrollIndex}`);
+                            elem.setAttribute('class', 'highlighted-context')
+                        } else {
+                            const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
+                            const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+                            if (!iElement || !jElement) return;
 
-                        jElement.innerText = '';
-                        jElement.setAttribute('class', 'silent');
+                            let iText = iElement.innerText;
+                            let jText = jElement.innerText;
+
+                            iElement.setAttribute('id', `context-highlight-${scrollIndex}`);
+                            iElement.setAttribute('class', 'highlighted-context');
+                            iElement.innerText = iText + ' ' + jText;
+
+                            jElement.innerText = '';
+                            jElement.setAttribute('class', 'silent');
+                        }
                         newScroll = true;
                     } else {
                         let combinedText = '';
+                        let lastPath = '';
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
                             let el = map[k];
-                            let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-                            console.log(`element ${k}`, element, el);
-                            if (element) combinedText += element.innerText;
-                            if (k === iMatchIndex) {
-                                element.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                element.setAttribute('class', 'highlighted-context');
-                            } else {
-                                element.innerText = ''; // Clear innerText of non-first elements
-                                element.setAttribute('class', 'silent');
+                            if (!el) continue;
+
+                            if (el.parentPath !== lastPath) {
+                                let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
+
+                                if (element) combinedText += element.innerText;
+                                if (k === iMatchIndex) {
+                                    element.setAttribute('id', `context-highlight-${scrollIndex}`);
+                                    element.setAttribute('class', 'highlighted-context');
+                                } else if (k !== iMatchIndex) {
+                                    element.innerText = ''; // Clear innerText of non-first elements
+                                    element.setAttribute('class', 'silent');
+                                }
+                                lastPath = el.parentPath;
                             }
+
                         }
 
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
