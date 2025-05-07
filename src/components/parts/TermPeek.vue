@@ -352,7 +352,10 @@ export default {
                 let slilents = newHtml.querySelectorAll('.silent');
                 //remove all the silent elements
                 slilents.forEach((silent) => {
-                    silent.remove();
+                    //We will just remove all other classes and ids
+                    silent.removeAttribute('class');
+                    silent.removeAttribute('id');
+                    silent.setAttribute('class', 'silent');
                 });
 
                 //update all of the ids going 0-> n
@@ -726,5 +729,13 @@ export default {
     border-radius: 5px;
     width: 80%;
     pointer-events: none;
+}
+.silent {
+    display: none;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
 }
 </style>
