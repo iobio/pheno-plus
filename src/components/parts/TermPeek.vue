@@ -198,7 +198,6 @@ export default {
                     let newScroll = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
-                        console.log('one');
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
 
                         if (!elem) return;
@@ -277,6 +276,7 @@ export default {
                     };
                     contextList.push(newContext);
                 }
+
                 // Add the term to the context list
                 contextList.push({
                     text: term,
@@ -324,47 +324,6 @@ export default {
                     }
                     i++;
                 }
-
-                // If no context was highlighted, try highlighting the term.
-                // if (isFirstHighlight) {
-                //     const windowLength = term.length;
-                //     const termThreshold = Math.floor(windowLength * 0.1);
-                //     if (windowLength <= textLength) {
-                //         i = 0;
-                //         while (i < textLength - termThreshold) {
-                //             let j, substring;
-                //             if (i + windowLength > textLength - 1) {
-                //                 substring = text.substring(i);
-                //                 j = textLength;
-                //             } else {
-                //                 substring = text.substring(i, i + windowLength);
-                //                 j = i + windowLength;
-                //             }
-                //             const distance = self.getLevenshteinDistance(term, substring);
-                //             if (distance <= termThreshold) {
-                //                 isFirstHighlight = false;
-                //                 let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
-                //                 let iMatch = map[iMatchIndex];
-
-                //                 let jMatchIndex;
-                //                 let jMatch;
-                //                 if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                //                     jMatchIndex = iMatchIndex;
-                //                     jMatch = map[jMatchIndex];
-                //                 } else {
-                //                     const sliceMap = map.slice(iMatchIndex + 1);
-                //                     jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
-                //                     jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                //                     jMatch = map[jMatchIndex];
-                //                 }
-                //                 applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
-                //                 i = jMatch.endOffset + 1; // Move past the element that was matched
-                //             } else {
-                //                 i++;
-                //             }
-                //         }
-                //     }
-                // }
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
