@@ -195,6 +195,10 @@ export default {
 
                 // Helper to wrap matching elements in a highlight span.
                 function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex) {
+                    console.log('iMatchIndex', iMatchIndex);
+                    console.log('jMatchIndex', jMatchIndex);
+                    console.log('iMatch', iMatch);
+                    console.log('jMatch', jMatch);
 
                     let newScroll = false;
                     // For single or two-element matches we treat them separately.
