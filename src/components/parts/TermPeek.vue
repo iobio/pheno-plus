@@ -213,7 +213,7 @@ export default {
                         newScroll = true;
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
-                        if (iMatchIndex.parentPath === jMatchIndex.parentPath) {
+                        if (iMatch.parentPath === jMatch.parentPath) {
                             console.log('two: paths same');
                             //They are in the same element but the text was split somehow
                             const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
