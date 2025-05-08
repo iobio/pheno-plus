@@ -591,7 +591,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     overflow-y: auto;
-    height: 50%;
+    height: 100%;
 }
 
 #term-peek-div h3 {
