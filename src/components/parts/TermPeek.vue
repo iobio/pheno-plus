@@ -276,7 +276,7 @@ export default {
                     let newContext = {
                         text: context.toLowerCase(),
                         length: context.length,
-                        threshold: Math.floor(context.length * 0.2),
+                        threshold: Math.floor(context.length * 0.1),
                     };
                     contextList.push(newContext);
                 }
@@ -297,7 +297,9 @@ export default {
                         if (distance <= context.threshold) {
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
-                            let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                            let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
+
+                            let iMatchIndex = map.findIndex((el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset);
                             let iMatch = map[iMatchIndex];
                             let jMatchIndex;
                             let jMatch;
