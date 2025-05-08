@@ -195,11 +195,6 @@ export default {
 
                 // Helper to wrap matching elements in a highlight span.
                 function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex) {
-                    console.log('iMatchIndex', iMatchIndex);
-                    console.log('jMatchIndex', jMatchIndex);
-                    console.log('iMatch', iMatch);
-                    console.log('jMatch', jMatch);
-
                     let newScroll = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
@@ -214,7 +209,6 @@ export default {
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
                         if (iMatch.parentPath === jMatch.parentPath) {
-                            console.log('two: paths same');
                             //They are in the same element but the text was split somehow
                             const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
 
@@ -223,12 +217,9 @@ export default {
                             elem.setAttribute('id', `context-highlight-${scrollIndex}`);
                             elem.setAttribute('class', 'highlighted-context')
                         } else {
-                            console.log('two: paths different');
                             const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                             const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
-                            console.log('iElement', iElement);
-                            console.log('jElement', jElement);
                             if (!iElement || !jElement) return;
 
                             let iText = iElement.innerText;
@@ -243,7 +234,6 @@ export default {
                         }
                         newScroll = true;
                     } else {
-                        console.log('more than two');
                         let combinedText = '';
                         let lastPath = '';
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
@@ -287,6 +277,15 @@ export default {
                     };
                     contextList.push(newContext);
                 }
+                // Add the term to the context list
+                contextList.push({
+                    text: term,
+                    length: term.length,
+                    threshold: Math.floor(term.length * 0.1),
+                });
+
+                // Sort contextList by length in descending order so longer contexts are checked first
+                contextList.sort((a, b) => b.length - a.length);
 
                 while (i < textLength) {
                     let j, substring;
@@ -327,45 +326,45 @@ export default {
                 }
 
                 // If no context was highlighted, try highlighting the term.
-                if (isFirstHighlight) {
-                    const windowLength = term.length;
-                    const termThreshold = Math.floor(windowLength * 0.1);
-                    if (windowLength <= textLength) {
-                        i = 0;
-                        while (i < textLength - termThreshold) {
-                            let j, substring;
-                            if (i + windowLength > textLength - 1) {
-                                substring = text.substring(i);
-                                j = textLength;
-                            } else {
-                                substring = text.substring(i, i + windowLength);
-                                j = i + windowLength;
-                            }
-                            const distance = self.getLevenshteinDistance(term, substring);
-                            if (distance <= termThreshold) {
-                                isFirstHighlight = false;
-                                let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
-                                let iMatch = map[iMatchIndex];
+                // if (isFirstHighlight) {
+                //     const windowLength = term.length;
+                //     const termThreshold = Math.floor(windowLength * 0.1);
+                //     if (windowLength <= textLength) {
+                //         i = 0;
+                //         while (i < textLength - termThreshold) {
+                //             let j, substring;
+                //             if (i + windowLength > textLength - 1) {
+                //                 substring = text.substring(i);
+                //                 j = textLength;
+                //             } else {
+                //                 substring = text.substring(i, i + windowLength);
+                //                 j = i + windowLength;
+                //             }
+                //             const distance = self.getLevenshteinDistance(term, substring);
+                //             if (distance <= termThreshold) {
+                //                 isFirstHighlight = false;
+                //                 let iMatchIndex = map.findIndex((el) => i >= el.startOffset && i <= el.endOffset);
+                //                 let iMatch = map[iMatchIndex];
 
-                                let jMatchIndex;
-                                let jMatch;
-                                if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                                    jMatchIndex = iMatchIndex;
-                                    jMatch = map[jMatchIndex];
-                                } else {
-                                    const sliceMap = map.slice(iMatchIndex + 1);
-                                    jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
-                                    jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                                    jMatch = map[jMatchIndex];
-                                }
-                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
-                                i = jMatch.endOffset + 1; // Move past the element that was matched
-                            } else {
-                                i++;
-                            }
-                        }
-                    }
-                }
+                //                 let jMatchIndex;
+                //                 let jMatch;
+                //                 if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                //                     jMatchIndex = iMatchIndex;
+                //                     jMatch = map[jMatchIndex];
+                //                 } else {
+                //                     const sliceMap = map.slice(iMatchIndex + 1);
+                //                     jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                //                     jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                //                     jMatch = map[jMatchIndex];
+                //                 }
+                //                 applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
+                //                 i = jMatch.endOffset + 1; // Move past the element that was matched
+                //             } else {
+                //                 i++;
+                //             }
+                //         }
+                //     }
+                // }
                 self.alertShown = isFirstHighlight;
                 return highlightedHtml;
             }
