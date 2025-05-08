@@ -221,8 +221,12 @@ export default {
                             elem.setAttribute('id', `context-highlight-${scrollIndex}`);
                             elem.setAttribute('class', 'highlighted-context')
                         } else {
+                            console.log('firing as expected');
                             const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                             const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
+
+                            console.log('iElement', iElement);
+                            console.log('jElement', jElement);
                             if (!iElement || !jElement) return;
 
                             let iText = iElement.innerText;
