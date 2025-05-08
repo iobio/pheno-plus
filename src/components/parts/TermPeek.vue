@@ -195,6 +195,11 @@ export default {
 
                 // Helper to wrap matching elements in a highlight span.
                 function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex) {
+                    console.log('iMatchIndex', iMatchIndex);
+                    console.log('jMatchIndex', jMatchIndex);
+                    console.log('iMatch', iMatch);
+                    console.log('jMatch', jMatch);
+
                     let newScroll = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
@@ -362,14 +367,6 @@ export default {
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
-                // let slilents = newHtml.querySelectorAll('.silent');
-                //remove all the silent elements
-                // slilents.forEach((silent) => {
-                //     //We will just remove all other classes and ids
-                //     silent.removeAttribute('class');
-                //     silent.removeAttribute('id');
-                //     silent.setAttribute('class', 'silent');
-                // });
 
                 //update all of the ids going 0-> n
                 highlights.forEach((highlight, index) => {
