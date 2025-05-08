@@ -203,6 +203,7 @@ export default {
                     let newScroll = false;
                     // For single or two-element matches we treat them separately.
                     if (jMatchIndex - iMatchIndex === 0) {
+                        console.log('one');
                         const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
 
                         if (!elem) return;
@@ -213,6 +214,7 @@ export default {
 
                     } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
                         if (iMatchIndex.parentPath === jMatchIndex.parentPath) {
+                            console.log('two: paths same');
                             //They are in the same element but the text was split somehow
                             const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
 
@@ -221,7 +223,7 @@ export default {
                             elem.setAttribute('id', `context-highlight-${scrollIndex}`);
                             elem.setAttribute('class', 'highlighted-context')
                         } else {
-                            console.log('firing as expected');
+                            console.log('two: paths different');
                             const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                             const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
 
@@ -241,6 +243,7 @@ export default {
                         }
                         newScroll = true;
                     } else {
+                        console.log('more than two');
                         let combinedText = '';
                         let lastPath = '';
                         for (let k = iMatchIndex; k <= jMatchIndex; k++) {
