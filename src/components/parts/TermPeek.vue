@@ -362,14 +362,14 @@ export default {
 
                 //Grab all the highlights
                 let highlights = newHtml.querySelectorAll('.highlighted-context');
-                let slilents = newHtml.querySelectorAll('.silent');
+                // let slilents = newHtml.querySelectorAll('.silent');
                 //remove all the silent elements
-                slilents.forEach((silent) => {
-                    //We will just remove all other classes and ids
-                    silent.removeAttribute('class');
-                    silent.removeAttribute('id');
-                    silent.setAttribute('class', 'silent');
-                });
+                // slilents.forEach((silent) => {
+                //     //We will just remove all other classes and ids
+                //     silent.removeAttribute('class');
+                //     silent.removeAttribute('id');
+                //     silent.setAttribute('class', 'silent');
+                // });
 
                 //update all of the ids going 0-> n
                 highlights.forEach((highlight, index) => {
