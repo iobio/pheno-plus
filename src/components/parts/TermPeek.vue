@@ -280,15 +280,15 @@ export default {
                     contextList.push(newContext);
                 }
 
+                // Sort contextList by length in descending order so longer contexts are checked first
+                contextList.sort((a, b) => b.length - a.length);
+
                 // Add the term to the context list
                 contextList.push({
                     text: term,
                     length: term.length,
                     threshold: Math.floor(term.length * 0.1),
                 });
-
-                // Sort contextList by length in descending order so longer contexts are checked first
-                contextList.sort((a, b) => b.length - a.length);
 
                 while (i < textLength) {
                     let j, substring;
