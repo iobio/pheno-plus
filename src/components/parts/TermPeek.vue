@@ -292,8 +292,9 @@ export default {
 
                 while (i < textLength) {
                     let j, substring;
-
-                    for (const context of contextList) {
+                    let matchedIndex = null;
+                    
+                    for (const [contextIndex, context] of contextList.entries()) {
                         if (i + context.length > textLength - 1) {
                             substring = text.substring(i);
                             j = textLength;
@@ -304,6 +305,8 @@ export default {
 
                         const distance = self.getLevenshteinDistance(context.text, substring);
                         if (distance <= context.threshold) {
+                            matchedIndex = contextIndex;
+
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
                             let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
@@ -323,9 +326,18 @@ export default {
                             }
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
                             i = jMatch.endOffset + 1; // Move past the context match
+                            break; // Exit the loop after finding a match
                         }
                     }
-                    i++;
+                    if (matchedIndex === null) {
+                        i++;
+                    } else {
+                        // If a match was found we have already incremented i so skip that
+                        if (contextList.length >= 1) {
+                            contextList.splice(matchedIndex, 1); // Remove the matched context so we don't keep looking for it
+                            //We keep the term in the list so we can highlight it over the whole note
+                        }
+                    }
                 }
                 self.alertShown = isFirstHighlight;
 
@@ -333,7 +345,7 @@ export default {
                 const endTime = performance.now();
                 const timeTaken = endTime - startTime;
                 console.log(`Highlighting took ${timeTaken} milliseconds`);
-                
+
                 return highlightedHtml;
             }
 
