@@ -158,6 +158,9 @@ export default {
             this.lenOfIndexes = 0;
         },
         async highlightContexts(note) {
+            //Start a timer to see how long it takes to highlight
+            const startTime = performance.now();
+
             const htmlMapping = note.getHtmlMapping();
             const rawText = note.getText();
             const parser = new DOMParser();
@@ -325,6 +328,12 @@ export default {
                     i++;
                 }
                 self.alertShown = isFirstHighlight;
+
+                // End the timer and log the time taken
+                const endTime = performance.now();
+                const timeTaken = endTime - startTime;
+                console.log(`Highlighting took ${timeTaken} milliseconds`);
+                
                 return highlightedHtml;
             }
 
