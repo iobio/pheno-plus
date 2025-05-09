@@ -311,7 +311,8 @@ export default {
 
                             isFirstHighlight = false;
                             // Find matching mapping entries for start (i) and end (j).
-                            let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
+                            // let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
+                            let matchedStart = i;
 
                             let iMatchIndex = map.findIndex((el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset);
                             let iMatch = map[iMatchIndex];
