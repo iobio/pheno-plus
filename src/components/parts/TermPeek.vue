@@ -303,7 +303,7 @@ export default {
                             j = i + context.length;
                         }
 
-                        if (context.text.strip().toLowerCase() === substring.strip().toLowerCase()) {
+                        if (context.text.trim().toLowerCase() === substring.trim().toLowerCase()) {
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
