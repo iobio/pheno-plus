@@ -66,7 +66,6 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
 
                 //concatenate the response array to the main response array
                 concatClinPhenResponseArray = concatClinPhenResponseArray.concat(clinphenResponseArray);
-                console.log('Concatenated response array length: ' + concatClinPhenResponseArray);
             } catch {
                 //No results return 0
                 return 0;
@@ -120,6 +119,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
                 .then((response) => response.text())
                 .then((data) => {
                     hpoText = data;
+                    console.log('hpoText', hpoText);
 
                     //split the text on the new lines to get the rows
                     let theTextArray = hpoText.split('\n');
