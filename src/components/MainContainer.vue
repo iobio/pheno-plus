@@ -219,6 +219,7 @@ export default {
 
             //Show the loading overlay
             this.hideOverlay = false;
+            console.log("note content", this.selectedNoteTextContent);
             let gru_data = await fetchFromGru(this.selectedNoteTextContent);
 
             if (gru_data) {
