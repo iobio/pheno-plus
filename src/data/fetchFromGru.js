@@ -66,6 +66,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
 
                 //concatenate the response array to the main response array
                 concatClinPhenResponseArray = concatClinPhenResponseArray.concat(clinphenResponseArray);
+                console.log('Concatenated response array length: ' + concatClinPhenResponseArray);
             } catch {
                 //No results return 0
                 return 0;
