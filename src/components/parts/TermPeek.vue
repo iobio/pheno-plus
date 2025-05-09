@@ -304,9 +304,6 @@ export default {
                             j = i + context.length;
                         }
 
-                        console.log('substring', substring);
-                        console.log('context', context.text);
-                        
                         if (context.text === substring) {
                             matchedIndex = contextIndex;
 
