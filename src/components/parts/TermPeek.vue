@@ -330,6 +330,33 @@ export default {
                             applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
                             i = jMatch.endOffset + 1; // Move past the context match
                             break; // Exit the loop after finding a match
+                        } else {
+                            const distance = self.getLevenshteinDistance(context.text, substring);
+                            if (distance <= context.threshold) {
+                                // console.log("distance: ", distance, "threshold: ", context.threshold);
+                                matchedIndex = contextIndex;
+
+                                isFirstHighlight = false;
+                                // Find matching mapping entries for start (i) and end (j).
+                                let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
+
+                                let iMatchIndex = map.findIndex((el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset);
+                                let iMatch = map[iMatchIndex];
+                                let jMatchIndex;
+                                let jMatch;
+                                if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) { //The start and end are in the same element
+                                    jMatchIndex = iMatchIndex;
+                                    jMatch = map[jMatchIndex];
+                                } else {
+                                    const sliceMap = map.slice(iMatchIndex + 1);
+                                    jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
+                                    jMatchIndex = jMatchIndex + iMatchIndex + 1;
+                                    jMatch = map[jMatchIndex];
+                                }
+                                applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
+                                i = jMatch.endOffset + 1; // Move past the context match
+                                break; // Exit the loop after finding a match 
+                            }
                         }
                     }
                     if (matchedIndex === null) {
