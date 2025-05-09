@@ -192,6 +192,7 @@ export default {
             // _highlightInnerText now encloses the common highlight logic.
             async function _highlightInnerText(rawText, html, map) {
                 const text = rawText.toLowerCase();
+                console.log('text', text);
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
                 let i = 0;
@@ -303,7 +304,10 @@ export default {
                             j = i + context.length;
                         }
 
-                        if (context.text.trim().toLowerCase() === substring.trim().toLowerCase()) {
+                        console.log('substring', substring);
+                        console.log('context', context.text);
+                        
+                        if (context.text === substring) {
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
