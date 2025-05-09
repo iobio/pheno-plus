@@ -304,8 +304,8 @@ export default {
                         }
 
                         const distance = self.getLevenshteinDistance(context.text, substring);
-                        console.log('Distance:', distance, 'Threshold:', context.threshold);
                         if (distance <= context.threshold) {
+                            console.log("distance: ", distance, "threshold: ", context.threshold);
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
