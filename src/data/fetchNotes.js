@@ -320,12 +320,12 @@ function _cleanText(text) {
     let cleaned = text;
 
     // Clean up the text remove number and special characters
-    cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
-    cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
-    cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
-    cleaned = cleaned.replace(/°F/g, '');
-    cleaned = cleaned.replace(/°C/g, '');
-    cleaned = cleaned.replace(/\( ?\)/g, '');
+    // cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
+    // cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
+    // cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
+    // cleaned = cleaned.replace(/°F/g, '');
+    // cleaned = cleaned.replace(/°C/g, '');
+    // cleaned = cleaned.replace(/\( ?\)/g, '');
 
     // Characters that explicitly cause issues with sending via URL
     cleaned = cleaned.replace(/\?/g, '');
