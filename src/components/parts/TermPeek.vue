@@ -399,47 +399,6 @@ export default {
                     return newHtml.body.innerHTML;
                 });
         },
-        getLevenshteinDistance(a, b) {
-            if (a === b) return 0;
-            const aLen = a.length;
-            const bLen = b.length;
-            if (aLen === 0) return bLen;
-            if (bLen === 0) return aLen;
-
-            // Always use the shorter string for the inner loop to reduce memory usage
-            if (aLen > bLen) {
-                [a, b] = [b, a];
-            }
-
-            const shorterLen = a.length;
-            const longerLen = b.length;
-
-            let prevRow = new Array(shorterLen + 1);
-            let currRow = new Array(shorterLen + 1);
-
-            // Initialize previous row: distances for transforming "" into a substring of `a`
-            for (let i = 0; i <= shorterLen; i++) {
-                prevRow[i] = i;
-            }
-
-            // Build distances row by row
-            for (let j = 1; j <= longerLen; j++) {
-                currRow[0] = j;
-                const bChar = b[j - 1];
-                for (let i = 1; i <= shorterLen; i++) {
-                    const cost = a[i - 1] === bChar ? 0 : 1;
-                    currRow[i] = Math.min(
-                        currRow[i - 1] + 1, // insertion
-                        prevRow[i] + 1, // deletion
-                        prevRow[i - 1] + cost, // substitution
-                    );
-                }
-                // Swap rows for next iteration
-                [prevRow, currRow] = [currRow, prevRow];
-            }
-
-            return prevRow[shorterLen];
-        },
     },
     computed: {
         exampleSentences() {
