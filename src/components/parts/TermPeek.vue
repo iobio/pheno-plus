@@ -315,12 +315,10 @@ export default {
                             continue;
                         } else {
                             substring = text.substring(i, i + context.length);
-                            console.log(substring);
                             j = i + context.length;
 
                             // Clean the substring by removing punctuation
                             cleanedSub = substring.replace(/[^0-9a-zA-Z ]+/g, ' ').replace(/\s+/g, ' ');
-                            console.log(cleanedSub);
                             punctuationOffset = substring.length - cleanedSub.length;
 
                             while (punctuationOffset > 0 && j + punctuationOffset < textLength) {
@@ -334,7 +332,7 @@ export default {
                             }
                         }
 
-                        if (context.text === substring) {
+                        if (context.text === cleanedSub) {
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
