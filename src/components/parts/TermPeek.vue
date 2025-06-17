@@ -208,7 +208,6 @@ export default {
             // _highlightInnerText now encloses the common highlight logic.
             async function _highlightInnerText(rawText, html, map) {
                 const text = rawText.toLowerCase();
-                console.log('text', text);
                 const textLength = text.length;
                 const highlightedHtml = html.cloneNode(true);
                 let i = 0;
@@ -319,7 +318,7 @@ export default {
                             j = i + context.length;
                         }
 
-                        if (context.text === substring.replace(/[^0-9a-zA-Z]+/g, ' ')) {
+                        if (context.text === substring.replace(/[^0-9a-zA-Z]+/g, '').trim()) {
                             // We are mirroring the clinPhen cleaning that happens
                             matchedIndex = contextIndex;
 
