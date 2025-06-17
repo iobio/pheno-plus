@@ -44,8 +44,21 @@
                     </div>
                     <span>{{ noteTIDPair[0] }}</span>
                 </div>
-                <div class="context-snip" v-for="note in this.notesList.find((note) => note.getId() == noteTIDPair[1]).getContexts(hpoItemObj.getHpoId())">
-                    <span class="seen-tag">{{ (exampleSentences.find((ex) => ex[0].toLowerCase().trim() == note.toLowerCase().trim()) || [null, '0'])[1] }} copies: </span>
+                <div
+                    class="context-snip"
+                    v-for="note in this.notesList
+                        .find((note) => note.getId() == noteTIDPair[1])
+                        .getContexts(hpoItemObj.getHpoId())"
+                >
+                    <span class="seen-tag"
+                        >{{
+                            (exampleSentences.find((ex) => ex[0].toLowerCase().trim() == note.toLowerCase().trim()) || [
+                                null,
+                                '0',
+                            ])[1]
+                        }}
+                        copies:
+                    </span>
                     {{ note }}
                 </div>
             </div>
@@ -105,50 +118,53 @@ export default {
                         }
                     }
                 })();
-            }, 10); 
+            }, 10);
         },
         async showFullTermContext() {
             this.fullNoteShown = true;
 
             // Highlight the contexts in the note
-            this.highlightContexts(this.noteSelected).then(async (html) => {
-                this.currentHighlightedHtml = html;
+            this.highlightContexts(this.noteSelected)
+                .then(async (html) => {
+                    this.currentHighlightedHtml = html;
 
-                if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
+                    if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
+                        this.alertShown = true;
+                        let parser = new DOMParser();
+                        this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
+                    }
+                })
+                .catch((error) => {
                     this.alertShown = true;
                     let parser = new DOMParser();
                     this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-                }
+                })
+                .finally(async () => {
+                    // Ensure DOM updates are complete before scrolling
+                    await this.$nextTick();
 
-            }).catch((error) => {
-                this.alertShown = true;
-                let parser = new DOMParser();
-                this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-            }).finally(async () => {
-                // Ensure DOM updates are complete before scrolling
-                await this.$nextTick();
+                    let firstHighlight = document.getElementById('context-highlight-0');
 
-                let firstHighlight = document.getElementById('context-highlight-0');
+                    if (firstHighlight) {
+                        let scrollableParent = document.querySelector('.full-note-overlay');
+                        if (scrollableParent) {
+                            //account for the sticky header
+                            let header = document.querySelector('.header-white');
+                            let headerHeight = header ? header.clientHeight : 0;
+                            scrollableParent.scrollTop =
+                                firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
 
-                if (firstHighlight) {
-                    let scrollableParent = document.querySelector('.full-note-overlay');
-                    if (scrollableParent) {
-                        //account for the sticky header
-                        let header = document.querySelector('.header-white');
-                        let headerHeight = header ? header.clientHeight : 0;
-                        scrollableParent.scrollTop = firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
-
-                        //also add the scrolled class to the first highlight
-                        firstHighlight.classList.add('scrolled');
+                            //also add the scrolled class to the first highlight
+                            firstHighlight.classList.add('scrolled');
+                        }
                     }
-                }
 
-                let noteHTMLParent = document.getElementById('note-html-container');
-                noteHTMLParent.style.zIndex = 1;
+                    let noteHTMLParent = document.getElementById('note-html-container');
+                    noteHTMLParent.style.zIndex = 1;
 
-                //for sanity just remove all images from the note
-                noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
-            });
+                    //for sanity just remove all images from the note
+                    noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+                });
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
@@ -209,8 +225,8 @@ export default {
                         elem.setAttribute('id', `context-highlight-${scrollIndex}`);
                         elem.setAttribute('class', 'highlighted-context');
                         newScroll = true;
-
-                    } else if (jMatchIndex - iMatchIndex === 1) { // Two elements
+                    } else if (jMatchIndex - iMatchIndex === 1) {
+                        // Two elements
                         if (iMatch.parentPath === jMatch.parentPath) {
                             //They are in the same element but the text was split somehow
                             const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
@@ -218,7 +234,7 @@ export default {
                             if (!elem) return;
 
                             elem.setAttribute('id', `context-highlight-${scrollIndex}`);
-                            elem.setAttribute('class', 'highlighted-context')
+                            elem.setAttribute('class', 'highlighted-context');
                         } else {
                             const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
                             const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
@@ -256,7 +272,6 @@ export default {
                                 }
                                 lastPath = el.parentPath;
                             }
-
                         }
 
                         const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
@@ -294,7 +309,7 @@ export default {
                 while (i < textLength) {
                     let j, substring;
                     let matchedIndex = null;
-                    
+
                     for (const [contextIndex, context] of contextList.entries()) {
                         if (i + context.length > textLength - 1) {
                             substring = text.substring(i);
@@ -304,7 +319,8 @@ export default {
                             j = i + context.length;
                         }
 
-                        if (context.text === substring) {
+                        if (context.text === substring.replace(/[^0-9a-zA-Z]+/g, ' ')) {
+                            // We are mirroring the clinPhen cleaning that happens
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
@@ -312,11 +328,14 @@ export default {
                             // let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
                             let matchedStart = i;
 
-                            let iMatchIndex = map.findIndex((el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset);
+                            let iMatchIndex = map.findIndex(
+                                (el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset,
+                            );
                             let iMatch = map[iMatchIndex];
                             let jMatchIndex;
                             let jMatch;
-                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) { //The start and end are in the same element
+                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
+                                //The start and end are in the same element
                                 jMatchIndex = iMatchIndex;
                                 jMatch = map[jMatchIndex];
                             } else {
@@ -351,25 +370,27 @@ export default {
             }
 
             let newHtml = htmlDoc.cloneNode(true);
-            return _highlightInnerText(rawText, htmlDoc, htmlMapping).then((highlightedHtml) => {
-                newHtml = highlightedHtml;
+            return _highlightInnerText(rawText, htmlDoc, htmlMapping)
+                .then((highlightedHtml) => {
+                    newHtml = highlightedHtml;
 
-                //Grab all the highlights
-                let highlights = newHtml.querySelectorAll('.highlighted-context');
+                    //Grab all the highlights
+                    let highlights = newHtml.querySelectorAll('.highlighted-context');
 
-                //update all of the ids going 0-> n
-                highlights.forEach((highlight, index) => {
-                    highlight.setAttribute('id', `context-highlight-${index}`);
+                    //update all of the ids going 0-> n
+                    highlights.forEach((highlight, index) => {
+                        highlight.setAttribute('id', `context-highlight-${index}`);
+                    });
+
+                    this.lenOfIndexes = highlights.length;
+                    return newHtml.body.innerHTML;
+                })
+                .catch((error) => {
+                    console.error('Error highlighting inner text:', error);
+                    this.alertShown = true;
+                    // Fallback to the original HTML if highlighting fails
+                    return newHtml.body.innerHTML;
                 });
-
-                this.lenOfIndexes = highlights.length;
-                return newHtml.body.innerHTML;
-            }).catch((error) => {
-                console.error('Error highlighting inner text:', error);
-                this.alertShown = true;
-                // Fallback to the original HTML if highlighting fails
-                return newHtml.body.innerHTML;
-            });
         },
         getLevenshteinDistance(a, b) {
             if (a === b) return 0;
@@ -612,11 +633,11 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    border: .5px solid transparent;
+    border: 0.5px solid transparent;
 }
 
 .note-title-column:hover {
-    border: .5px solid #e2e2e2;
+    border: 0.5px solid #e2e2e2;
     border-radius: 5px;
     background-color: #f6f6f6;
     cursor: pointer;
