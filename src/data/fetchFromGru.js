@@ -119,7 +119,6 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
                 .then((response) => response.text())
                 .then((data) => {
                     hpoText = data;
-                    console.log('hpoText', hpoText);
 
                     //split the text on the new lines to get the rows
                     let theTextArray = hpoText.split('\n');

@@ -174,9 +174,6 @@ export default {
             this.lenOfIndexes = 0;
         },
         async highlightContexts(note) {
-            //Start a timer to see how long it takes to highlight
-            const startTime = performance.now();
-
             const htmlMapping = note.getHtmlMapping();
             const rawText = note.getText();
             const parser = new DOMParser();
@@ -306,20 +303,36 @@ export default {
                 });
 
                 while (i < textLength) {
-                    let j, substring;
+                    let j,
+                        substring,
+                        punctuationOffset = 0,
+                        cleanedSub;
                     let matchedIndex = null;
 
                     for (const [contextIndex, context] of contextList.entries()) {
                         if (i + context.length > textLength - 1) {
-                            substring = text.substring(i);
-                            j = textLength;
+                            // We can't match this context here because we are doing an exact match and we are at the end of the text
+                            continue;
                         } else {
                             substring = text.substring(i, i + context.length);
                             j = i + context.length;
+
+                            // Clean the substring by removing punctuation
+                            cleanedSub = substring.replace(/[^0-9a-zA-Z ]+/g, ' ').replace(/\s+/g, ' ');
+                            punctuationOffset = substring.length - cleanedSub.length;
+
+                            while (punctuationOffset > 0 && j + punctuationOffset < textLength) {
+                                let newChar = text.substring(j, j + punctuationOffset);
+                                let cleanedNewChar = newChar.replace(/[^0-9a-zA-Z ]+/g, ' ').replace(/\s+/g, ' ');
+
+                                cleanedSub = cleanedNewChar ? cleanedSub + cleanedNewChar : cleanedSub;
+                                punctuationOffset = context.length - cleanedSub.length;
+
+                                j += newChar.length;
+                            }
                         }
 
-                        if (context.text === substring.replace(/[^0-9a-zA-Z]+/g, '').trim()) {
-                            // We are mirroring the clinPhen cleaning that happens
+                        if (context.text === substring) {
                             matchedIndex = contextIndex;
 
                             isFirstHighlight = false;
@@ -359,11 +372,6 @@ export default {
                     }
                 }
                 self.alertShown = isFirstHighlight;
-
-                // End the timer and log the time taken
-                const endTime = performance.now();
-                const timeTaken = endTime - startTime;
-                console.log(`Highlighting took ${timeTaken} milliseconds`);
 
                 return highlightedHtml;
             }
