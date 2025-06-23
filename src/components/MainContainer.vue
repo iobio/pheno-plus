@@ -250,12 +250,53 @@ export default {
                                 this.hpoTermsObj[key].addToEarliness(earliness);
                                 this.hpoTermsObj[key].addToExampleSentences(clinPhenSen);
                             }
+
+                            let noteContexts = this.selectedNote.getContexts(key);
+                            if (noteContexts) {
+                                let alreadyInList = false;
+                                for (let i = 0; i < noteContexts.length; i++) {
+                                    let currContext = noteContexts[i].trim().toLowerCase();
+                                    //Check if the sentence is already in the list
+                                    if (currContext == clinPhenSen) {
+                                        //Dont add it again
+                                        alreadyInList = true;
+                                    }
+                                }
+                                if (!alreadyInList) {
+                                    //If this clinPhen sentence is not already in the list add it
+                                    this.selectedNote.addContext(key, clinPhenSen);
+                                }
+                            } else {
+                                this.selectedNote.addContext(key, clinPhenSen);
+                            }
                         }
 
                         //It technically shouldnt be possible to add the same note twice via the UI but there is a
                         //check on this method to prevent it from happening if it does
                         this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
                         continue;
+                    }
+                    
+                    for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                        let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
+                        let noteContexts = this.selectedNote.getContexts(key);
+                        if (noteContexts) {
+                            let alreadyInList = false;
+                            for (let i = 0; i < noteContexts.length; i++) {
+                                let currContext = noteContexts[i].trim().toLowerCase();
+                                //Check if the sentence is already in the list
+                                if (currContext == clinPhenSen) {
+                                    //Dont add it again
+                                    alreadyInList = true;
+                                }
+                            }
+                            if (!alreadyInList) {
+                                //If this clinPhen sentence is not already in the list add it
+                                this.selectedNote.addContext(key, clinPhenSen);
+                            }
+                        } else {
+                            this.selectedNote.addContext(key, clinPhenSen);
+                        }
                     }
 
                     //otherwise just add it to the list we haven't seen it before
