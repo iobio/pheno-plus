@@ -140,7 +140,6 @@ input[type='checkbox'] {
 .hpo-row-container.disabled {
     opacity: 0.5;
     color: grey;
-    text-decoration: line-through;
 }
 
 .delete-btn-span {
