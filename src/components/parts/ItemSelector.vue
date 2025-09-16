@@ -72,7 +72,7 @@
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        padding: 8px 2px 5px 2px;
+        padding: 8px 2px 5px 6px;
         margin: 0px;
         height: fit-content;
 

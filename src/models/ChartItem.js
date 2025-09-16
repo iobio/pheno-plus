@@ -54,7 +54,7 @@ class ChartItem {
         this.inheritance = 'unknown';
         this.mother = false;
         this.father = false;
-        this.use = true;
+        this.use = false;
     }
 
     //Getters

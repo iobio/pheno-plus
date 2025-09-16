@@ -138,9 +138,11 @@ input[type='checkbox'] {
     background-color: #e2e2e2;
 }
 .hpo-row-container.disabled {
-    opacity: 0.5;
-    color: grey;
-    text-decoration: line-through;
+    color: #3D3D3D;
+}
+.hpo-row-container.disabled > .phenotype-name-span {
+    font-style: italic;
+    opacity: 0.7;
 }
 
 .delete-btn-span {

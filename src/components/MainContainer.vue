@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div id="selector-view-container" :class="{ closed: !selectorViewOpen }">
+    <div id="selector-view-container" ref="selectorView" :class="{ closed: !selectorViewOpen }">
             <div class="open-close" @click="selectorViewOpen = !selectorViewOpen">
                 <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section" />
                 <img v-else src="../assets/dots-hz.svg" alt="open section" />
@@ -27,7 +27,11 @@
                 </div>
             </div>
 
-            <div class="content-title-wrapper item-selector" :class="{ closed: !selectorViewOpen, fullWidth: !noteContentOpen }">
+            <div
+                class="content-title-wrapper item-selector"
+                :class="{ closed: !selectorViewOpen, fullWidth: !noteContentOpen }"
+                :style="itemSelectorStyle"
+            >
                 <h3 @mouseenter="showNotesPulledTip = true" @mouseleave="showNotesPulledTip = false" id="item-selector-header">
                     Relevant EHR Notes ({{ notesNum }})
                 </h3>
@@ -55,7 +59,26 @@
                 <img v-if="noteContentOpen" src="../assets/close.svg" alt="close section" />
                 <img v-else src="../assets/dots-hz.svg" alt="open section" />
             </div>
-            <div class="content-title-wrapper view-info" :class="{ closed: !selectorViewOpen, closedWidth: !noteContentOpen }">
+            <!-- Draggable vertical splitter shown when both panes are open -->
+            <div
+                v-show="selectorViewOpen && noteContentOpen"
+                class="splitter"
+                :style="splitterStyle"
+                @mousedown="startDrag"
+                @touchstart.prevent="startDrag"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>arrow-left-right</title>
+                    <path d="M6.45,17.45L1,12L6.45,6.55L7.86,7.96L4.83,11H19.17L16.14,7.96L17.55,6.55L23,12L17.55,17.45L16.14,16.04L19.17,13H4.83L7.86,16.04L6.45,17.45Z" />
+                </svg>
+
+            </div>
+
+            <div
+                class="content-title-wrapper view-info"
+                :class="{ closed: !selectorViewOpen, closedWidth: !noteContentOpen }"
+                :style="viewInfoStyle"
+            >
                 <h3>Note Content Preview</h3>
                 <ViewInfo :note="selectedNote" @textChanged="changeTextContent"> </ViewInfo>
             </div>
@@ -136,6 +159,9 @@ export default {
             selectorViewOpen: true,
             noteContentOpen: false,
             fullWidthBoxOpen: false,
+            // Resizable panes state
+            selectorWidthPct: 30, // left pane width percentage
+            isDragging: false,
         };
     },
     async mounted() {},
@@ -393,6 +419,24 @@ export default {
         allNotesProcessed() {
             return this.notesAlreadyProcessed.length === this.notesList.length;
         },
+        // Dynamic inline styles for resizable panes
+        itemSelectorStyle() {
+            return this.noteContentOpen
+                ? { width: `${this.selectorWidthPct}%` }
+                : { width: '100%' };
+        },
+        viewInfoStyle() {
+            const rightPct = Math.max(0, 100 - this.selectorWidthPct);
+            return this.noteContentOpen
+                ? { width: `${rightPct}%`, minWidth: `${rightPct}%` }
+                : { width: '0%', minWidth: '0%' };
+        },
+        splitterStyle() {
+            return {
+                left: `calc(${this.selectorWidthPct}% )`,
+                cursor: 'col-resize',
+            };
+        },
     },
     watch: {
         isCheckedMapStart: function (val) {
@@ -413,6 +457,281 @@ export default {
                 }
             },
             deep: true,
+        },
+    },
+    methods: {
+        selectTerm(term) {
+            if (this.selectedTerm === null && term !== null) {
+                this.selectedTerm = term;
+                return;
+            } else if (term == null || this.selectedTerm.hpoId === term.hpoId) {
+                this.selectedTerm = null;
+                return;
+            } else {
+                this.selectedTerm = term;
+            }
+        },
+        selectNote(note) {
+            if (!this.selectedNote || this.selectedNote.id !== note.id) {
+                this.selectedNote = note;
+                this.noteContentOpen = true;
+            } else {
+                this.noteContentOpen = !this.noteContentOpen;
+            }
+        },
+        removeHpoTerm(id) {
+            if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
+                this.selectedTerm = null;
+            }
+            this.sortedHpoList = this.sortedHpoList.filter((item) => item[0] !== id);
+            delete this.hpoTermsObj[id];
+        },
+        updateHpoTerm(item) {
+            this.hpoTermsObj[item.getHpoId()] = item;
+
+            //we need to sort the list again incase
+            this.sortedHpoList = Object.values(this.hpoTermsObj)
+                .sort((a, b) => b.numOccurrences - a.numOccurrences)
+                .map((item) => [item.hpoId, item.numOccurrences]);
+
+            //Sort all the terms in the sorted list again and put any that have the 'use' property false to the bottom
+            let sortedToBottom = this.sortedHpoList.filter((item) => !this.hpoTermsObj[item[0]].getUse());
+            let sortedToTop = this.sortedHpoList.filter((item) => this.hpoTermsObj[item[0]].getUse());
+
+            this.sortedHpoList = sortedToTop.concat(sortedToBottom);
+        },
+        formatAndPopulateTerms() {
+            //Needs to populate the clipboard box with the terms
+            let terms = [];
+            for (let key in this.hpoTermsObj) {
+                let item = this.hpoTermsObj[key];
+                if (item.getUse()) {
+                    terms.push(item);
+                }
+            }
+            this.clipTerms = terms;
+        },
+        clearClipTerms() {
+            this.clipTerms = [];
+        },
+        clearAllTableTerms() {
+            //Clear all the terms from the table and open the selector view and close the full width box
+            this.fullWidthBoxOpen = false;
+            this.selectorViewOpen = true;
+
+            this.hpoTermsObj = {};
+            this.sortedHpoList = [];
+            this.notesAlreadyProcessed = [];
+            this.selectedTerm = null;
+        },
+        async processText() {
+            //If nothing is selected dont process
+            if (this.selectedNote === null) {
+                return;
+            }
+
+            //If the item has already been processed dont add it to the list again
+            if (!this.notesAlreadyProcessed.includes(this.selectedNote.id)) {
+                this.notesAlreadyProcessed.push(this.selectedNote.id);
+            } else {
+                return;
+            }
+
+            //Show the loading overlay
+            this.hideOverlay = false;
+            let gru_data = await fetchFromGru(this.selectedNoteTextContent);
+
+            if (gru_data) {
+                const clinPhen = gru_data.clinPhenData;
+                //Clinphen is an object of objects, each object is a term the key is the hpo id
+                for (let key in clinPhen) {
+                    if (this.hpoTermsObj[key]) {
+                        //clinPhen Example sentance is always an array, usually of one element but sometimes more
+                        for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                            let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
+                            //Any example sentence will have a corresponding earliness value
+                            let earliness = clinPhen[key]['Earliness (lower = earlier)'][i];
+
+                            let sentenceAlreadySeen = false;
+                            for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
+                                let currSen = this.hpoTermsObj[key].exampleSentences[i][0].trim().toLowerCase();
+                                //Check if the sentence is already in the list
+                                if (currSen == clinPhenSen) {
+                                    this.hpoTermsObj[key].addToTimesSeen(i);
+                                    sentenceAlreadySeen = true;
+                                }
+                            }
+
+                            if (!sentenceAlreadySeen) {
+                                //If this clinPhen sentence is not already in the list add it
+                                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
+
+                                //Use the singular adding methods to add the earliness and example sentence
+                                this.hpoTermsObj[key].addToEarliness(earliness);
+                                this.hpoTermsObj[key].addToExampleSentences(clinPhenSen);
+                            }
+
+                            let noteContexts = this.selectedNote.getContexts(key);
+                            if (noteContexts) {
+                                let alreadyInList = false;
+                                for (let i = 0; i < noteContexts.length; i++) {
+                                    let currContext = noteContexts[i].trim().toLowerCase();
+                                    //Check if the sentence is already in the list
+                                    if (currContext == clinPhenSen) {
+                                        //Dont add it again
+                                        alreadyInList = true;
+                                    }
+                                }
+                                if (!alreadyInList) {
+                                    //If this clinPhen sentence is not already in the list add it
+                                    this.selectedNote.addContext(key, clinPhenSen);
+                                }
+                            } else {
+                                this.selectedNote.addContext(key, clinPhenSen);
+                            }
+                        }
+
+                        //It technically shouldnt be possible to add the same note twice via the UI but there is a
+                        //check on this method to prevent it from happening if it does
+                        this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
+                        continue;
+                    }
+                    
+                    for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
+                        let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
+                        let noteContexts = this.selectedNote.getContexts(key);
+                        if (noteContexts) {
+                            let alreadyInList = false;
+                            for (let i = 0; i < noteContexts.length; i++) {
+                                let currContext = noteContexts[i].trim().toLowerCase();
+                                //Check if the sentence is already in the list
+                                if (currContext == clinPhenSen) {
+                                    //Dont add it again
+                                    alreadyInList = true;
+                                }
+                            }
+                            if (!alreadyInList) {
+                                //If this clinPhen sentence is not already in the list add it
+                                this.selectedNote.addContext(key, clinPhenSen);
+                            }
+                        } else {
+                            this.selectedNote.addContext(key, clinPhenSen);
+                        }
+                    }
+
+                    //otherwise just add it to the list we haven't seen it before
+                    let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
+                    this.hpoTermsObj[key] = item;
+                }
+
+                let sortedTerms = Object.values(this.hpoTermsObj)
+                    .sort((a, b) => b.numOccurrences - a.numOccurrences)
+                    .map((item) => [item.hpoId, item.numOccurrences]);
+
+                let sortedToBottom = sortedTerms.filter((item) => !this.hpoTermsObj[item[0]].getUse());
+                let sortedToTop = sortedTerms.filter((item) => this.hpoTermsObj[item[0]].getUse());
+                sortedTerms = sortedToTop.concat(sortedToBottom);
+
+                this.sortedHpoList = sortedTerms;
+                this.hideOverlay = true;
+                this.selectorViewOpen = false;
+            } else {
+                this.hideOverlay = true;
+                this.selectorViewOpen = false;
+            }
+        },
+        async processTextAll() {
+            //For each of the notes in the notes list process the text
+            for (let note of this.notesList) {
+                //Call the process text function
+                if (this.isCheckedMap[note.id] == false) {
+                    continue;
+                } else {
+                    this.selectedNote = note;
+                    this.selectedNoteTextContent = note.text;
+                    await this.processText();
+                }
+            }
+        },
+        changeTextContent(textContent) {
+            this.selectedNoteTextContent = textContent;
+        },
+        updateIsCheckedMap(noteId) {
+            this.isCheckedMap[noteId] = !this.isCheckedMap[noteId];
+
+            if (this.isCheckedMap[noteId] == false) {
+                this.allChecked = false;
+            } else {
+                let allChecked = true;
+                for (let note of this.notesList) {
+                    if (this.isCheckedMap[note.id] == false) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                this.allChecked = allChecked;
+            }
+        },
+        checkAll() {
+            for (let note of this.notesList) {
+                this.isCheckedMap[note.id] = true;
+            }
+            this.allChecked = true;
+        },
+        uncheckAll() {
+            for (let note of this.notesList) {
+                this.isCheckedMap[note.id] = false;
+            }
+            this.allChecked = false;
+        },
+        checkForChecked() {
+            for (let note of this.notesList) {
+                if (Object.keys(this.isCheckedMap).length == 0) {
+                    return true;
+                }
+                if (this.isCheckedMap[note.id] == true) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        addTermFromUser(term) {
+            this.hpoTermsObj[term.hpoId] = term;
+            this.sortedHpoList = Object.values(this.hpoTermsObj)
+                .sort((a, b) => b.numOccurrences - a.numOccurrences)
+                .map((item) => [item.hpoId, item.numOccurrences]);
+        },
+        // Drag handling for resizable panes
+        startDrag(e) {
+            this.isDragging = true;
+            const move = (ev) => this.onDrag(ev);
+            const up = () => this.stopDrag(move, up);
+            window.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', up);
+            window.addEventListener('touchmove', move, { passive: false });
+            window.addEventListener('touchend', up);
+            document.body.style.cursor = 'col-resize';
+        },
+        onDrag(e) {
+            if (!this.isDragging || !this.$refs.selectorView) return;
+            const getX = (evt) => (evt.touches ? evt.touches[0].clientX : evt.clientX);
+            const rect = this.$refs.selectorView.getBoundingClientRect();
+            const x = getX(e) - rect.left;
+            let pct = (x / rect.width) * 100;
+            // Clamp so neither pane collapses too far
+            const minLeft = 15; // min 15% for left
+            const maxLeft = 85; // max 85% for left
+            pct = Math.max(minLeft, Math.min(maxLeft, pct));
+            this.selectorWidthPct = pct;
+            e.preventDefault?.();
+        },
+        stopDrag(move, up) {
+            this.isDragging = false;
+            window.removeEventListener('mousemove', move);
+            window.removeEventListener('mouseup', up);
+            window.removeEventListener('touchmove', move);
+            window.removeEventListener('touchend', up);
+            document.body.style.cursor = '';
         },
     },
 };
@@ -611,7 +930,7 @@ h3 {
 /* Default state: item-selector takes 30%, view-info takes 70% */
 .content-title-wrapper.item-selector {
     width: 30%; /* Default width */
-    transition: width 0.3s ease-in-out; /* Transition based on flex-basis */
+    transition: width 0.1s linear; /* Smooth resize while dragging */
 }
 
 .content-title-wrapper.view-info {
@@ -620,8 +939,8 @@ h3 {
     overflow-x: hidden;
     overflow-y: hidden;
     transition:
-        width 0.3s ease-in-out,
-        min-width 0.3s ease-in-out; /* Transition based on flex-basis */
+        width 0.1s linear,
+        min-width 0.1s linear; /* Smooth resize while dragging */
 }
 
 /* When view-info is closed, item-selector should take 100%, and view-info should collapse */
@@ -736,5 +1055,44 @@ h3 {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Draggable vertical splitter */
+#selector-view-container {
+    position: relative; /* ensure splitter is positioned correctly */
+}
+
+#selector-view-container .splitter {
+    position: absolute;
+    overflow: visible;
+    top: 45%;
+    bottom: 0;
+    width: 6px;
+    transform: translateX(1px); /* center on boundary */
+    background-color: rgba(0, 113, 189, 1);
+    border: 1px solid rgba(0, 113, 189, 1);
+    z-index: 2; /* below the open-close controls (z-index: 3) */
+    cursor: col-resize;
+    height: 10%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#selector-view-container .splitter:hover {
+    background-color: rgba(0, 113, 189, 0.8);
+}
+
+#selector-view-container .splitter > svg {
+    pointer-events: none; /* allow dragging through the SVG */
+    height: 15px;
+    width: 15px;
+    min-height: 15px;
+    min-width: 15px;
+    background-color:rgba(0, 113, 189, 1);
+    border-radius: 50%;
+    padding: 1px;
+    fill: white;
 }
 </style>
