@@ -1,6 +1,9 @@
 # Pheno-Plus
 Pheno-Plus is a SMART on FHIR application designed to streamline phenotype extraction from electronic health records (EHR). It enables users to select relevant clinical notes, extract phenotype terms using ClinPhen, review terms in context, and curate a final phenotype list in multiple formats.
 
+## Configuration
+- **User whitelist**: The app restricts access by user ID. Copy `public/whiteList.example.json` to `public/whiteList.json` and add your environment’s user IDs and display names (key = user ID, value = display name). `whiteList.json` is gitignored.
+
 <b>Data shown is only demo data.</b>
 <img width="1815" alt="Screenshot 2025-02-10 at 10 48 34 AM" src="https://github.com/user-attachments/assets/6a20b0a4-135c-4c3d-b6ff-6acfea7eb4cb" />
 

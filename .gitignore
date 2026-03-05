@@ -32,3 +32,7 @@ testing
 
 #Any files named notes
 notes.txt
+
+# ignore whiteList.json
+whiteList.json
+whiteList.PRIVATE.json
