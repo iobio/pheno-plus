@@ -1,0 +1,64 @@
+// [MermaidChart: 4bf73a03-b701-4772-bf95-c6daba15becd]
+// [MermaidChart: 4a41b667-948b-4a33-9f1a-c61bd232904b]
+// [MermaidChart: 4a41b667-948b-4a33-9f1a-c61bd232904b]
+flowchart TB
+    subgraph runtime["Runtime"]
+        node["Node.js\n(runs npm and Vite on your machine)"]
+    end
+
+    subgraph phase1["Phase 1: npm install"]
+        pkg["package.json\n(dependencies, scripts)"]
+        npm_install["npm install\n(run on Node)"]
+        reg["npm registry"]
+        nm["node_modules/\n(vue, sql.js, ...)\nESM + CommonJS"]
+        lock["package-lock.json"]
+        pkg --> npm_install
+        npm_install --> reg
+        reg --> nm
+        npm_install --> lock
+    end
+
+    subgraph declared["How dependencies are declared in code"]
+        src_file["Source: main.js or App.vue"]
+        import_line["import Vue from 'vue'\nimport App from '@/App.vue'\n(import = declare dependency)"]
+        resolve["Vite resolves 'vue' → node_modules/vue\n'@/...' → src/... (alias)"]
+        src_file --> import_line
+        import_line --> resolve
+        nm -.-> resolve
+    end
+
+    subgraph phase2a["Phase 2a: npm run dev (development)"]
+        npm_dev["npm run dev\n(runs script: vite)"]
+        vite_dev["Vite dev server\n(Node HTTP server, e.g. port 3002)"]
+        html_dev["index.html\n&lt;script type=module src=/src/main.js&gt;"]
+        browser_dev["Browser loads HTML → requests /src/main.js\nDev server transforms on the fly, resolves imports\n(no single build.js; many small module requests)"]
+        node --> npm_dev
+        npm_dev --> vite_dev
+        vite_dev --> html_dev
+        html_dev --> browser_dev
+    end
+
+    subgraph phase2b["Phase 2b: npm run build (production)"]
+        npm_build["npm run build\n(runs script: vite build)"]
+        vite_build["Vite: transform + Rollup bundle + minify"]
+        dist_dir["dist/\nindex.html\nassets/index-[hash].js\nassets/index-[hash].css"]
+        html_prod["dist/index.html\n&lt;script src=/launch/assets/index-xxx.js&gt;\n(HTML points to bundled build.js)"]
+        node --> npm_build
+        npm_build --> vite_build
+        vite_build --> dist_dir
+        dist_dir --> html_prod
+    end
+
+    node --> npm_install
+    node --> npm_dev
+    node --> npm_build
+    nm --> vite_build
+    src_file --> vite_build
+    resolve --> vite_dev
+
+    style runtime fill:#ffecb3
+    style phase1 fill:#e1f5fe
+    style declared fill:#f3e5f5
+    style phase2a fill:#e8f5e9
+    style phase2b fill:#e8f5e9
+    style node fill:#ffd54f
