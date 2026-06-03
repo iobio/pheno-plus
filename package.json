@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "sql.js": "^1.10.3",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "fhirclient": "^2.6.3"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.2",

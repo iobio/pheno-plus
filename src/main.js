@@ -1,4 +1,5 @@
 import './assets/base.css';
+import FHIR from 'fhirclient';
 import { createApp } from 'vue'
 import App from './App.vue'
 import { loadWhiteList, userHasAccess } from './config/whiteListAccess.js';
