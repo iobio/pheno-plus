@@ -29,6 +29,14 @@ Pheno-Plus is a SMART on FHIR application designed to streamline phenotype extra
 
 ![Copy and export phenotype list](./docs/screenshots/copy-export.png)
 
+## Automated tests
+
+Vitest unit and integration tests run without Epic or SMART OAuth. See [docs/testing.md](./docs/testing.md) for a walkthrough of the example tests.
+
+```bash
+npm test
+```
+
 ## Local install (standalone app)
 
 1. **Install dependencies**

@@ -1,38 +1,11 @@
 import ClinicalNote from '@/models/ClinicalNote';
 import { configUrl } from '@/config/configLoader.js';
-
-const LOINC_SYSTEM = 'http://loinc.org';
-
-const LOINC_CODES_CORE = [
-    '18842-5', // Discharge Summary
-    '11488-4', // Consult Note
-    '34117-2'  // History and Physical Note 
-    ];
-const DOC_STATUS_CODES = ['preliminary', 'final', 'amended'];
-    
-const LOINC_CODE_PROGRESS_NOTE = '11506-3';
-const PROGRESS_NOTE_TYPES_QUALIFYING = ['progress notes'];
-
-function tokenSearchParam(system, code) {
-    return encodeURIComponent(`${system}|${code}`);
-}
-
-function buildDocumentSearchUrl(patientId, loincCodes, { category = null } = {}) {
-    const typeParam = loincCodes.map((code) => tokenSearchParam(LOINC_SYSTEM, code)).join(',');
-    let url =
-        '/DocumentReference?patient=' +
-        patientId +
-        '&docstatus=' +
-        DOC_STATUS_CODES.join(',') +
-        '&type=' +
-        typeParam;
-
-    if (category) {
-        url += '&category=' + encodeURIComponent(category);
-    }
-
-    return url;
-}
+import {
+    buildDocumentSearchUrl,
+    LOINC_CODE_PROGRESS_NOTE,
+    LOINC_CODES_CORE,
+} from '@/data/fhir/documentReferenceSearch.js';
+import { filterProgressNoteEntry } from '@/data/fhir/progressNoteFilter.js';
 
 async function fetchAllDocumentEntries(client, patientId) {
     const [coreNotes, progressNotes] = await Promise.all([
@@ -235,15 +208,17 @@ async function fetchEntries(client, url, filterEntry = null) {
 
         noteEnteries = noteEnteries.concat(noteSearchData.entry);
 
-        let links = noteSearchData.link || [];
-        for (let link of links) {
+        const links = noteSearchData.link || [];
+        let hasNext = false;
+        for (const link of links) {
             if (link.relation == 'next') {
-                // If there is a next page of notes, then we need to fetch that page as well
                 followUrl = link.url;
+                hasNext = true;
                 break;
-            } else {
-                noNext = true;
             }
+        }
+        if (!hasNext) {
+            noNext = true;
         }
     }
 
@@ -385,48 +360,6 @@ function isProgressNote(resource) {
             coding.code === LOINC_CODE_PROGRESS_NOTE &&
             (coding.system === 'http://loinc.org' || coding.system === 'http%3A//loinc.org'),
     );
-}
-
-function noteType(resource) {
-    return (resource?.type?.text || '').trim();
-}
-
-/**
- * Client-side filter for the progress-note DocumentReference query.
- * Epic cannot exclude note kinds by type.text in search, so we drop unwanted
- * matches (e.g. Telephone Encounter) after the bundle is returned.
- *
- * Search results arrive as a FHIR Bundle. Each element in `entry` wraps one
- * EHR note; the note itself is on `resource` (a DocumentReference):
- *
- *   {
- *     entry: [
- *       {
- *         fullUrl: "…/DocumentReference/abc",
- *         resource: {                    // ← one note in the EHR
- *           resourceType: "DocumentReference",
- *           type: { text: "Progress Notes", coding: […] },
- *           docStatus: "final",
- *           content: [{ attachment: { url: "…/Binary/…" } }],
- *           …
- *         }
- *       },
- *       …
- *     ]
- *   }
- *
- * @param {object} entry - One bundle entry from DocumentReference search
- * @returns {boolean} true to keep the note
- */
-function filterProgressNoteEntry(entry) {
-    const progressNote = entry?.resource;
-    if (!progressNote) {
-        return false;
-    }
-
-    const typeText = noteType(progressNote).toLowerCase();
-    // Return true if the note type is in the list of qualifying types
-    return PROGRESS_NOTE_TYPES_QUALIFYING.some((pattern) => typeText.includes(pattern));
 }
 
 /**

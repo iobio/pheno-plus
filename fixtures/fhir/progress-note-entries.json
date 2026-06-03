@@ -1,0 +1,27 @@
+[
+  {
+    "resource": {
+      "resourceType": "DocumentReference",
+      "id": "progress-1",
+      "date": "2024-06-01T12:00:00Z",
+      "type": {
+        "text": "Progress Notes",
+        "coding": [{ "system": "http://loinc.org", "code": "11506-3", "display": "Progress note" }]
+      },
+      "docStatus": "final",
+      "author": [{ "type": "Practitioner", "display": "Jane Doe, MD" }],
+      "content": [{ "attachment": { "url": "Binary/progress-1-html" } }]
+    }
+  },
+  {
+    "resource": {
+      "resourceType": "DocumentReference",
+      "id": "phone-1",
+      "date": "2024-06-02T12:00:00Z",
+      "type": { "text": "Telephone Encounter" },
+      "docStatus": "final",
+      "author": [{ "type": "Practitioner", "display": "Jane Doe, MD" }],
+      "content": [{ "attachment": { "url": "Binary/phone-1-html" } }]
+    }
+  }
+]
