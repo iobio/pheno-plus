@@ -1,5 +1,18 @@
 class ClinicalNote {
-    constructor(id, date, encounterId, binaryUrl, text=null, title=null, html=null, htmlMapping=null, contexts={}) {
+    constructor(
+        id,
+        date,
+        encounterId,
+        binaryUrl,
+        text = null,
+        title = null,
+        html = null,
+        htmlMapping = null,
+        contexts = {},
+        isProgressNote = false,
+        noteType = null,
+        provider = null,
+    ) {
         this.id = id;
         this.date = date;
         this.encounterId = encounterId;
@@ -9,6 +22,9 @@ class ClinicalNote {
         this.html = html;
         this.htmlMapping = htmlMapping;
         this.contexts = contexts;
+        this.isProgressNote = isProgressNote;
+        this.noteType = noteType;
+        this.provider = provider;
     }
 
     //setters

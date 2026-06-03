@@ -1,0 +1,26 @@
+{
+  "hosts": {
+    "localhost":                      "local",
+    "127.0.0.1":                      "local",
+    "pheno-stage.yourdomain.org":     "staging",
+    "pheno-prod.yourdomain.org":      "production"
+  },
+  "environments": {
+    "local": {
+      "enforceWhiteList": false, 
+      "bypassFHIR":       true,         
+      "clientId":         "",            
+      "redirectUri":      ""         
+    },
+    "staging": {
+      "enforceWhiteList": false, 
+      "clientId":         "YOUR-STAGING-EPIC-CLIENT-ID",
+      "redirectUri":      "https://pheno-stage.yourdomain.org/oauth2/redirect" 
+    },
+    "production": {
+      "enforceWhiteList": false,
+      "clientId":         "YOUR-PRODUCTION-EPIC-CLIENT-ID",
+      "redirectUri":      "https://pheno-prod.yourdomain.org/oauth2/redirect"
+    }
+  }
+}

@@ -118,18 +118,15 @@ export default {
             this.$emit('selectTerm', term);
         },
         async loadSqlDb() {
-            let prefix = '/phenoplus/oauth2/redirect';
-            if (this.$isProduction) {
-                prefix = '/launch';
-            }
+            const assetBase = import.meta.env.BASE_URL;
             // Load the wasm file
             const SQL = await initSqlJs({
                 // the WASM is just in the public folder
-                locateFile: (file) => `${prefix}/sql-wasm.wasm`,
+                locateFile: (file) => `${assetBase}${file}`,
             });
 
             // Fetch the db file called mini_hpo.db in the public folder
-            const response = await fetch(`${prefix}/mini_hpo.db`);
+            const response = await fetch(`${assetBase}mini_hpo.db`);
             const buffer = await response.arrayBuffer();
             this.hpoDb = new SQL.Database(new Uint8Array(buffer));
         },

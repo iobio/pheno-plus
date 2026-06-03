@@ -1,6 +1,73 @@
 import ClinicalNote from '@/models/ClinicalNote';
+import { configUrl } from '@/config/configLoader.js';
 
-export default async function fetchNotes(client, patientId) {
+const LOINC_SYSTEM = 'http://loinc.org';
+
+const LOINC_CODES_CORE = [
+    '18842-5', // Discharge Summary
+    '11488-4', // Consult Note
+    '34117-2'  // History and Physical Note 
+    ];
+const DOC_STATUS_CODES = ['preliminary', 'final', 'amended'];
+    
+const LOINC_CODE_PROGRESS_NOTE = '11506-3';
+const PROGRESS_NOTE_TYPES_QUALIFYING = ['progress notes'];
+
+function tokenSearchParam(system, code) {
+    return encodeURIComponent(`${system}|${code}`);
+}
+
+function buildDocumentSearchUrl(patientId, loincCodes, { category = null } = {}) {
+    const typeParam = loincCodes.map((code) => tokenSearchParam(LOINC_SYSTEM, code)).join(',');
+    let url =
+        '/DocumentReference?patient=' +
+        patientId +
+        '&docstatus=' +
+        DOC_STATUS_CODES.join(',') +
+        '&type=' +
+        typeParam;
+
+    if (category) {
+        url += '&category=' + encodeURIComponent(category);
+    }
+
+    return url;
+}
+
+async function fetchAllDocumentEntries(client, patientId) {
+    const [coreNotes, progressNotes] = await Promise.all([
+        fetchEntries(client, buildDocumentSearchUrl(patientId, LOINC_CODES_CORE, { category: 'clinical-note' })),
+        fetchEntries(
+            client,
+            buildDocumentSearchUrl(patientId, [LOINC_CODE_PROGRESS_NOTE]),
+            filterProgressNoteEntry,
+        ),
+    ]);
+
+    return [...coreNotes, ...progressNotes];
+}
+
+/** Pass as notesOverride to fetchNotes() to load dummy notes from fixtures/dummyNotes.json (dev only). */
+export const USE_DUMMY_NOTES = true;
+
+/**
+ * Fetch clinical notes for the active patient.
+ * @param {object|null} client - FHIR client (required for live fetch)
+ * @param {string|null} patientId - FHIR patient id (required for live fetch)
+ * @param {Array|boolean|null|undefined} notesOverride -
+ *   Pass USE_DUMMY_NOTES (true) for dummy notes from dummyNotes.json, a ClinicalNote[] to return custom fixtures,
+ *   or omit/null for live FHIR fetch.
+ */
+export default async function fetchNotes(client, patientId, notesOverride) {
+    if (notesOverride === USE_DUMMY_NOTES) {
+        const dummyNotes = await loadDummyNotes();
+        return { notesList: dummyNotes, totalNotes: dummyNotes.length };
+    }
+
+    if (Array.isArray(notesOverride)) {
+        return { notesList: notesOverride, totalNotes: notesOverride.length };
+    }
+
     /**
      * This function will
      * 1. Fetch all the notes from the database
@@ -9,61 +76,22 @@ export default async function fetchNotes(client, patientId) {
      * 4. The function will return an array of ClinicalNote objects and the number of notes generated
      */
 
-    let docSearchUrl =
-        '/DocumentReference?patient=' +
-        patientId +
-        '&docstatus=preliminary,final,amended&type=http%3A//loinc.org|18842-5,http%3A//loinc.org|11488-4,http%3A//loinc.org|34117-2';
-
     let notes = null;
     try {
-        notes = await fetchEntries(client, docSearchUrl);
+        notes = await fetchAllDocumentEntries(client, patientId);
     } catch (error) {
         //no notes found
         console.error('Error fetching notes');
     }
 
-    var notesList = [];
+    const fetchedNotes = [];
     let totalNotes = 0;
     //Check to make sure the noteSearchData is not null and that there are entries
     if (notes) {
-        let skippedNotesCode = 0;
-        let skippedNotesLoinc = 0;
         let skippedNotesNurse = 0;
 
         totalNotes = notes.length;
         outer: for (let note of notes) {
-            // Get the code of the note
-            let noteCode =
-                (note.resource &&
-                    note.resource.category &&
-                    note.resource.category[0] &&
-                    note.resource.category[0].coding &&
-                    note.resource.category[0].coding[0] &&
-                    note.resource.category[0].coding[0].code) ||
-                null;
-            let codingArray = (note.resource && note.resource.type && note.resource.type.coding) || null;
-            let isLoinc = false;
-
-            if (codingArray) {
-                for (let coding of codingArray) {
-                    if (coding.system == 'http://loinc.org' || coding.system == 'http%3A//loinc.org') {
-                        isLoinc = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!isLoinc) {
-                skippedNotesLoinc++;
-                continue; // Skip this note if it is not a LOINC code
-            }
-
-            // Only pull notes with the code "clinical-note" can be changed if there are other types that should be pulled
-            if (noteCode == null || noteCode != 'clinical-note') {
-                skippedNotesCode++;
-                continue; // Skip this note if it is not a clinical note
-            }
-
             let customExts = (note.resource && note.resource.context && note.resource.context.extension) || null;
             if (customExts == null) {
                 //it is okay to just proccess this note
@@ -110,41 +138,37 @@ export default async function fetchNotes(client, patientId) {
                 null;
 
             // Build the components of the note title
-            let author =
-                (note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].display) || null;
-            let type = (note.resource && note.resource.type && note.resource.type.text) || null;
+            const authorFromReference = getDocumentAuthorFromReference(note.resource);
+            let author = authorFromReference || getDocumentAuthorDisplay(note.resource);
+            let type = getDocumentTypeText(note.resource);
 
-            //try to get the practitioer role form the reference on author
-            let practitionerSearch = null;
-            let practitionerId =
-                (note.resource && note.resource.author && note.resource.author[0] && note.resource.author[0].reference) || null;
-            practitionerId = practitionerId.replace('Practitioner/', '');
-            let practitionerRole = 'Not Found';
-            try {
-                practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
-                practitionerRole =
-                    (practitionerSearch &&
-                        practitionerSearch.entry &&
-                        practitionerSearch.entry[0] &&
-                        practitionerSearch.entry[0].resource &&
-                        practitionerSearch.entry[0].resource.specialty &&
-                        practitionerSearch.entry[0].resource.specialty[0] &&
-                        practitionerSearch.entry[0].resource.specialty[0].text) ||
-                    'Not Found';
-            } catch (error) {
-                //If there is an dont do anything
+            // Progress notes (and others) carry author on DocumentReference.author; use display as-is.
+            let practitionerRole = null;
+            if (!authorFromReference) {
+                const practitionerRef = getPractitionerReference(note.resource);
+                if (practitionerRef) {
+                    const practitionerId = practitionerRef.replace('Practitioner/', '');
+                    try {
+                        const practitionerSearch = await client.request('/PractitionerRole?practitioner=' + practitionerId);
+                        practitionerRole =
+                            (practitionerSearch &&
+                                practitionerSearch.entry &&
+                                practitionerSearch.entry[0] &&
+                                practitionerSearch.entry[0].resource &&
+                                practitionerSearch.entry[0].resource.specialty &&
+                                practitionerSearch.entry[0].resource.specialty[0] &&
+                                practitionerSearch.entry[0].resource.specialty[0].text) ||
+                            null;
+                    } catch (error) {
+                        // Role lookup is optional
+                    }
+                }
             }
 
-            let titleDate = noteDate.slice(0, 10);
-
-            // Build the note title
-            if (type && author && titleDate) {
-                // If all the components are present then build the note title
-                var noteTitle = `${type}: ${author} (${practitionerRole}) [${titleDate}]`;
-            } else {
-                // If any of the components are missing then set the note title to null
-                var noteTitle = 'No title.';
-            }
+            let titleDate = noteDate ? noteDate.slice(0, 10) : null;
+            const providerLabel =
+                author && practitionerRole ? `${author} (${practitionerRole})` : author || null;
+            let noteTitle = buildNoteTitle(type, author, practitionerRole, titleDate);
 
             let noteContent = null;
             let textNodeMap = null;
@@ -175,15 +199,20 @@ export default async function fetchNotes(client, patientId) {
                 noteTitle,
                 updatedHtml,
                 textNodeMap,
+                {},
+                isProgressNote(note.resource),
+                type,
+                providerLabel,
             );
-            notesList.push(noteObj);
+            fetchedNotes.push(noteObj);
         }
     }
-    return { notesList: notesList, totalNotes: totalNotes };
+    return { notesList: fetchedNotes, totalNotes: totalNotes };
 }
 
 // Function to repeatedly fetch the next page of notes and concatenate the entry arrays
-async function fetchEntries(client, url) {
+/** @param {(entry: object) => boolean} [filterEntry] - Keep entries where this returns true. */
+async function fetchEntries(client, url, filterEntry = null) {
     let noNext = false;
     let followUrl = url;
     let noteEnteries = [];
@@ -196,11 +225,12 @@ async function fetchEntries(client, url) {
             //make sure that the search data has an entry
             if (!noteSearchData.entry || noteSearchData.entry.length == 0) {
                 noNext = true;
-                return noteEnteries;
+                return filterEntry ? noteEnteries.filter(filterEntry) : noteEnteries;
             }
         } catch (error) {
+            console.error('DocumentReference search failed:', followUrl, error);
             noNext = true;
-            return noteEnteries;
+            return filterEntry ? noteEnteries.filter(filterEntry) : noteEnteries;
         }
 
         noteEnteries = noteEnteries.concat(noteSearchData.entry);
@@ -216,7 +246,8 @@ async function fetchEntries(client, url) {
             }
         }
     }
-    return noteEnteries;
+
+    return filterEntry ? noteEnteries.filter(filterEntry) : noteEnteries;
 }
 
 function _pullTextContent(html) {
@@ -342,4 +373,207 @@ function _cleanText(text) {
     cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
 
     return cleaned.trim(); // Trim leading and trailing whitespace
+}
+
+function getTypeCodings(resource) {
+    return (resource && resource.type && resource.type.coding) || [];
+}
+
+function isProgressNote(resource) {
+    return getTypeCodings(resource).some(
+        (coding) =>
+            coding.code === LOINC_CODE_PROGRESS_NOTE &&
+            (coding.system === 'http://loinc.org' || coding.system === 'http%3A//loinc.org'),
+    );
+}
+
+function noteType(resource) {
+    return (resource?.type?.text || '').trim();
+}
+
+/**
+ * Client-side filter for the progress-note DocumentReference query.
+ * Epic cannot exclude note kinds by type.text in search, so we drop unwanted
+ * matches (e.g. Telephone Encounter) after the bundle is returned.
+ *
+ * Search results arrive as a FHIR Bundle. Each element in `entry` wraps one
+ * EHR note; the note itself is on `resource` (a DocumentReference):
+ *
+ *   {
+ *     entry: [
+ *       {
+ *         fullUrl: "…/DocumentReference/abc",
+ *         resource: {                    // ← one note in the EHR
+ *           resourceType: "DocumentReference",
+ *           type: { text: "Progress Notes", coding: […] },
+ *           docStatus: "final",
+ *           content: [{ attachment: { url: "…/Binary/…" } }],
+ *           …
+ *         }
+ *       },
+ *       …
+ *     ]
+ *   }
+ *
+ * @param {object} entry - One bundle entry from DocumentReference search
+ * @returns {boolean} true to keep the note
+ */
+function filterProgressNoteEntry(entry) {
+    const progressNote = entry?.resource;
+    if (!progressNote) {
+        return false;
+    }
+
+    const typeText = noteType(progressNote).toLowerCase();
+    // Return true if the note type is in the list of qualifying types
+    return PROGRESS_NOTE_TYPES_QUALIFYING.some((pattern) => typeText.includes(pattern));
+}
+
+/**
+ * Author on DocumentReference.author when type is Practitioner, e.g.
+ * { reference: "Practitioner/…", type: "Practitioner", display: "Courtney Claire MacLean, MD" }
+ */
+function getDocumentAuthorFromReference(resource) {
+    const authors = (resource && resource.author) || [];
+    for (const author of authors) {
+        const isPractitioner =
+            author.type === 'Practitioner' ||
+            (author.reference && author.reference.startsWith('Practitioner/'));
+        if (isPractitioner && author.display) {
+            return author.display;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Author fallback for note types that populate extension-based author fields.
+ */
+function getDocumentAuthorDisplay(resource) {
+    const fromReference = getDocumentAuthorFromReference(resource);
+    if (fromReference) {
+        return fromReference;
+    }
+
+    const extensions = (resource && resource.extension) || [];
+    for (const ext of extensions) {
+        if (ext.valueReference && ext.valueReference.display) {
+            return ext.valueReference.display;
+        }
+        if (ext.valueHumanName && ext.valueHumanName.text) {
+            return ext.valueHumanName.text;
+        }
+    }
+
+    return null;
+}
+
+function getPractitionerReference(resource) {
+    const authors = (resource && resource.author) || [];
+    for (const author of authors) {
+        if (author.reference && author.reference.startsWith('Practitioner/')) {
+            return author.reference;
+        }
+    }
+
+    return null;
+}
+
+function getDocumentTypeText(resource) {
+    if (resource && resource.type && resource.type.text) {
+        return resource.type.text;
+    }
+
+    if (isProgressNote(resource)) {
+        return 'Progress note';
+    }
+
+    const loincCoding = getTypeCodings(resource).find(
+        (coding) => coding.system === 'http://loinc.org' || coding.system === 'http%3A//loinc.org',
+    );
+    return (loincCoding && loincCoding.display) || null;
+}
+
+function buildNoteTitle(type, author, practitionerRole, titleDate) {
+    if (!author && !type && !titleDate) {
+        return 'No title.';
+    }
+
+    const authorLabel =
+        author && practitionerRole ? `${author} (${practitionerRole})` : author || null;
+
+    const parts = [type, authorLabel, titleDate ? `[${titleDate}]` : null].filter(Boolean);
+    return parts.join(': ');
+}
+
+async function loadDummyNotes() {
+    const response = await fetch(configUrl('dummyNotes.json'));
+    if (!response.ok) {
+        throw new Error(`Failed to load dummy notes: HTTP ${response.status}`);
+    }
+
+    const records = await response.json();
+    if (!Array.isArray(records)) {
+        throw new Error('dummyNotes.json must be a JSON array');
+    }
+
+    return records.map(clinicalNoteFromRecord);
+}
+
+function parseDisplayTitle(title) {
+    if (!title) {
+        return { noteType: null, provider: null };
+    }
+
+    const dashIdx = title.indexOf(' - ');
+    if (dashIdx !== -1) {
+        return {
+            noteType: title.slice(0, dashIdx).trim(),
+            provider: title.slice(dashIdx + 3).trim(),
+        };
+    }
+
+    const parts = title.split(': ').filter(Boolean);
+    if (parts.length >= 2) {
+        const provider = parts[1].replace(/\s*\[\d{4}-\d{2}-\d{2}\]$/, '').trim();
+        return { noteType: parts[0].trim(), provider };
+    }
+
+    return { noteType: title.trim(), provider: null };
+}
+
+function clinicalNoteFromRecord(record) {
+    const { noteType, provider } =
+        record.noteType || record.provider
+            ? { noteType: record.noteType ?? null, provider: record.provider ?? null }
+            : parseDisplayTitle(record.title);
+
+    let text = record.text ?? null;
+    let html = record.html ?? null;
+    let htmlMapping = record.htmlMapping ?? null;
+
+    // Same pipeline as live FHIR notes: text + htmlMapping must be derived together from html
+    // so TermPeek can map ClinPhen context offsets back to DOM nodes for highlighting.
+    if (html && !htmlMapping) {
+        const pulled = _pullTextContent(html);
+        text = pulled.allText;
+        html = pulled.html;
+        htmlMapping = pulled.textNodeMap;
+    }
+
+    return new ClinicalNote(
+        record.id,
+        record.date,
+        record.encounterId,
+        record.binaryUrl,
+        text,
+        record.title ?? null,
+        html,
+        htmlMapping,
+        record.contexts ?? {},
+        record.isProgressNote ?? false,
+        noteType,
+        provider,
+    );
 }

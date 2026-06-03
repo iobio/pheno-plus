@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "setup:config": "node scripts/setup-config.mjs",
+    "predev": "npm run setup:config",
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "npm run build:production",
+    "build:staging": "npm run setup:config && vite build --base /phenoplus/oauth2/redirect/",
+    "build:production": "npm run setup:config && vite build --base /launch/",
     "format": "prettier --write src/"
   },
   "dependencies": {

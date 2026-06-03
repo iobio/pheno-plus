@@ -1,15 +1,18 @@
 <template>
     <div class="li-wrapper">
         <input type="checkbox" v-model="checked" @change="toggleCheck">
-        <p 
-        :class="{'current-selection' : isSelected}"
-        @click="selectNote"
-        class="list-item">
-        <div class="select-item-span">{{ note.title }}</div>
-        <span class="already-added-sign" v-if="alreadyProcessed.includes(note.id)">
-            <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
-            <p class="already-added-tip">Already processed</p>
-        </span>
+        <p
+            :class="{ 'current-selection': isSelected }"
+            @click="selectNote"
+            class="list-item note-list-grid"
+        >
+            <span class="col-type" :title="displayType">{{ displayType }}</span>
+            <span class="col-provider" :title="displayProvider">{{ displayProvider }}</span>
+            <span class="col-date">{{ displayDate }}</span>
+            <span class="already-added-sign" v-if="alreadyProcessed.includes(note.id)">
+                <img alt="OK" src="../../assets/checkbox.svg" id="check-svg">
+                <p class="already-added-tip">Already processed</p>
+            </span>
         </p>
     </div>
 </template>
@@ -28,8 +31,6 @@
                 itemNote: this.note,
                 checked: this.isChecked,
             }
-        }, 
-        mounted () {
         },
         emits: ['click', 'toggle-checked'],
         methods: {
@@ -44,9 +45,21 @@
             isSelected() {
                 if (this.selectedNote === null) {
                     return false;
-                } 
+                }
                 return this.selectedNote.id === this.itemNote.id;
-            }
+            },
+            displayType() {
+                return this.itemNote.noteType || '—';
+            },
+            displayProvider() {
+                return this.itemNote.provider || '—';
+            },
+            displayDate() {
+                if (!this.itemNote.date) {
+                    return '—';
+                }
+                return this.itemNote.date.slice(0, 10);
+            },
         },
         watch: {
             isChecked: function (val) {
@@ -59,12 +72,9 @@
 <style scoped lang="css">
     .li-wrapper {
         width: 100%;
-
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
-
         padding: 2px;
         margin: 0px;
         height: fit-content;
@@ -76,63 +86,64 @@
         margin-top: 0px;
         padding: .5em;
         border-radius: 3px;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
     }
     .list-item:hover {
         background-color: #e1e1e1;
     }
-
     .current-selection {
         background-color: #c2dbf7;
     }
-
-    .select-item-span {
-        width: 80%;
-        white-space: nowrap;
+    .note-list-grid {
+        display: grid;
+        grid-template-columns: 132px minmax(0, 1fr) 84px auto;
+        gap: 8px;
+        align-items: center;
+    }
+    .col-type,
+    .col-provider {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.85rem;
+    }
+    .col-type {
+        font-weight: 500;
+    }
+    .col-date {
+        font-size: 0.85rem;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        white-space: nowrap;
     }
     .already-added-sign {
         background-color: rgba(32, 236, 32, 0.607);
         border-radius: 5px;
-
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         position: relative;
     }
-
     .already-added-tip {
         font-size: .5rem;
         margin-top: 0px;
         margin-bottom: 0px;
-
         padding-left: 3px;
         padding-top: 2px;
         padding-bottom: 2px;
-
         border-radius: 3px;
         visibility: hidden;
         width: fit-content;
-
         position: absolute;
         top: 0px;
         left: -45px;
         z-index: 0;
-
         background-color: rgba(32, 236, 32, 0.6);
     }
-
     .already-added-sign:hover .already-added-tip {
         visibility: visible;
     }
-
     #check-svg {
         z-index: 2;
     }
-    
 </style>

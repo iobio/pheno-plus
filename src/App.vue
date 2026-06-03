@@ -1,6 +1,6 @@
 <template>
-    <div v-if="this.$userNotAuthorized" id="alt-msg">
-      <span>This app is available to specific users only. For inquiries and access, please contact Emerson Lebleu at <b>emerson.lebleu@genetics.utah.edu</b> and members of the ReImagine EHR team at <b>ReImagineEHR@utah.edu</b></span>
+    <div v-if="!this.$userHasAccess" id="alt-msg">
+      <span>Pheno+ is not yet available to your account. For inquiries and access, please contact Emerson Lebleu at <b>emerson.lebleu@genetics.utah.edu</b> and members of the ReImagine EHR team at <b>ReImagineEHR@utah.edu</b></span>
     </div>
     <MainContainer v-else
       :notesList="notesList" 
@@ -12,8 +12,7 @@
 
 <script>
   import MainContainer from '@/components/MainContainer.vue';
-  import constructData from './data/constructData';
-  import fetchNotes from './data/fetchNotes';
+  import fetchNotes, { USE_DUMMY_NOTES } from './data/fetchNotes';
 
   export default {
     name: 'App',
@@ -31,17 +30,15 @@
       }
     }, 
     async mounted () {
-      //Demo Data setup
-      let list2 = constructData();
-
-      if (this.$userNotAuthorized == true) {
-        //If the user is not authorized, do not load any data
+      if (this.$userHasAccess != true) {
         return;
       }
 
+      const deploymentConfig = this.$deploymentConfig || {};
+      const notesOverride = deploymentConfig.bypassFHIR ? USE_DUMMY_NOTES : null;
+
       this.hideOverlay = false;
-      //Fetch the notes from the server
-      const appNotesObj = await fetchNotes(this.$client, this.$patientId);
+      const appNotesObj = await fetchNotes(this.$client, this.$patientId, notesOverride);
       const appNotes = appNotesObj.notesList;
       this.totalNotes = appNotesObj.totalNotes;
 
@@ -50,13 +47,7 @@
       if (appNotes != null && appNotes.length != 0) {
         this.notesList = appNotes;
         this.notesNum = appNotes.length;
-
-      } else if (this.$isTestingEnvironment == true) {
-        //Load demo data because we are in testing
-        this.notesList = this.notesList.concat(list2);
-
-      } else { //if we are not in testing and there are no notes
-        //Notes List is empty
+      } else {
         this.notesList = [];
       }
     },

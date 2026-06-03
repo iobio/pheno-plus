@@ -33,6 +33,9 @@ testing
 #Any files named notes
 notes.txt
 
-# ignore whiteList.json
+# Local / per-deployment config (templates: config/templates/*.example.json)
+public/deploymentConfig.json
 whiteList.json
-whiteList.PRIVATE.json
+
+# presentation files
+docs/presentations
