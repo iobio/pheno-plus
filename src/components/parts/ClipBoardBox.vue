@@ -129,7 +129,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 0.8em;
+    font-size: var(--text-sm);
     overflow: hidden;
 }
 
@@ -179,7 +179,7 @@ button {
     height: 90%;
     border: rgb(215, 215, 215) 1px solid;
     overflow-y: auto;
-    font-size: 1em;
+    font-size: var(--text-md);
     resize: none;
     padding: 0.5em;
 

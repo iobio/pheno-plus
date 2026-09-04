@@ -1,15 +1,29 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+@import url(https://fonts.googleapis.com/css?family=Google+Sans+Flex);
+
+:root {
+    --font-scale: 1;
+    --font-base: 16px;
+    --text-2xs: 0.625em;
+    --text-xs: 0.75em;
+    --text-sm: 0.85em;
+    --text-md: 1em;
+    --text-lg: 1.1em;
+    --text-xl: 1.5em;
+}
 
 html {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    font-size: calc(var(--font-base) * var(--font-scale));
 }
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
+    font-size: var(--text-md);
     height: 100vh;
     width: 100vw;
     background-color: rgb(242, 245, 249);
@@ -20,6 +34,7 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    font-size: var(--text-md);
 }
 
 h3 {

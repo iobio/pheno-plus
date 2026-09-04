@@ -157,7 +157,7 @@
         padding: 4px 0.5em 4px 0;
     }
     .note-list-header {
-        font-size: 0.75rem;
+    font-size: var(--text-sm);
         font-weight: 600;
         color: #666;
         text-transform: uppercase;
@@ -179,7 +179,7 @@
         background-color: #f5f8fc;
         color: #2c3e50;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.9em;
         text-align: left;
         cursor: pointer;
         position: sticky;
@@ -192,7 +192,7 @@
     .note-folder-chevron {
         display: inline-block;
         transition: transform 0.15s ease;
-        font-size: 1.1rem;
+        font-size: var(--text-lg);
         line-height: 1;
     }
     .note-folder-chevron.open {

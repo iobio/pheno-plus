@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 1186">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f4f5f7;
+        stroke: #d3d7dd;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-width: .5px;
+      }
+
+      .cls-4 {
+        font-size: 12.17px;
+      }
+
+      .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15 {
+        isolation: isolate;
+      }
+
+      .cls-4, .cls-16, .cls-6, .cls-11, .cls-13, .cls-14, .cls-17 {
+        fill: #5c6370;
+      }
+
+      .cls-4, .cls-16, .cls-13 {
+        font-family: Helvetica-Oblique, Helvetica;
+        font-style: oblique;
+      }
+
+      .cls-5 {
+        font-family: Geologica-SemiBold, Geologica;
+        font-variation-settings: 'wght' 600, 'CRSV' 0, 'SHRP' 0, 'slnt' 0;
+        font-weight: 600;
+      }
+
+      .cls-5, .cls-8, .cls-9, .cls-10, .cls-12 {
+        fill: #1f2328;
+      }
+
+      .cls-5, .cls-9, .cls-12 {
+        font-size: 14px;
+      }
+
+      .cls-16, .cls-6, .cls-8, .cls-13, .cls-18, .cls-14, .cls-15, .cls-17 {
+        font-size: 12px;
+      }
+
+      .cls-19 {
+        fill: #f1ecfb;
+        stroke: #8b78c9;
+        stroke-width: 1.5px;
+      }
+
+      .cls-20 {
+        stroke: #8a9099;
+      }
+
+      .cls-20, .cls-21, .cls-3 {
+        fill: none;
+      }
+
+      .cls-6, .cls-17 {
+        font-family: Helvetica, Helvetica;
+      }
+
+      .cls-8, .cls-9, .cls-10, .cls-12, .cls-18, .cls-15 {
+        font-weight: 700;
+      }
+
+      .cls-8, .cls-12, .cls-18, .cls-15 {
+        font-family: Helvetica-Bold, Helvetica;
+      }
+
+      .cls-9, .cls-10 {
+        font-family: Geologica-Bold, Geologica;
+        font-variation-settings: 'wght' 700, 'CRSV' 0, 'SHRP' 0, 'slnt' 0;
+      }
+
+      .cls-10 {
+        font-size: 21px;
+      }
+
+      .cls-22 {
+        letter-spacing: 0em;
+      }
+
+      .cls-11 {
+        font-family: Geologica-Medium, Geologica;
+        font-size: 16px;
+        font-variation-settings: 'wght' 500, 'CRSV' 0, 'SHRP' 0, 'slnt' 0;
+        font-weight: 500;
+      }
+
+      .cls-23 {
+        fill: #8a9099;
+      }
+
+      .cls-24 {
+        letter-spacing: 0em;
+      }
+
+      .cls-25 {
+        letter-spacing: 0em;
+      }
+
+      .cls-21 {
+        stroke: rgba(166, 162, 162, .14);
+        stroke-width: 20px;
+      }
+
+      .cls-26 {
+        letter-spacing: 0em;
+      }
+
+      .cls-27 {
+        letter-spacing: 0em;
+      }
+
+      .cls-2 {
+        fill: #e6f4ef;
+        stroke: #4ea48c;
+      }
+
+      .cls-14 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+      }
+
+      .cls-28 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-29 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-30 {
+        letter-spacing: 0em;
+      }
+
+      .cls-31 {
+        letter-spacing: 0em;
+      }
+
+      .cls-32 {
+        letter-spacing: 0em;
+      }
+
+      .cls-33 {
+        letter-spacing: 0em;
+      }
+
+      .cls-34 {
+        letter-spacing: 0em;
+      }
+
+      .cls-35 {
+        letter-spacing: 0em;
+      }
+
+      .cls-36 {
+        letter-spacing: 0em;
+      }
+
+      .cls-37 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-38 {
+        letter-spacing: 0em;
+      }
+
+      .cls-39 {
+        letter-spacing: 0em;
+      }
+
+      .cls-40 {
+        letter-spacing: 0em;
+      }
+
+      .cls-41 {
+        letter-spacing: 0em;
+      }
+
+      .cls-42 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        stroke: #afabab;
+      }
+
+      .cls-43 {
+        letter-spacing: 0em;
+      }
+
+      .cls-44 {
+        letter-spacing: 0em;
+      }
+
+      .cls-45 {
+        letter-spacing: 0em;
+      }
+
+      .cls-46 {
+        letter-spacing: 0em;
+      }
+
+      .cls-47 {
+        letter-spacing: 0em;
+      }
+
+      .cls-48 {
+        letter-spacing: 0em;
+      }
+    </style>
+  </defs>
+  <text class="cls-10" transform="translate(40 52)"><tspan x="0" y="0">Phen</tspan><tspan class="cls-34" x="53.77" y="0">o</tspan><tspan x="66.75" y="0">ty</tspan><tspan class="cls-47" x="88.4" y="0">p</tspan><tspan class="cls-22" x="102.49" y="0">e Con</tspan><tspan class="cls-38" x="161.29" y="0">c</tspan><tspan x="172.33" y="0">e</tspan><tspan class="cls-33" x="184.81" y="0">p</tspan><tspan class="cls-24" x="198.69" y="0">t R</tspan><tspan class="cls-47" x="227.37" y="0">e</tspan><tspan class="cls-38" x="239.95" y="0">c</tspan><tspan x="251" y="0">ognition</tspan></text>
+  <text class="cls-11" transform="translate(40 72.91)"><tspan x="0" y="0">Clinical NLP L</tspan><tspan class="cls-41" x="103.9" y="0">e</tspan><tspan class="cls-27" x="113.05" y="0">xi</tspan><tspan class="cls-37" x="126.45" y="0">c</tspan><tspan x="134.65" y="0">on</tspan></text>
+  <rect class="cls-1" x="40" y="96" width="600" height="168" rx="8" ry="8"/>
+  <rect class="cls-3" x="84" y="200.65" width="126.08" height="14.8" rx="2.79" ry="2.79"/>
+  <rect class="cls-3" x="110" y="219.28" width="112.73" height="14.7" rx="2.63" ry="2.63"/>
+  <rect class="cls-3" x="254" y="236.7" width="117" height="16.1" rx="2.61" ry="2.61"/>
+  <text class="cls-5" transform="translate(60 116)"><tspan x="0" y="0">Clinical n</tspan><tspan class="cls-32" x="62.54" y="0">o</tspan><tspan class="cls-43" x="71.1" y="0">t</tspan><tspan x="77.27" y="0">e</tspan></text>
+  <text class="cls-6" transform="translate(60 136)"><tspan x="0" y="0">unstructured text, excerpts shown</tspan></text>
+  <g>
+    <text class="cls-6" transform="translate(60 158)"><tspan x="0" y="0">HPI: </tspan></text>
+    <text class="cls-8" transform="translate(86.67 158)"><tspan x="0" y="0">generalized hypotonia</tspan></text>
+    <text class="cls-17" transform="translate(213.36 158)"><tspan x="0" y="0" xml:space="preserve"> noted since birth</tspan></text>
+  </g>
+  <g>
+    <text class="cls-6" transform="translate(60 176)"><tspan x="0" y="0">Exam: </tspan></text>
+    <text class="cls-8" transform="translate(97.34 176)"><tspan x="0" y="0">tone diffusely decreased</tspan></text>
+    <text class="cls-17" transform="translate(238.05 176)"><tspan x="0" y="0" xml:space="preserve"> throughout</tspan></text>
+  </g>
+  <g class="cls-7">
+    <text class="cls-6" transform="translate(60 194)"><tspan x="0" y="0">ABR confirms </tspan></text>
+    <text class="cls-8" transform="translate(136.68 194)"><tspan x="0" y="0">bilateral sensorineural hearing loss</tspan></text>
+  </g>
+  <text class="cls-6" transform="translate(60 212)"><tspan x="0" y="0">MRI</tspan></text>
+  <text class="cls-4" transform="translate(88 212.15) scale(1.07 1)"><tspan x="0" y="0">confirms absence of</tspan></text>
+  <text class="cls-8" transform="translate(211 212)"><tspan x="0" y="0">cerebellar hypoplasia</tspan></text>
+  <text class="cls-6" transform="translate(60 230)"><tspan x="0" y="0">Patient&apos;s</tspan></text>
+  <text class="cls-13" transform="translate(114 230)"><tspan x="0" y="0">mother su</tspan><tspan class="cls-29" x="53.36" y="0">f</tspan><tspan x="56.48" y="0">fers from</tspan></text>
+  <text class="cls-8" transform="translate(226 230)"><tspan x="0" y="0">early-onset glaucoma</tspan></text>
+  <text class="cls-6" transform="translate(60 248)"><tspan x="0" y="0">Recommend bi-annual blood panels</tspan></text>
+  <text class="cls-13" transform="translate(258 248)"><tspan x="0" y="0">for early detection of</tspan></text>
+  <text class="cls-8" transform="translate(375 248)"><tspan x="0" y="0">hepatoblastoma</tspan></text>
+  <g>
+    <rect class="cls-19" x="140" y="288" width="400" height="52" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(234.6 306)"><tspan x="0" y="0">Nam</tspan><tspan class="cls-46" x="32.36" y="0">e</tspan><tspan x="40.65" y="0">d e</tspan><tspan class="cls-39" x="61.39" y="0">n</tspan><tspan x="70.23" y="0">tity </tspan><tspan class="cls-39" x="97.85" y="0">r</tspan><tspan class="cls-46" x="103.77" y="0">e</tspan><tspan class="cls-39" x="112.05" y="0">c</tspan><tspan x="119.32" y="0">ognition (NER)</tspan></text>
+    <text class="cls-6" transform="translate(250.95 324)"><tspan x="0" y="0">detects and delimits the text span</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-2" x="140" y="362" width="400" height="72" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(313.17 382)"><tspan x="0" y="0">Me</tspan><tspan class="cls-37" x="21.22" y="0">n</tspan><tspan class="cls-26" x="30.06" y="0">tion</tspan></text>
+    <text class="cls-6" transform="translate(231.93 402)"><tspan x="0" y="0">the span of text, also phenotype mention</tspan></text>
+    <text class="cls-8" transform="translate(201.3 420)"><tspan x="0" y="0">generalized hypotonia / tone diffusely decreased</tspan></text>
+  </g>
+  <line class="cls-20" x1="340" y1="434" x2="340" y2="448"/>
+  <line class="cls-20" x1="190" y1="448" x2="500" y2="448"/>
+  <g>
+    <rect class="cls-19" x="40" y="468" width="300" height="52" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(98.6 486)"><tspan x="0" y="0">Nam</tspan><tspan class="cls-46" x="32.36" y="0">e</tspan><tspan x="40.65" y="0">d e</tspan><tspan class="cls-39" x="61.39" y="0">n</tspan><tspan x="70.23" y="0">tity normaliz</tspan><tspan class="cls-37" x="158.25" y="0">a</tspan><tspan x="166.1" y="0">tion</tspan></text>
+    <text class="cls-6" transform="translate(110.95 504)"><tspan x="0" y="0">assigns the ontology identifier</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-19" x="360" y="468" width="280" height="52" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(400.83 486)"><tspan x="0" y="0">Co</tspan><tspan class="cls-37" x="18.4" y="0">n</tspan><tspan class="cls-43" x="27.24" y="0">t</tspan><tspan class="cls-42" x="33.41" y="0">e</tspan><tspan x="41.52" y="0">xtual </tspan><tspan class="cls-39" x="80.03" y="0">a</tspan><tspan x="87.88" y="0">ttribu</tspan><tspan class="cls-43" x="128.36" y="0">t</tspan><tspan x="134.52" y="0">e d</tspan><tspan class="cls-32" x="155.26" y="0">e</tspan><tspan class="cls-44" x="163.41" y="0">t</tspan><tspan class="cls-45" x="169.58" y="0">e</tspan><tspan x="177.87" y="0">ction</tspan></text>
+    <text class="cls-6" transform="translate(407.94 504)"><tspan x="0" y="0">uses mention and surrounding text</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-2" x="40" y="542" width="300" height="72" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(162 562)"><tspan x="0" y="0">Con</tspan><tspan class="cls-37" x="27.38" y="0">c</tspan><tspan class="cls-26" x="34.65" y="0">e</tspan><tspan class="cls-30" x="42.87" y="0">p</tspan><tspan x="52.03" y="0">t</tspan></text>
+    <text class="cls-6" transform="translate(101.95 582)"><tspan x="0" y="0">the ontology target, an HPO term</tspan></text>
+    <text class="cls-8" transform="translate(55.66 601.18)"><tspan x="0" y="0">HP:0001290 generalized hypotonia</tspan></text>
+    <text class="cls-16" transform="translate(256.51 600.84)"><tspan x="0" y="0">(2 mentions)</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-2" x="360" y="542" width="280" height="72" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(470.06 562)"><tspan x="0" y="0">Neg</tspan><tspan class="cls-39" x="27.5" y="0">a</tspan><tspan x="35.34" y="0">tion</tspan></text>
+    <text class="cls-6" transform="translate(448.07 582)"><tspan x="0" y="0">a</tspan><tspan class="cls-29" x="6.67" y="0">f</tspan><tspan x="9.8" y="0">firmed or negated</tspan></text>
+    <text class="cls-8" transform="translate(378.62 600)"><tspan x="0" y="0">confirms absence of cerebellar hypoplasia</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-2" x="360" y="624" width="280" height="72" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(425.72 644)"><tspan x="0" y="0">Subj</tspan><tspan class="cls-46" x="30.93" y="0">e</tspan><tspan x="39.21" y="0">ct </tspan><tspan class="cls-30" x="56.1" y="0">o</tspan><tspan class="cls-26" x="64.66" y="0">f i</tspan><tspan class="cls-37" x="77.71" y="0">n</tspan><tspan class="cls-32" x="86.55" y="0">f</tspan><tspan x="92.2" y="0">orm</tspan><tspan class="cls-39" x="120.49" y="0">a</tspan><tspan x="128.34" y="0">tion</tspan></text>
+    <text class="cls-6" transform="translate(459.64 664)"><tspan x="0" y="0">patient or other</tspan></text>
+    <text class="cls-8" transform="translate(387.22 682)"><tspan x="0" y="0">patient&apos;s mother suffers from glaucoma</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-2" x="360" y="706" width="280" height="72" rx="8" ry="8"/>
+    <text class="cls-9" transform="translate(460.84 726)"><tspan class="cls-28" x="0" y="0">T</tspan><tspan x="7.36" y="0">em</tspan><tspan class="cls-46" x="29.46" y="0">p</tspan><tspan x="38.86" y="0">orality</tspan></text>
+    <text class="cls-6" transform="translate(413.96 746)"><tspan x="0" y="0">recent, historical, or hypothetical</tspan></text>
+    <text class="cls-8" transform="translate(396.66 764)"><tspan x="0" y="0">bi-annual blood panels for detection</tspan></text>
+  </g>
+  <line class="cls-20" x1="190" y1="614" x2="190" y2="798"/>
+  <line class="cls-20" x1="500" y1="778" x2="500" y2="798"/>
+  <line class="cls-20" x1="190" y1="798" x2="500" y2="798"/>
+  <g>
+    <rect class="cls-19" x="180" y="820" width="320" height="52" rx="8" ry="8"/>
+    <text class="cls-9" transform="translate(284.36 838)"><tspan x="0" y="0">P</tspan><tspan class="cls-39" x="9.2" y="0">r</tspan><tspan class="cls-32" x="15.27" y="0">o</tspan><tspan x="23.93" y="0">file a</tspan><tspan class="cls-37" x="57.85" y="0">s</tspan><tspan x="65.03" y="0">sembly</tspan></text>
+    <text class="cls-6" transform="translate(268.96 856)"><tspan x="0" y="0">applies the inclusion policy</tspan></text>
+  </g>
+  <line class="cls-20" x1="340" y1="872" x2="340" y2="888"/>
+  <line class="cls-20" x1="60" y1="888" x2="340" y2="888"/>
+  <line class="cls-20" x1="60" y1="888" x2="60" y2="1098"/>
+  <g>
+    <rect class="cls-2" x="90" y="910" width="550" height="120" rx="8" ry="8"/>
+    <text class="cls-5" transform="translate(110 930)"><tspan x="0" y="0">Phen</tspan><tspan class="cls-32" x="35.27" y="0">o</tspan><tspan x="43.83" y="0">ty</tspan><tspan class="cls-46" x="57.94" y="0">p</tspan><tspan x="67.24" y="0">e p</tspan><tspan class="cls-37" x="87.98" y="0">r</tspan><tspan class="cls-30" x="93.9" y="0">o</tspan><tspan x="102.46" y="0">file</tspan></text>
+    <text class="cls-14" transform="translate(110 950)"><tspan class="cls-31" x="0" y="0">t</tspan><tspan class="cls-25" x="3.9" y="0">e</tspan><tspan class="cls-48" x="9.91" y="0">r</tspan><tspan x="13.88" y="0">ms qualified p</tspan><tspan class="cls-40" x="84.41" y="0">r</tspan><tspan x="88.21" y="0">ese</tspan><tspan class="cls-36" x="104.99" y="0">n</tspan><tspan x="111.6" y="0">t or abse</tspan><tspan class="cls-35" x="154.55" y="0">n</tspan><tspan x="161.16" y="0">t</tspan></text>
+    <text class="cls-15" transform="translate(190.93 977)"><tspan x="0" y="0">present</tspan></text>
+    <text class="cls-8" transform="translate(110 996)"><tspan x="0" y="0">HP:0001290 generalized hypotonia</tspan></text>
+    <text class="cls-8" transform="translate(110 1014)"><tspan x="0" y="0">HP:0000407 sensorineural hearing loss</tspan></text>
+    <line class="cls-21" x1="110.17" y1="973.23" x2="332.28" y2="973.23"/>
+    <line class="cls-21" x1="365.58" y1="974" x2="587.69" y2="974"/>
+    <text class="cls-18" transform="translate(460.47 976.93)"><tspan x="0" y="0">absent</tspan></text>
+    <text class="cls-8" transform="translate(380 996)"><tspan x="0" y="0">HP:0001321 cerebellar hypoplasia</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-1" x="90" y="1050" width="550" height="96" rx="8" ry="8"/>
+    <text class="cls-12" transform="translate(110 1070)"><tspan x="0" y="0">Discarded mentions</tspan></text>
+    <text class="cls-6" transform="translate(110 1090)"><tspan x="0" y="0">did not pass the inclusion policy</tspan></text>
+    <text class="cls-8" transform="translate(110 1112)"><tspan x="0" y="0">subject is mother: early-onset glaucoma</tspan></text>
+    <text class="cls-8" transform="translate(110 1130)"><tspan x="0" y="0">hypothetical: bi-annual blood panels for hepatoblastoma</tspan></text>
+  </g>
+  <g>
+    <line class="cls-20" x1="190.5" y1="448" x2="190.58" y2="465.81"/>
+    <polygon class="cls-23" points="187.05 462.97 187.68 462.38 190.58 465.48 193.45 462.36 194.08 462.94 190.58 466.74 187.05 462.97"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="352.92" y1="798.13" x2="353.22" y2="818.6"/>
+    <polygon class="cls-23" points="349.66 815.81 350.28 815.21 353.21 818.27 356.06 815.13 356.69 815.7 353.23 819.54 349.66 815.81"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="499.44" y1="448.67" x2="499.52" y2="466.48"/>
+    <polygon class="cls-23" points="495.99 463.65 496.62 463.06 499.52 466.15 502.39 463.03 503.03 463.61 499.52 467.41 495.99 463.65"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="191.16" y1="520.99" x2="191.46" y2="541.46"/>
+    <polygon class="cls-23" points="187.9 538.66 188.52 538.06 191.45 541.13 194.29 537.98 194.93 538.56 191.47 542.39 187.9 538.66"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="339.39" y1="265.86" x2="339.69" y2="286.33"/>
+    <polygon class="cls-23" points="336.13 283.53 336.75 282.94 339.68 286 342.52 282.85 343.16 283.43 339.7 287.26 336.13 283.53"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="339.02" y1="340.62" x2="339.32" y2="361.1"/>
+    <polygon class="cls-23" points="335.76 358.3 336.38 357.7 339.32 360.77 342.16 357.62 342.8 358.2 339.33 362.03 335.76 358.3"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="499.41" y1="520.56" x2="499.71" y2="541.03"/>
+    <polygon class="cls-23" points="496.15 538.23 496.77 537.64 499.7 540.7 502.54 537.55 503.18 538.13 499.72 541.96 496.15 538.23"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="59.75" y1="976.89" x2="87.9" y2="977.15"/>
+    <polygon class="cls-23" points="85.02 980.64 84.44 980 87.57 977.14 84.49 974.23 85.08 973.6 88.83 977.15 85.02 980.64"/>
+  </g>
+  <g>
+    <line class="cls-20" x1="59.57" y1="1097.74" x2="87.72" y2="1098"/>
+    <polygon class="cls-23" points="84.84 1101.49 84.26 1100.85 87.39 1097.99 84.31 1095.08 84.91 1094.45 88.66 1098.01 84.84 1101.49"/>
+  </g>
+</svg>

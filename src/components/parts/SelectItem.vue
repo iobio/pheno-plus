@@ -104,13 +104,13 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: 0.85rem;
+        font-size: var(--text-sm);
     }
     .col-type {
         font-weight: 500;
     }
     .col-date {
-        font-size: 0.85rem;
+        font-size: var(--text-sm);
         font-variant-numeric: tabular-nums;
         text-align: right;
         white-space: nowrap;
@@ -125,7 +125,7 @@
         position: relative;
     }
     .already-added-tip {
-        font-size: .5rem;
+        font-size: var(--text-2xs);
         margin-top: 0px;
         margin-bottom: 0px;
         padding-left: 3px;

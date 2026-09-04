@@ -64,7 +64,7 @@ export default {
 .note-info-p {
     width: 100%;
     height: 100%;
-    font-size: 1em;
+    font-size: var(--text-md);
     margin-top: 0%;
 
     border: rgb(215, 215, 215) 1px solid;
@@ -85,7 +85,7 @@ export default {
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: auto;
-    padding: 0.5em;
+    padding: 0em .5em .5em .5em;
     width: 99%;
 }
 

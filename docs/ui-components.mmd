@@ -1,0 +1,15 @@
+flowchart TB
+  subgraph MC["MainContainer (#the-main-container)"]
+    LO["#loading-overlay — spinner only"]
+    subgraph SV["#selector-view-container"]
+      IS["ItemSelector"]
+      VI["ViewInfo"]
+    end
+    subgraph FW["#full-width-box-container"]
+      TD["TermDashboard"]
+      TP["TermPeek"]
+      CB["ClipBoardBox"]
+    end
+  end
+  IS --> SI["SelectItem × notes"]
+  TD --> HR["HpoTermRow × terms"]
