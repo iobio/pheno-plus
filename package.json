@@ -11,6 +11,8 @@
     "build:production": "npm run setup:config && vite build --base /launch/",
     "format": "prettier --write src/",
     "test": "vitest run",
+    "test:verbose": "vitest run --reporter=verbose",
+    "test:clinphen": "vitest run tests/clinphenHighlightAlignment.test.js --reporter=verbose",
     "test:watch": "vitest"
   },
   "dependencies": {

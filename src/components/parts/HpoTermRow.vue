@@ -13,13 +13,16 @@
             @mouseleave="hideHpoIdSpan($event)"
             @click="$emit('selectTerm', thisHpoItemObj)"
         >
-            <i class="small-italic">({{ thisHpoItemObj.getNumOccurrences() }})</i> {{ thisHpoItemObj.getPhenotypeName() }}
+            {{ thisHpoItemObj.getPhenotypeName() }}
             <span class="hpo-id-span">{{ thisHpoItemObj.getHpoId() }}</span>
         </span>
 
         <span class="delete-btn-span">
             <input type="checkbox" name="use" id="" v-model="thisHpoItemObj.use" @change="updateUse($event)" />
         </span>
+
+        <span class="occurrences-span">{{ highlightCount }}</span>
+
         <span v-if="!(selectedTerm == hpoItemObj)" class="show-btn-span" @click="$emit('selectTerm', thisHpoItemObj)"
             ><img class="show-btn-img" alt="show context" src="../../assets/doc-view.svg"
         /></span>
@@ -34,6 +37,10 @@ export default {
     name: 'HpoTermRow',
     props: {
         hpoItemObj: Object,
+        highlightCount: {
+            type: Number,
+            default: 0,
+        },
         baseInformationOnly: Boolean,
         selectedTerm: Object,
     },
@@ -122,7 +129,7 @@ input[type='checkbox'] {
 .hpo-row-container {
     width: 100%;
     display: grid;
-    grid-template-columns: 0.7fr 0.15fr 0.15fr;
+    grid-template-columns: 0.55fr 0.15fr 0.10fr 0.15fr;
     justify-items: center;
     align-items: center;
 
@@ -132,7 +139,7 @@ input[type='checkbox'] {
     justify-self: start;
 }
 .hpo-row-container.base {
-    grid-template-columns: 0.7fr 0.15fr 0.15fr;
+    grid-template-columns: 0.55fr 0.15fr 0.10fr 0.15fr;
 }
 .hpo-row-container:hover {
     background-color: #e2e2e2;
@@ -169,6 +176,10 @@ input[type='checkbox'] {
     position: relative;
     cursor: pointer;
     width: 100%;
+    justify-self: start;
+}
+.occurrences-span {
+    text-align: center;
 }
 .hpo-id-span {
     position: absolute;

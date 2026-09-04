@@ -7,7 +7,6 @@ export default async function fetchFromGru(data) {
 }
 
 async function fetchFromClinPhen(gruBaseUrl, data) {
-    let hpoText = '';
     let noteText = data;
     //get the num of chars in the note
     let noteLength = noteText.length;
@@ -46,7 +45,7 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         for (let i = 0; i < noteChunks.length; i++) {
             let chunk = noteChunks[i];
             try {
-                let clinphenResponse = await fetch(gruBaseUrl + 'clinphen?notes=' + chunk)
+                let clinphenResponse = await fetch(gruBaseUrl + 'clinphen?notes=' + encodeURIComponent(chunk))
                     .then((response) => response.text())
                     .then((data) => {
                         return data;
@@ -115,57 +114,59 @@ async function fetchFromClinPhen(gruBaseUrl, data) {
         return theObject;
     } else {
         try {
-            return fetch(gruBaseUrl + 'clinphen?notes=' + noteText)
+            return fetch(gruBaseUrl + 'clinphen?notes=' + encodeURIComponent(noteText))
                 .then((response) => response.text())
-                .then((data) => {
-                    hpoText = data;
-
-                    //split the text on the new lines to get the rows
-                    let theTextArray = hpoText.split('\n');
-
-                    //first part is the header row
-                    let headerRow = theTextArray[0];
-
-                    //remove the header row from the array
-                    theTextArray.shift();
-
-                    //if nothing is found just return 0
-                    if (theTextArray.length == 0) {
-                        return 0;
-                    }
-
-                    //split the header row on the tabs
-                    let headerRowArray = headerRow.split('\t');
-
-                    //Iterate over the text array and split each row on the tabs, then create an object for each row with the header row as the keys
-                    let theObject = {};
-                    theTextArray.forEach((row, index) => {
-                        let rowArray = row.split('\t');
-                        let tempObject = {};
-                        headerRowArray.forEach((header, index) => {
-                            tempObject[header] = rowArray[index];
-                        });
-                        theObject[rowArray[0]] = tempObject;
-
-                        //Example sentence and Earliness should be arrays if they arent already
-                        if (!Array.isArray(theObject[rowArray[0]]['Earliness (lower = earlier)'])) {
-                            theObject[rowArray[0]]['Earliness (lower = earlier)'] = [
-                                theObject[rowArray[0]]['Earliness (lower = earlier)'],
-                            ];
-                        }
-                        if (!Array.isArray(theObject[rowArray[0]]['Example sentence'])) {
-                            theObject[rowArray[0]]['Example sentence'] = [theObject[rowArray[0]]['Example sentence']];
-                        }
-                    });
-
-                    //remove any empty objects
-                    delete theObject[''];
-
-                    return theObject;
-                });
+                .then((data) => parseClinPhenTsv(data));
         } catch {
             //No results return 0
             return 0;
         }
     }
+}
+
+/**
+ * Parse tab-separated ClinPhen response text into the same object shape returned by fetchFromGru.
+ */
+export function parseClinPhenTsv(hpoText) {
+    const theTextArray = hpoText.split('\n');
+
+    if (theTextArray.length === 0) {
+        return {};
+    }
+
+    const headerRow = theTextArray[0];
+    theTextArray.shift();
+
+    if (theTextArray.length === 0) {
+        return {};
+    }
+
+    const headerRowArray = headerRow.split('\t');
+    const theObject = {};
+
+    theTextArray.forEach((row) => {
+        if (!row.trim()) {
+            return;
+        }
+
+        const rowArray = row.split('\t');
+        const tempObject = {};
+        headerRowArray.forEach((header, index) => {
+            tempObject[header] = rowArray[index];
+        });
+        theObject[rowArray[0]] = tempObject;
+
+        if (!Array.isArray(theObject[rowArray[0]]['Earliness (lower = earlier)'])) {
+            theObject[rowArray[0]]['Earliness (lower = earlier)'] = [
+                theObject[rowArray[0]]['Earliness (lower = earlier)'],
+            ];
+        }
+        if (!Array.isArray(theObject[rowArray[0]]['Example sentence'])) {
+            theObject[rowArray[0]]['Example sentence'] = [theObject[rowArray[0]]['Example sentence']];
+        }
+    });
+
+    delete theObject[''];
+
+    return theObject;
 }

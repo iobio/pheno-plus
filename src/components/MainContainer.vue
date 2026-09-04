@@ -23,7 +23,7 @@
                 <img v-if="selectorViewOpen" src="../assets/close.svg" alt="close section" />
                 <img v-else src="../assets/dots-hz.svg" alt="open section" />
                 <div class="open-close-label">
-                    {{ selectorViewOpen ? 'Close Notes Section' : 'Open Notes Section' }}
+                    {{ selectorViewOpen ? 'Select Notes' : 'Open Notes Section' }}
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
 
             <div class="open-close note-preview" @click="noteContentOpen = !noteContentOpen" v-if="selectorViewOpen">
                 <div class="open-close-label">
-                    {{ noteContentOpen ? 'Close Note Preview' : 'Open Note Preview' }}
+                    {{ noteContentOpen ? 'Note Preview' : 'Open Note Preview' }}
                 </div>
                 <img v-if="noteContentOpen" src="../assets/close.svg" alt="close section" />
                 <img v-else src="../assets/dots-hz.svg" alt="open section" />
@@ -89,13 +89,14 @@
                 <img v-if="fullWidthBoxOpen" src="../assets/close.svg" alt="close section" />
                 <img v-else src="../assets/dots-hz.svg" alt="open section" />
                 <div class="open-close-label">
-                    {{ fullWidthBoxOpen ? 'Close HPO Terms Section' : 'Open HPO Terms Section' }}
+                    {{ fullWidthBoxOpen ? 'Select Phenotypes' : 'Open HPO Terms Section' }}
                 </div>
             </div>
             <div id="term-table" :class="{ closed: !fullWidthBoxOpen }">
                 <TermDashboard
                     :hpoItemsObj="hpoTermsObj"
                     :sortedHpoList="sortedHpoList"
+                    :notesList="notesList"
                     :baseInformationOnly="baseInformationOnly"
                     :selectedTerm="selectedTerm"
                     @removeItem="removeHpoTerm"
@@ -269,9 +270,6 @@ export default {
                             }
 
                             if (!sentenceAlreadySeen) {
-                                //If this clinPhen sentence is not already in the list add it
-                                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
-
                                 //Use the singular adding methods to add the earliness and example sentence
                                 this.hpoTermsObj[key].addToEarliness(earliness);
                                 this.hpoTermsObj[key].addToExampleSentences(clinPhenSen);
@@ -297,300 +295,7 @@ export default {
                             }
                         }
 
-                        //It technically shouldnt be possible to add the same note twice via the UI but there is a
-                        //check on this method to prevent it from happening if it does
-                        this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
-                        continue;
-                    }
-                    
-                    for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
-                        let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
-                        let noteContexts = this.selectedNote.getContexts(key);
-                        if (noteContexts) {
-                            let alreadyInList = false;
-                            for (let i = 0; i < noteContexts.length; i++) {
-                                let currContext = noteContexts[i].trim().toLowerCase();
-                                //Check if the sentence is already in the list
-                                if (currContext == clinPhenSen) {
-                                    //Dont add it again
-                                    alreadyInList = true;
-                                }
-                            }
-                            if (!alreadyInList) {
-                                //If this clinPhen sentence is not already in the list add it
-                                this.selectedNote.addContext(key, clinPhenSen);
-                            }
-                        } else {
-                            this.selectedNote.addContext(key, clinPhenSen);
-                        }
-                    }
-
-                    //otherwise just add it to the list we haven't seen it before
-                    let item = new ChartItem(clinPhen[key], [[this.selectedNote.title, this.selectedNote.id]]);
-                    this.hpoTermsObj[key] = item;
-                }
-
-                let sortedTerms = Object.values(this.hpoTermsObj)
-                    .sort((a, b) => b.numOccurrences - a.numOccurrences)
-                    .map((item) => [item.hpoId, item.numOccurrences]);
-
-                let sortedToBottom = sortedTerms.filter((item) => !this.hpoTermsObj[item[0]].getUse());
-                let sortedToTop = sortedTerms.filter((item) => this.hpoTermsObj[item[0]].getUse());
-                sortedTerms = sortedToTop.concat(sortedToBottom);
-
-                this.sortedHpoList = sortedTerms;
-                this.hideOverlay = true;
-                this.selectorViewOpen = false;
-            } else {
-                this.hideOverlay = true;
-                this.selectorViewOpen = false;
-            }
-        },
-        async processTextAll() {
-            //For each of the notes in the notes list process the text
-            for (let note of this.notesList) {
-                //Call the process text function
-                if (this.isCheckedMap[note.id] == false) {
-                    continue;
-                } else {
-                    this.selectedNote = note;
-                    this.selectedNoteTextContent = note.text;
-                    await this.processText();
-                }
-            }
-        },
-        changeTextContent(textContent) {
-            this.selectedNoteTextContent = textContent;
-        },
-        updateIsCheckedMap(noteId) {
-            this.isCheckedMap[noteId] = !this.isCheckedMap[noteId];
-
-            if (this.isCheckedMap[noteId] == false) {
-                this.allChecked = false;
-            } else {
-                let allChecked = true;
-                for (let note of this.notesList) {
-                    if (this.isCheckedMap[note.id] == false) {
-                        allChecked = false;
-                        break;
-                    }
-                }
-                this.allChecked = allChecked;
-            }
-        },
-        checkAll() {
-            for (let note of this.notesList) {
-                this.isCheckedMap[note.id] = true;
-            }
-            this.allChecked = true;
-        },
-        uncheckAll() {
-            for (let note of this.notesList) {
-                this.isCheckedMap[note.id] = false;
-            }
-            this.allChecked = false;
-        },
-        checkForChecked() {
-            for (let note of this.notesList) {
-                if (Object.keys(this.isCheckedMap).length == 0) {
-                    return true;
-                }
-                if (this.isCheckedMap[note.id] == true) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        addTermFromUser(term) {
-            this.hpoTermsObj[term.hpoId] = term;
-            this.sortedHpoList = Object.values(this.hpoTermsObj)
-                .sort((a, b) => b.numOccurrences - a.numOccurrences)
-                .map((item) => [item.hpoId, item.numOccurrences]);
-        },
-    },
-    computed: {
-        isCheckedMapStart() {
-            let map = {};
-            for (let note of this.notesList) {
-                map[note.id] = false;
-            }
-            return map;
-        },
-        allNotesProcessed() {
-            return this.notesAlreadyProcessed.length === this.notesList.length;
-        },
-        // Dynamic inline styles for resizable panes
-        itemSelectorStyle() {
-            return this.noteContentOpen
-                ? { width: `${this.selectorWidthPct}%` }
-                : { width: '100%' };
-        },
-        viewInfoStyle() {
-            const rightPct = Math.max(0, 100 - this.selectorWidthPct);
-            return this.noteContentOpen
-                ? { width: `${rightPct}%`, minWidth: `${rightPct}%` }
-                : { width: '0%', minWidth: '0%' };
-        },
-        splitterStyle() {
-            return {
-                left: `calc(${this.selectorWidthPct}% )`,
-                cursor: 'col-resize',
-            };
-        },
-    },
-    watch: {
-        isCheckedMapStart: function (val) {
-            this.isCheckedMap = val;
-        },
-        hideOverlayFromApp: function (val) {
-            this.hideOverlay = val;
-        },
-        notesList: function (newVal, oldVal) {
-            if (newVal && newVal.length > 0 && newVal !== oldVal) {
-                this.selectNote(newVal[0]);
-            }
-        },
-        sortedHpoList: {
-            handler: function (newVal, oldVal) {
-                if (newVal && newVal.length > 0 && newVal !== oldVal) {
-                    this.fullWidthBoxOpen = true;
-                }
-            },
-            deep: true,
-        },
-    },
-    methods: {
-        selectTerm(term) {
-            if (this.selectedTerm === null && term !== null) {
-                this.selectedTerm = term;
-                return;
-            } else if (term == null || this.selectedTerm.hpoId === term.hpoId) {
-                this.selectedTerm = null;
-                return;
-            } else {
-                this.selectedTerm = term;
-            }
-        },
-        selectNote(note) {
-            if (!this.selectedNote || this.selectedNote.id !== note.id) {
-                this.selectedNote = note;
-                this.noteContentOpen = true;
-            } else {
-                this.noteContentOpen = !this.noteContentOpen;
-            }
-        },
-        removeHpoTerm(id) {
-            if (this.selectedTerm !== null && this.selectedTerm.hpoId === id) {
-                this.selectedTerm = null;
-            }
-            this.sortedHpoList = this.sortedHpoList.filter((item) => item[0] !== id);
-            delete this.hpoTermsObj[id];
-        },
-        updateHpoTerm(item) {
-            this.hpoTermsObj[item.getHpoId()] = item;
-
-            //we need to sort the list again incase
-            this.sortedHpoList = Object.values(this.hpoTermsObj)
-                .sort((a, b) => b.numOccurrences - a.numOccurrences)
-                .map((item) => [item.hpoId, item.numOccurrences]);
-
-            //Sort all the terms in the sorted list again and put any that have the 'use' property false to the bottom
-            let sortedToBottom = this.sortedHpoList.filter((item) => !this.hpoTermsObj[item[0]].getUse());
-            let sortedToTop = this.sortedHpoList.filter((item) => this.hpoTermsObj[item[0]].getUse());
-
-            this.sortedHpoList = sortedToTop.concat(sortedToBottom);
-        },
-        formatAndPopulateTerms() {
-            //Needs to populate the clipboard box with the terms
-            let terms = [];
-            for (let key in this.hpoTermsObj) {
-                let item = this.hpoTermsObj[key];
-                if (item.getUse()) {
-                    terms.push(item);
-                }
-            }
-            this.clipTerms = terms;
-        },
-        clearClipTerms() {
-            this.clipTerms = [];
-        },
-        clearAllTableTerms() {
-            //Clear all the terms from the table and open the selector view and close the full width box
-            this.fullWidthBoxOpen = false;
-            this.selectorViewOpen = true;
-
-            this.hpoTermsObj = {};
-            this.sortedHpoList = [];
-            this.notesAlreadyProcessed = [];
-            this.selectedTerm = null;
-        },
-        async processText() {
-            //If nothing is selected dont process
-            if (this.selectedNote === null) {
-                return;
-            }
-
-            //If the item has already been processed dont add it to the list again
-            if (!this.notesAlreadyProcessed.includes(this.selectedNote.id)) {
-                this.notesAlreadyProcessed.push(this.selectedNote.id);
-            } else {
-                return;
-            }
-
-            //Show the loading overlay
-            this.hideOverlay = false;
-            let gru_data = await fetchFromGru(this.selectedNoteTextContent);
-
-            if (gru_data) {
-                const clinPhen = gru_data.clinPhenData;
-                //Clinphen is an object of objects, each object is a term the key is the hpo id
-                for (let key in clinPhen) {
-                    if (this.hpoTermsObj[key]) {
-                        //clinPhen Example sentance is always an array, usually of one element but sometimes more
-                        for (let i = 0; i < clinPhen[key]['Example sentence'].length; i++) {
-                            let clinPhenSen = clinPhen[key]['Example sentence'][i].trim().toLowerCase();
-                            //Any example sentence will have a corresponding earliness value
-                            let earliness = clinPhen[key]['Earliness (lower = earlier)'][i];
-
-                            let sentenceAlreadySeen = false;
-                            for (let i = 0; i < this.hpoTermsObj[key].exampleSentences.length; i++) {
-                                let currSen = this.hpoTermsObj[key].exampleSentences[i][0].trim().toLowerCase();
-                                //Check if the sentence is already in the list
-                                if (currSen == clinPhenSen) {
-                                    this.hpoTermsObj[key].addToTimesSeen(i);
-                                    sentenceAlreadySeen = true;
-                                }
-                            }
-
-                            if (!sentenceAlreadySeen) {
-                                //If this clinPhen sentence is not already in the list add it
-                                this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
-
-                                //Use the singular adding methods to add the earliness and example sentence
-                                this.hpoTermsObj[key].addToEarliness(earliness);
-                                this.hpoTermsObj[key].addToExampleSentences(clinPhenSen);
-                            }
-
-                            let noteContexts = this.selectedNote.getContexts(key);
-                            if (noteContexts) {
-                                let alreadyInList = false;
-                                for (let i = 0; i < noteContexts.length; i++) {
-                                    let currContext = noteContexts[i].trim().toLowerCase();
-                                    //Check if the sentence is already in the list
-                                    if (currContext == clinPhenSen) {
-                                        //Dont add it again
-                                        alreadyInList = true;
-                                    }
-                                }
-                                if (!alreadyInList) {
-                                    //If this clinPhen sentence is not already in the list add it
-                                    this.selectedNote.addContext(key, clinPhenSen);
-                                }
-                            } else {
-                                this.selectedNote.addContext(key, clinPhenSen);
-                            }
-                        }
-
+                        this.hpoTermsObj[key].addToNumOccurrences(clinPhen[key]['No. occurrences']);
                         //It technically shouldnt be possible to add the same note twice via the UI but there is a
                         //check on this method to prevent it from happening if it does
                         this.hpoTermsObj[key].addToNotesPresentIn([this.selectedNote.title, this.selectedNote.id]);
@@ -734,6 +439,57 @@ export default {
             document.body.style.cursor = '';
         },
     },
+    computed: {
+        isCheckedMapStart() {
+            let map = {};
+            for (let note of this.notesList) {
+                map[note.id] = false;
+            }
+            return map;
+        },
+        allNotesProcessed() {
+            return this.notesAlreadyProcessed.length === this.notesList.length;
+        },
+        // Dynamic inline styles for resizable panes
+        itemSelectorStyle() {
+            return this.noteContentOpen
+                ? { width: `${this.selectorWidthPct}%` }
+                : { width: '100%' };
+        },
+        viewInfoStyle() {
+            const rightPct = Math.max(0, 100 - this.selectorWidthPct);
+            return this.noteContentOpen
+                ? { width: `${rightPct}%`, minWidth: `${rightPct}%` }
+                : { width: '0%', minWidth: '0%' };
+        },
+        splitterStyle() {
+            return {
+                left: `calc(${this.selectorWidthPct}% )`,
+                cursor: 'col-resize',
+            };
+        },
+    },
+    watch: {
+        isCheckedMapStart: function (val) {
+            this.isCheckedMap = val;
+        },
+        hideOverlayFromApp: function (val) {
+            this.hideOverlay = val;
+        },
+        notesList: function (newVal, oldVal) {
+            if (newVal && newVal.length > 0 && newVal !== oldVal) {
+                this.selectNote(newVal[0]);
+            }
+        },
+        sortedHpoList: {
+            handler: function (newVal, oldVal) {
+                if (newVal && newVal.length > 0 && newVal !== oldVal) {
+                    this.fullWidthBoxOpen = true;
+                }
+            },
+            deep: true,
+        },
+    },
 };
 </script>
 
@@ -745,7 +501,7 @@ export default {
     position: absolute;
     top: 0px;
     left: 50%;
-    font-size: small;
+    font-size: var(--text-sm);
     font-style: italic;
     margin-top: 0px;
     background-color: white;
@@ -757,7 +513,7 @@ export default {
     z-index: 4;
 }
 .small-italic {
-    font-size: x-small;
+    font-size: var(--text-xs);
 }
 
 h3 {
@@ -968,7 +724,7 @@ h3 {
 .process-btn {
     width: 40%;
     min-width: 45px;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
 
     margin: 5px 2.5% 0px 2.5%;
     height: 30px;
@@ -1019,7 +775,7 @@ h3 {
 }
 
 #loading-overlay p {
-    font-size: 1.5em;
+    font-size: var(--text-xl);
     font-weight: bolder;
 
     padding: 1em;

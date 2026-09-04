@@ -1,0 +1,12 @@
+[
+  {
+    "noteId": "demo-ellison-n5-discharge",
+    "hpoId": "HP:0008619",
+    "clinphenTsv": "HPO ID\tPhenotype name\tNo. occurrences\tEarliness (lower = earlier)\tExample sentence\nHP:0008619\tBilateral sensorineural hearing impairment\t2\t35\tbilateral sensorineural hearing loss"
+  },
+  {
+    "noteId": "demo-ellison-n5-discharge",
+    "hpoId": "HP:0002015",
+    "clinphenTsv": "HPO ID\tPhenotype name\tNo. occurrences\tEarliness (lower = earlier)\tExample sentence\nHP:0002015\tDysphagia\t2\t42\tdysphagia"
+  }
+]

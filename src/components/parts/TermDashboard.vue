@@ -1,15 +1,17 @@
 <template>
     <div id="term-dashboard-container">
         <h4 id="title-row" :class="{ base: baseInformationOnly }">
-            <span><i class="small-italic">(Unique Occ.)</i> Phenotype</span>
-            <span>Use Term</span>
-            <span>Review Context</span>
+            <span>HPO Phenotype</span>
+            <span>Select</span>
+            <span>Occur.</span>
+            <span>Preview</span>
             <span id="num-of-terms">{{ sortedHpoList.length }} Terms</span>
         </h4>
         <div v-if="sortedHpoList.length > 0" id="table-container">
             <HpoTermRow
                 v-for="hpoPair in sortedHpoList"
                 :hpoItemObj="hpoItemsObj[hpoPair[0]]"
+                :highlightCount="highlightCountsByHpoId[hpoPair[0]] ?? 0"
                 :baseInformationOnly="baseInformationOnly"
                 :selectedTerm="selectedTerm"
                 @deleteItem="removeItem"
@@ -56,6 +58,7 @@
 import HpoTermRow from './HpoTermRow.vue';
 import ChartItem from '../../models/ChartItem.js';
 import initSqlJs from 'sql.js';
+import { countHighlightsForTerm } from '../../utils/noteHighlighting.js';
 
 export default {
     name: 'TermDashboard',
@@ -65,6 +68,7 @@ export default {
     props: {
         hpoItemsObj: Object,
         sortedHpoList: Array,
+        notesList: Array,
         baseInformationOnly: Boolean,
         selectedTerm: Object,
     },
@@ -75,9 +79,12 @@ export default {
             hpoDb: null,
             typeAheadMatches: [],
             selectedSearchTerm: null,
+            highlightCountsByHpoId: {},
         };
     },
-    mounted() {},
+    mounted() {
+        this.refreshHighlightCounts();
+    },
     methods: {
         removeItem(id) {
             this.$emit('removeItem', id);
@@ -161,6 +168,18 @@ export default {
                 this.selectedSearchTerm = null;
             }
         },
+        refreshHighlightCounts() {
+            if (!this.notesList || !this.hpoItemsObj) {
+                this.highlightCountsByHpoId = {};
+                return;
+            }
+
+            const counts = {};
+            for (const hpoId in this.hpoItemsObj) {
+                counts[hpoId] = countHighlightsForTerm(this.hpoItemsObj[hpoId], this.notesList);
+            }
+            this.highlightCountsByHpoId = counts;
+        },
     },
     watch: {
         hpoItemsObj: {
@@ -168,6 +187,7 @@ export default {
                 if (newVal !== oldVal) {
                     this.termDashHpoItemsObj = newVal;
                 }
+                this.refreshHighlightCounts();
             },
             deep: true,
         },
@@ -176,6 +196,13 @@ export default {
                 if (newVal !== oldVal) {
                     this.$emit('sendTerms');
                 }
+                this.refreshHighlightCounts();
+            },
+            deep: true,
+        },
+        notesList: {
+            handler: function () {
+                this.refreshHighlightCounts();
             },
             deep: true,
         },
@@ -223,9 +250,7 @@ export default {
 }
 
 .blue-button {
-    width: 60px;
-    font-size: 0.8rem;
-
+    font-size: var(--text-sm);
     height: 30px;
     border: none;
     border-radius: 3px;
@@ -285,9 +310,7 @@ export default {
 }
 
 #send-terms-btn {
-    width: 20%;
-    font-size: 0.8rem;
-
+    font-size: var(--text-sm);
     height: 30px;
     border: none;
     border-radius: 3px;
@@ -309,9 +332,7 @@ export default {
 }
 
 #clear-terms-btn {
-    width: 10%;
-    font-size: 0.8rem;
-
+    font-size: var(--text-sm);
     height: 30px;
     border: none;
     border-radius: 3px;
@@ -363,7 +384,7 @@ export default {
     align-items: center;
     height: auto;
     flex: 1;
-    margin-top: 10px;
+    margin-top: 0px;
     border-radius: 3px;
 
     border: rgb(215, 215, 215) 1px solid;
@@ -373,13 +394,14 @@ export default {
     width: 100%;
     position: relative;
     display: grid;
-    grid-template-columns: 0.7fr 0.15fr 0.15fr;
+    grid-template-columns: 0.55fr 0.15fr 0.10fr 0.15fr;
     justify-items: center;
     align-items: center;
     text-align: center;
+    margin-left: 10px;
 
-    margin-top: 0px;
-    margin-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 0px;
     color: rgb(0, 113, 189);
     padding-left: 0.25em;
     padding-right: 16px;
@@ -389,7 +411,7 @@ export default {
     position: absolute;
     right: 0;
     top: -25px;
-    font-size: 0.85em;
+    font-size: var(--text-sm);
     color: rgb(0, 113, 189);
     border-radius: 10px;
     padding: 3px 5px;
@@ -401,6 +423,6 @@ export default {
 }
 
 #title-row.base {
-    grid-template-columns: 0.7fr 0.15fr 0.15fr;
+    grid-template-columns: 0.55fr 0.15fr 0.10fr 0.15fr;
 }
 </style>

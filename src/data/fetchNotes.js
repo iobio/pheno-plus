@@ -241,9 +241,106 @@ async function fetchEntries(client, url, filterEntry = null) {
     return filterEntry ? noteEnteries.filter(filterEntry) : noteEnteries;
 }
 
+const BLOCK_TAGS = new Set([
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'P',
+    'LI',
+    'DIV',
+    'TR',
+    'TD',
+    'TH',
+    'BLOCKQUOTE',
+    'SECTION',
+    'ARTICLE',
+    'UL',
+    'OL',
+    'DL',
+    'DT',
+    'DD',
+    'PRE',
+]);
+
+function _finalizeBlockText(context) {
+    if (context.allText.length === 0) {
+        return;
+    }
+
+    const trimmed = context.allText.trimEnd();
+    if (trimmed.length === 0) {
+        context.allText = '';
+        return;
+    }
+
+    const lastChar = trimmed[trimmed.length - 1];
+    if (!/[.!?]/.test(lastChar)) {
+        context.allText = trimmed + '.';
+    } else {
+        context.allText = trimmed;
+    }
+}
+
+function _appendBlockSeparator(context) {
+    if (context.allText.length === 0) {
+        return;
+    }
+
+    _finalizeBlockText(context);
+
+    if (context.allText.endsWith('\n\n')) {
+        return;
+    }
+    if (context.allText.endsWith('\n')) {
+        context.allText += '\n';
+    } else {
+        context.allText += '\n\n';
+    }
+}
+
+function hasHtmlMarkup(value) {
+    return typeof value === 'string' && /<[a-zA-Z]/.test(value);
+}
+
+/**
+ * Plain-text notes (no tags) parse as a single text node under body. Highlighting
+ * then builds an empty CSS path and querySelector throws. Wrap those nodes in <p>
+ * so they get the same mapping as FHIR HTML notes.
+ */
+function wrapBodyTextNodes(doc) {
+    const textNodes = Array.from(doc.body.childNodes).filter(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+    );
+
+    for (const node of textNodes) {
+        const blocks = node.textContent.split(/\n\s*\n/);
+        const paragraphs = [];
+
+        for (const block of blocks) {
+            const trimmed = block.trim();
+            if (!trimmed) {
+                continue;
+            }
+            const paragraph = doc.createElement('p');
+            paragraph.textContent = trimmed;
+            paragraphs.push(paragraph);
+        }
+
+        if (paragraphs.length === 0) {
+            continue;
+        }
+
+        node.replaceWith(...paragraphs);
+    }
+}
+
 function _pullTextContent(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
+    wrapBodyTextNodes(doc);
 
     let context = {
         allText: '',
@@ -313,9 +410,12 @@ function _processNode(node, context) {
             return;
         }
 
-        // Process children
         for (let child of node.childNodes) {
             _processNode(child, context);
+        }
+
+        if (BLOCK_TAGS.has(node.tagName)) {
+            _appendBlockSeparator(context);
         }
     }
 }
@@ -341,29 +441,24 @@ function _getNodePath(node, doc) {
 function _cleanText(text) {
     let cleaned = text;
 
-    // Clean up the text remove number and special characters
-    cleaned = cleaned.replace(/[\[\]\*\ã\<\>\,\-]+/g, '');
-    cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞\/]+/g, '');
-    cleaned = cleaned.replace(/[|]/g, ''); // No improvement from keeping
+    cleaned = cleaned.replace(/[\[\]\*\ã\<\>]+/g, '');
+    cleaned = cleaned.replace(/[‚Äî‚Ä¢¬∞]+/g, '');
+    cleaned = cleaned.replace(/[|]/g, '');
     cleaned = cleaned.replace(/°F/g, '');
     cleaned = cleaned.replace(/°C/g, '');
     cleaned = cleaned.replace(/\( ?\)/g, '');
 
-    // Characters that explicitly cause issues with sending via URL
-    cleaned = cleaned.replace(/\?/g, '');
-    cleaned = cleaned.replace(/\!/g, '');
-    cleaned = cleaned.replace(/\%/g, '');
-    cleaned = cleaned.replace(/\#/g, '');
-    cleaned = cleaned.replace(/\=/g, '');
-    cleaned = cleaned.replace(/\&/g, '');
-    cleaned = cleaned.replace(/\@/g, '');
-    cleaned = cleaned.replace(/[\'\"]+/g, '');
+    // Preserve commas; convert hyphens to spaces (e.g. G-tube -> G tube)
+    cleaned = cleaned.replace(/-/g, ' ');
+    cleaned = cleaned.replace(/\//g, ' ');
 
-    // Standardize whitespace
-    cleaned = cleaned.replace(/\u200B/g, ''); // Zero-width space
-    cleaned = cleaned.replace(/[\n\t\s]+/g, ' '); // Collapse whitespace
+    // Characters that cause issues in URL query strings when not encoded
+    cleaned = cleaned.replace(/[\?!\%#\=\&\@\'\"]+/g, '');
 
-    return cleaned.trim(); // Trim leading and trailing whitespace
+    cleaned = cleaned.replace(/\u200B/g, '');
+    cleaned = cleaned.replace(/[\n\t\s]+/g, ' ');
+
+    return cleaned.trim();
 }
 
 function getTypeCodings(resource) {
@@ -500,6 +595,12 @@ function clinicalNoteFromRecord(record) {
     let html = record.html ?? null;
     let htmlMapping = record.htmlMapping ?? null;
 
+    // Text-only fixtures have no markup (or html is a copy of text). Feed that
+    // string through the same HTML pipeline so TermPeek can highlight contexts.
+    if (!hasHtmlMarkup(html) && (text || html)) {
+        html = text || html;
+    }
+
     // Same pipeline as live FHIR notes: text + htmlMapping must be derived together from html
     // so TermPeek can map ClinPhen context offsets back to DOM nodes for highlighting.
     if (html && !htmlMapping) {
@@ -524,3 +625,5 @@ function clinicalNoteFromRecord(record) {
         provider,
     );
 }
+
+export { _pullTextContent, clinicalNoteFromRecord };

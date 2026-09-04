@@ -11,22 +11,25 @@
             </div>
             <div v-if="alertShown" class="no-context-alert">Pheno+ was not able to highlight the reference within this note.</div>
             <h3 class="header-white note-title">
-                {{ noteSelected.getTitle() }}
-                <div id="scroll-btn-wrapper" v-if="lenOfIndexes > 0" @click="incrementScrollIndex()">
-                    <div>{{ scrolledIndex + 1 }} / {{ lenOfIndexes }}</div>
-                    <div id="next-highlight">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <title>next</title>
-                            <path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" />
-                        </svg>
-                    </div>
+                <div>{{ noteSelected.getTitle() }}</div>
+                <div id="scroll-btn-wrapper">
+                    <div class="scroll-btn-term" @click.stop>{{ phenotypeName }}</div>
+                    <template v-if="lenOfIndexes > 0">
+                        <div @click="incrementScrollIndex()">{{ scrolledIndex + 1 }} / {{ lenOfIndexes }}</div>
+                        <div id="next-highlight" @click="incrementScrollIndex()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <title>next</title>
+                                <path d="M11,4H13V16L18.5,10.5L19.92,11.92L12,19.84L4.08,11.92L5.5,10.5L11,16V4Z" />
+                            </svg>
+                        </div>
+                    </template>
                 </div>
             </h3>
             <div id="note-html-container" v-if="currentHighlightedHtml" v-html="currentHighlightedHtml"></div>
             <div v-else-if="noteSelected.html" id="note-html-container" v-html="noteSelected.html"></div>
         </div>
         <div class="sub-container">
-            <h3 class="header-white">Notes With Term</h3>
+            <h3 class="header-white">Notes with {{ phenotypeName }}</h3>
             <div
                 @click="showLoadingAndParseHtml(noteTIDPair[1])"
                 class="note-title-column"
@@ -46,20 +49,10 @@
                 </div>
                 <div
                     class="context-snip"
-                    v-for="note in this.notesList
-                        .find((note) => note.getId() == noteTIDPair[1])
-                        .getContexts(hpoItemObj.getHpoId())"
+                    v-for="(snippet, snippetIndex) in contextSnippetsByNoteId[noteTIDPair[1]] || []"
+                    :key="`${noteTIDPair[1]}-${snippetIndex}`"
                 >
-                    <span class="seen-tag"
-                        >{{
-                            (exampleSentences.find((ex) => ex[0].toLowerCase().trim() == note.toLowerCase().trim()) || [
-                                null,
-                                '0',
-                            ])[1]
-                        }}
-                        copies:
-                    </span>
-                    {{ note }}
+                    {{ snippet }}
                 </div>
             </div>
         </div>
@@ -67,6 +60,8 @@
 </template>
 
 <script>
+import { buildHighlightedNote } from '../../utils/noteHighlighting.js';
+
 export default {
     name: 'TermPeek',
     props: {
@@ -81,6 +76,7 @@ export default {
             alertShown: false,
             scrolledIndex: 0,
             lenOfIndexes: 0,
+            contextSnippetsByNoteId: {},
         };
     },
     methods: {
@@ -92,25 +88,24 @@ export default {
             }
         },
         showLoadingAndParseHtml(tid) {
-            // Grab the term-peek-div and add the loading indicator
             let loadingDiv = document.createElement('div');
             loadingDiv.setAttribute('id', 'loading-highlights-indicator');
             loadingDiv.innerText = 'Loading Highlights...';
             document.getElementById('term-peek-div').appendChild(loadingDiv);
 
-            let selectedNote = this.notesList.find((note) => note.getId() == tid);
-            this.noteSelected = selectedNote;
-
-            let parser = new DOMParser();
-            this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
+            this.noteSelected = this.notesList.find((note) => note.getId() == tid);
+            this.alertShown = false;
+            this.currentHighlightedHtml = null;
+            this.scrolledIndex = 0;
 
             setTimeout(() => {
                 void (async () => {
                     try {
-                        this.currentHighlightedHtml = await this.showFullTermContext();
+                        await this.showFullTermContext();
                     } catch (error) {
                         console.error('Error showing full term context:', error);
                         this.alertShown = true;
+                        this.currentHighlightedHtml = this.noteSelected.html;
                     } finally {
                         let loadingIndicator = document.getElementById('loading-highlights-indicator');
                         if (loadingIndicator) {
@@ -123,48 +118,34 @@ export default {
         async showFullTermContext() {
             this.fullNoteShown = true;
 
-            // Highlight the contexts in the note
-            this.highlightContexts(this.noteSelected)
-                .then(async (html) => {
-                    this.currentHighlightedHtml = html;
+            const html = await this.highlightContexts(this.noteSelected);
+            this.currentHighlightedHtml = html || this.noteSelected.html;
 
-                    if (!this.currentHighlightedHtml || this.currentHighlightedHtml === '') {
-                        this.alertShown = true;
-                        let parser = new DOMParser();
-                        this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-                    }
-                })
-                .catch((error) => {
-                    this.alertShown = true;
-                    let parser = new DOMParser();
-                    this.currentHighlightedHtml = parser.parseFromString(this.noteSelected.html, 'text/html');
-                })
-                .finally(async () => {
-                    // Ensure DOM updates are complete before scrolling
-                    await this.$nextTick();
+            if (!html) {
+                this.alertShown = true;
+            }
 
-                    let firstHighlight = document.getElementById('context-highlight-0');
+            await this.$nextTick();
 
-                    if (firstHighlight) {
-                        let scrollableParent = document.querySelector('.full-note-overlay');
-                        if (scrollableParent) {
-                            //account for the sticky header
-                            let header = document.querySelector('.header-white');
-                            let headerHeight = header ? header.clientHeight : 0;
-                            scrollableParent.scrollTop =
-                                firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
+            let firstHighlight = document.getElementById('context-highlight-0');
 
-                            //also add the scrolled class to the first highlight
-                            firstHighlight.classList.add('scrolled');
-                        }
-                    }
+            if (firstHighlight) {
+                let scrollableParent = document.querySelector('.full-note-overlay');
+                if (scrollableParent) {
+                    let header = document.querySelector('.header-white');
+                    let headerHeight = header ? header.clientHeight : 0;
+                    scrollableParent.scrollTop =
+                        firstHighlight.offsetTop - scrollableParent.offsetTop - headerHeight - 20;
 
-                    let noteHTMLParent = document.getElementById('note-html-container');
-                    noteHTMLParent.style.zIndex = 1;
+                    firstHighlight.classList.add('scrolled');
+                }
+            }
 
-                    //for sanity just remove all images from the note
-                    noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
-                });
+            let noteHTMLParent = document.getElementById('note-html-container');
+            if (noteHTMLParent) {
+                noteHTMLParent.style.zIndex = 1;
+                noteHTMLParent.querySelectorAll('img').forEach((img) => img.remove());
+            }
         },
         closeAndResetNote() {
             this.fullNoteShown = false;
@@ -173,244 +154,49 @@ export default {
             this.scrolledIndex = 0;
             this.lenOfIndexes = 0;
         },
+        async refreshContextSnippets() {
+            if (!this.hpoItemObj) {
+                this.contextSnippetsByNoteId = {};
+                return;
+            }
+
+            const snippetsByNoteId = {};
+            for (const [, noteId] of this.hpoItemObj.getNotesPresentIn()) {
+                const note = this.notesList.find((n) => n.getId() == noteId);
+                if (!note) {
+                    continue;
+                }
+                const { snippets } = buildHighlightedNote(note, this.hpoItemObj);
+                snippetsByNoteId[noteId] = snippets;
+            }
+            this.contextSnippetsByNoteId = snippetsByNoteId;
+        },
         async highlightContexts(note) {
-            const htmlMapping = note.getHtmlMapping();
-            const rawText = note.getText();
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(note.html, 'text/html');
-            const contexts = note.getContexts(this.hpoItemObj.getHpoId());
-            const term = this.hpoItemObj.getPhenotypeName().toLowerCase();
-            const self = this;
-
-            let isFirstHighlight = true;
-            let scrollIndex = 0;
-
-            // Cache for transformed paths to avoid recomputation.
-            const transformCache = new Map();
-            function _transformPath(parentPath) {
-                if (transformCache.has(parentPath)) {
-                    return transformCache.get(parentPath);
-                }
-                const parts = parentPath.split(' > ');
-                const selector = parts
-                    .map((part) => {
-                        const [tag, idx] = part.split('[');
-                        return idx ? `${tag}:nth-child(${parseInt(idx.replace(']', ''), 10) + 1})` : tag;
-                    })
-                    .join(' > ');
-                transformCache.set(parentPath, selector);
-                return selector;
+            try {
+                const { html, snippets, hasHighlights } = buildHighlightedNote(note, this.hpoItemObj);
+                this.lenOfIndexes = snippets.length;
+                this.alertShown = !hasHighlights;
+                return html;
+            } catch (error) {
+                console.error('Error highlighting inner text:', error);
+                this.alertShown = true;
+                const parser = new DOMParser();
+                return parser.parseFromString(note.html, 'text/html').body.innerHTML;
             }
-
-            // _highlightInnerText now encloses the common highlight logic.
-            async function _highlightInnerText(rawText, html, map) {
-                const text = rawText.toLowerCase();
-                const textLength = text.length;
-                const highlightedHtml = html.cloneNode(true);
-                let i = 0;
-
-                // Helper to wrap matching elements in a highlight span.
-                function applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex) {
-                    let newScroll = false;
-                    // For single or two-element matches we treat them separately.
-                    if (jMatchIndex - iMatchIndex === 0) {
-                        const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-
-                        if (!elem) return;
-
-                        elem.setAttribute('id', `context-highlight-${scrollIndex}`);
-                        elem.setAttribute('class', 'highlighted-context');
-                        newScroll = true;
-                    } else if (jMatchIndex - iMatchIndex === 1) {
-                        // Two elements
-                        if (iMatch.parentPath === jMatch.parentPath) {
-                            //They are in the same element but the text was split somehow
-                            const elem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-
-                            if (!elem) return;
-
-                            elem.setAttribute('id', `context-highlight-${scrollIndex}`);
-                            elem.setAttribute('class', 'highlighted-context');
-                        } else {
-                            const iElement = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                            const jElement = highlightedHtml.querySelector(_transformPath(jMatch.parentPath));
-
-                            if (!iElement || !jElement) return;
-
-                            let iText = iElement.innerText;
-                            let jText = jElement.innerText;
-
-                            iElement.setAttribute('id', `context-highlight-${scrollIndex}`);
-                            iElement.setAttribute('class', 'highlighted-context');
-                            iElement.innerText = iText + ' ' + jText;
-
-                            jElement.innerText = '';
-                            jElement.setAttribute('class', 'silent');
-                        }
-                        newScroll = true;
-                    } else {
-                        let combinedText = '';
-                        let lastPath = '';
-                        for (let k = iMatchIndex; k <= jMatchIndex; k++) {
-                            let el = map[k];
-                            if (!el) continue;
-
-                            if (el.parentPath !== lastPath) {
-                                let element = highlightedHtml.querySelector(_transformPath(el.parentPath));
-
-                                if (element) combinedText += element.innerText;
-                                if (k === iMatchIndex) {
-                                    element.setAttribute('id', `context-highlight-${scrollIndex}`);
-                                    element.setAttribute('class', 'highlighted-context');
-                                } else if (k !== iMatchIndex) {
-                                    element.innerText = ''; // Clear innerText of non-first elements
-                                    element.setAttribute('class', 'silent');
-                                }
-                                lastPath = el.parentPath;
-                            }
-                        }
-
-                        const firstElem = highlightedHtml.querySelector(_transformPath(iMatch.parentPath));
-                        if (firstElem) {
-                            firstElem.innerText = combinedText;
-                            newScroll = true;
-                        }
-                    }
-
-                    if (newScroll) {
-                        scrollIndex++;
-                    }
-                }
-
-                let contextList = [];
-                for (const context of contexts) {
-                    let newContext = {
-                        text: context.toLowerCase(),
-                        length: context.length,
-                        threshold: Math.floor(context.length * 0.2),
-                    };
-                    contextList.push(newContext);
-                }
-
-                // Sort contextList by length in descending order so longer contexts are checked first
-                contextList.sort((a, b) => b.length - a.length);
-
-                // Add the term to the context list
-                contextList.push({
-                    text: term,
-                    length: term.length,
-                    threshold: Math.floor(term.length * 0.1),
-                });
-
-                while (i < textLength) {
-                    let j,
-                        substring,
-                        punctuationOffset = 0,
-                        cleanedSub;
-                    let matchedIndex = null;
-
-                    for (const [contextIndex, context] of contextList.entries()) {
-                        if (i + context.length > textLength - 1) {
-                            // We can't match this context here because we are doing an exact match and we are at the end of the text
-                            continue;
-                        } else {
-                            substring = text.substring(i, i + context.length);
-                            j = i + context.length;
-
-                            // Clean the substring by removing punctuation
-                            cleanedSub = substring.replace(/[^0-9a-zA-Z ]+/g, ' ').replace(/\s+/g, ' ');
-                            punctuationOffset = substring.length - cleanedSub.length;
-
-                            while (punctuationOffset > 0 && j + punctuationOffset < textLength) {
-                                let newChar = text.substring(j, j + punctuationOffset);
-                                let cleanedNewChar = newChar.replace(/[^0-9a-zA-Z ]+/g, ' ').replace(/\s+/g, ' ');
-
-                                cleanedSub = cleanedNewChar ? cleanedSub + cleanedNewChar : cleanedSub;
-                                punctuationOffset = context.length - cleanedSub.length;
-
-                                j += newChar.length;
-                            }
-                        }
-
-                        if (context.text === cleanedSub) {
-                            matchedIndex = contextIndex;
-
-                            isFirstHighlight = false;
-                            // Find matching mapping entries for start (i) and end (j).
-                            // let matchedStart = i + distance; // Adjusted to account for whatever doesn't match
-                            let matchedStart = i;
-
-                            let iMatchIndex = map.findIndex(
-                                (el) => matchedStart >= el.startOffset && matchedStart <= el.endOffset,
-                            );
-                            let iMatch = map[iMatchIndex];
-                            let jMatchIndex;
-                            let jMatch;
-                            if (iMatch && j >= iMatch.startOffset && j <= iMatch.endOffset) {
-                                //The start and end are in the same element
-                                jMatchIndex = iMatchIndex;
-                                jMatch = map[jMatchIndex];
-                            } else {
-                                const sliceMap = map.slice(iMatchIndex + 1);
-                                jMatchIndex = sliceMap.findIndex((el) => j >= el.startOffset && j <= el.endOffset);
-                                jMatchIndex = jMatchIndex + iMatchIndex + 1;
-                                jMatch = map[jMatchIndex];
-                            }
-                            applyHighlight(iMatch, jMatch, iMatchIndex, jMatchIndex);
-                            i = jMatch.endOffset + 1; // Move past the context match
-                            break; // Exit the loop after finding a match
-                        }
-                    }
-                    if (matchedIndex === null) {
-                        i++;
-                    } else {
-                        // If a match was found we have already incremented i so skip that
-                        if (contextList.length >= 1) {
-                            contextList.splice(matchedIndex, 1); // Remove the matched context so we don't keep looking for it
-                            //We keep the term in the list so we can highlight it over the whole note
-                        }
-                    }
-                }
-                self.alertShown = isFirstHighlight;
-
-                return highlightedHtml;
-            }
-
-            let newHtml = htmlDoc.cloneNode(true);
-            return _highlightInnerText(rawText, htmlDoc, htmlMapping)
-                .then((highlightedHtml) => {
-                    newHtml = highlightedHtml;
-
-                    //Grab all the highlights
-                    let highlights = newHtml.querySelectorAll('.highlighted-context');
-
-                    //update all of the ids going 0-> n
-                    highlights.forEach((highlight, index) => {
-                        highlight.setAttribute('id', `context-highlight-${index}`);
-                    });
-
-                    this.lenOfIndexes = highlights.length;
-                    return newHtml.body.innerHTML;
-                })
-                .catch((error) => {
-                    console.error('Error highlighting inner text:', error);
-                    this.alertShown = true;
-                    // Fallback to the original HTML if highlighting fails
-                    return newHtml.body.innerHTML;
-                });
         },
     },
     computed: {
-        exampleSentences() {
-            if (!this.hpoItemObj) {
-                return [];
-            }
-            return this.hpoItemObj.getExampleSentences();
+        phenotypeName() {
+            return this.hpoItemObj ? this.hpoItemObj.getPhenotypeName() : '';
         },
     },
     watch: {
         hpoItemObj: function (newVal, oldVal) {
             this.closeAndResetNote();
+            this.contextSnippetsByNoteId = {};
+            if (newVal) {
+                void this.refreshContextSnippets();
+            }
         },
         scrolledIndex: function (newVal, oldVal) {
             let scrollHighlight = document.getElementById(`context-highlight-${newVal}`);
@@ -469,26 +255,41 @@ export default {
     background-color: white;
     border-radius: 3px;
     margin-left: 0px;
-    font-style: italic;
     padding: 0px 5px 5px 5px;
     transition: all 0.45s ease-in-out;
     overflow: hidden;
     color: rgb(72, 71, 71);
+    font-size: var(--text-md);
 }
 
 #scroll-btn-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-right: 5px;
+    gap: 8px;
     position: absolute;
-    right: 2px;
-    bottom: -20px;
+    right: 30px;
     background-color: white;
-    font-size: 10pt;
+    font-size: 0.833em;
     border: 1px solid #0b4b99;
     padding: 2px 5px;
     border-radius: 5px;
+    color: white;
+    box-shadow: 0 3px 1px -2px rgba(79, 79, 79, 0.2), 0 2px 2px 0 rgba(79, 79, 79, 0.2), 0 1px 5px 0 rgba(79, 79, 79, 0.2);
+    background-color: rgb(0, 113, 189);
+    font-style: italic;
+    cursor: pointer;
+}
+
+.scroll-btn-term {
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+    font-style: italic;
+    font-size: var(--text-xs);
 }
 
 #next-highlight {
@@ -501,7 +302,7 @@ export default {
     align-items: center;
     border-radius: 5px;
 
-    background-color: gray;
+    background-color: rgb(12, 162, 255);
     border-radius: 5px;
 }
 
@@ -515,27 +316,8 @@ export default {
     fill: white;
 }
 
-.seen-tag {
-    background-color: aliceblue;
-    color: #0b4b99;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-weight: bold;
-    font-style: normal;
-    padding: 2px 4px;
-    border-radius: 5px;
-}
-
-.seen-tag > b {
-    text-decoration: underline;
-}
-
-.seen-tag > i {
-    color: gray;
-}
-
 .no-context-alert {
-    font-size: 12pt;
+    font-size: var(--text-md);
     font-weight: bold;
     color: red;
     margin-left: 5px;
@@ -565,10 +347,11 @@ export default {
     box-sizing: border-box;
     overflow-y: auto;
     height: 100%;
+    
 }
 
 #term-peek-div h3 {
-    font-size: 12pt;
+    font-size: var(--text-md);
     padding-top: 10px;
     width: 100%;
     text-align: center;
@@ -576,19 +359,21 @@ export default {
     box-sizing: border-box;
     top: 0;
     margin-top: 0px;
-    background-color: white;
+    background-color: #eaeaea;
+    min-height: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .note-title {
     z-index: 2;
-    font-size: 1.1em;
+    font-size: var(--text-lg);
 }
 
 #term-peek-div > .sub-container > div {
     text-align: center;
-    border-bottom: 1px solid rgb(209, 209, 209);
-    padding-bottom: 5px;
-    padding-top: 5px;
+    border-bottom: 1px solid rgb(221, 220, 220);
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -616,6 +401,7 @@ export default {
     width: 100%;
     padding: 5px 0px;
     pointer-events: none;
+    font-size: var(--text-sm);
 }
 
 .exp-btn {
@@ -670,7 +456,6 @@ export default {
     border-radius: 5px;
     margin-top: 2px;
     margin-right: 2px;
-    background-color: white;
 }
 
 .close-note-overlay > svg {
@@ -683,7 +468,7 @@ export default {
 }
 
 .highlighted-context {
-    background-color: #fff19583;
+    background-color: #d8ff7273;
     border-radius: 3px;
     padding: 1px 0px;
     margin: 0px;
@@ -691,7 +476,6 @@ export default {
 }
 
 .highlighted-context-term {
-    background-color: #fff19583;
     border-radius: 3px;
     padding: 1px 0px;
     margin: 0px;
@@ -699,22 +483,25 @@ export default {
 
 .highlighted-context-term.scrolled,
 .highlighted-context.scrolled {
-    text-decoration: underline;
-    text-decoration-color: #0b4b99;
+    border-color: #82ba00;
+    border-style: solid;
+    border-width: 2px;
+    text-decoration-color: black;
     text-decoration-thickness: 2px;
     font-weight: bold;
 }
 
 .context-snip {
-    align-self: flex-end;
-    font-size: 10pt;
+    align-self: flex-start;
     padding: 5px 5px;
-    margin-left: 5px;
+    margin-left: 30px;
     margin-right: 5px;
-    background-color: #f6f6f6;
-    border-radius: 5px;
-    width: 80%;
+    margin-bottom: 5px;
+    background-color: #d3f47e45;
     pointer-events: none;
+    font-style: italic;
+    font-size: var(--text-xs);
+    text-align: left;
 }
 .silent {
     display: none;
