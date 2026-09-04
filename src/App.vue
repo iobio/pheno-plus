@@ -12,7 +12,8 @@
 
 <script>
   import MainContainer from '@/components/MainContainer.vue';
-  import fetchNotes, { USE_DUMMY_NOTES } from './data/fetchNotes';
+  import fetchNotes from './data/fetchNotes';
+  import { resolveMockNotesOverride } from './data/mockNotes.js';
 
   export default {
     name: 'App',
@@ -35,7 +36,7 @@
       }
 
       const deploymentConfig = this.$deploymentConfig || {};
-      const notesOverride = deploymentConfig.bypassFHIR ? USE_DUMMY_NOTES : null;
+      const notesOverride = resolveMockNotesOverride(deploymentConfig);
 
       this.hideOverlay = false;
       const appNotesObj = await fetchNotes(this.$client, this.$patientId, notesOverride);

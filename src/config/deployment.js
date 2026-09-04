@@ -5,7 +5,8 @@ import { fetchJsonConfig } from './configLoader.js';
  * to per-environment settings. Copy config/templates/deploymentConfig.example.json via
  * `npm run setup:config`.
  *
- * bypassFHIR: skip SMART OAuth and load dummy notes (local dev only).
+ * bypassFHIR: skip SMART OAuth and load mock notes (local dev only).
+ * mockNotesCollections: keys from fixtures/mock-notes.json (default: synthetic-notes-baby-ellison).
  */
 const DEFAULT_DEPLOYMENT_CONFIG = {
     enforceWhiteList: true,

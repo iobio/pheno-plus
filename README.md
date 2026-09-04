@@ -59,7 +59,7 @@ This creates `public/deploymentConfig.json` and `public/whiteList.json` from tem
 npm run dev
 ```
 
-Vite serves the app at [http://localhost:3002](http://localhost:3002) (default port). Dummy notes are loaded from `fixtures/dummyNotes.json` via a dev-only route (not included in production builds).
+Vite serves the app at [http://localhost:3002](http://localhost:3002) (default port). Mock notes are loaded from `fixtures/mock-notes.json` via a dev-only route (not included in production builds).
 
 4. **Open the app**
 
@@ -127,7 +127,7 @@ Runtime config files live in `public/` and are copied into `dist/` at build time
 | `deploymentConfig.example.json` | `deploymentConfig.json` | Host mapping, OAuth, feature flags |
 | `whiteList.example.json` | `whiteList.json` | Allowed users when whitelist is enforced |
 
-Dummy notes for local dev live in `fixtures/dummyNotes.json` — served by the Vite dev server only, not included in staging or production builds.
+Mock notes for local dev live in `fixtures/mock-notes.json` — organized by collection (`synthetic-notes-baby-ellison`, `benchmark-hpo-rag`, `test`) and served by the Vite dev server only, not included in staging or production builds.
 
 `setup:config` copies each template into `public/` **only if the target file is missing** — it never overwrites an existing file.
 

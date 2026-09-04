@@ -5,27 +5,27 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
-const dummyNotesPath = path.join(rootDir, 'fixtures/dummyNotes.json');
+const mockNotesPath = path.join(rootDir, 'fixtures/mock-notes.json');
 
-function serveDummyNotesDev() {
+function serveMockNotesDev() {
     return {
-        name: 'serve-dummy-notes-dev',
+        name: 'serve-mock-notes-dev',
         configureServer(server) {
             server.middlewares.use((req, res, next) => {
                 const url = req.url?.split('?')[0] ?? '';
-                if (!url.endsWith('/dummyNotes.json')) {
+                if (!url.endsWith('/mock-notes.json')) {
                     next();
                     return;
                 }
 
-                if (!fs.existsSync(dummyNotesPath)) {
+                if (!fs.existsSync(mockNotesPath)) {
                     res.statusCode = 404;
-                    res.end('dummyNotes.json not found');
+                    res.end('mock-notes.json not found');
                     return;
                 }
 
                 res.setHeader('Content-Type', 'application/json');
-                fs.createReadStream(dummyNotesPath).pipe(res);
+                fs.createReadStream(mockNotesPath).pipe(res);
             });
         },
     };
@@ -36,7 +36,7 @@ export default defineConfig({
     server: {
         port: 3002,
     },
-    plugins: [vue(), serveDummyNotesDev()],
+    plugins: [vue(), serveMockNotesDev()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),

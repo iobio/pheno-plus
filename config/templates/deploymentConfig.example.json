@@ -7,10 +7,11 @@
   },
   "environments": {
     "local": {
-      "enforceWhiteList": false, 
-      "bypassFHIR":       true,         
-      "clientId":         "",            
-      "redirectUri":      ""         
+      "enforceWhiteList": false,
+      "bypassFHIR":       true,
+      "mockNotesCollections": ["synthetic-notes-baby-ellison"],
+      "clientId":         "",
+      "redirectUri":      ""
     },
     "staging": {
       "enforceWhiteList": false, 

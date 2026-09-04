@@ -1,6 +1,11 @@
 import ClinicalNote from '@/models/ClinicalNote';
 import { configUrl } from '@/config/configLoader.js';
 import {
+    DEFAULT_MOCK_NOTE_COLLECTIONS,
+    flattenMockNotesRecords,
+    parseMockNotesFile,
+} from '@/data/mockNotes.js';
+import {
     buildDocumentSearchUrl,
     LOINC_CODE_PROGRESS_NOTE,
     LOINC_CODES_CORE,
@@ -20,21 +25,32 @@ async function fetchAllDocumentEntries(client, patientId) {
     return [...coreNotes, ...progressNotes];
 }
 
-/** Pass as notesOverride to fetchNotes() to load dummy notes from fixtures/dummyNotes.json (dev only). */
-export const USE_DUMMY_NOTES = true;
+/** Pass as notesOverride to fetchNotes() to load mock notes from fixtures/mock-notes.json (dev only). */
+export const USE_DUMMY_NOTES = { useMockNotes: true };
+
+function isMockNotesOverride(notesOverride) {
+    return notesOverride === USE_DUMMY_NOTES || notesOverride?.useMockNotes === true;
+}
+
+function mockNoteCollectionsFromOverride(notesOverride) {
+    if (Array.isArray(notesOverride?.collections) && notesOverride.collections.length > 0) {
+        return notesOverride.collections;
+    }
+    return DEFAULT_MOCK_NOTE_COLLECTIONS;
+}
 
 /**
  * Fetch clinical notes for the active patient.
  * @param {object|null} client - FHIR client (required for live fetch)
  * @param {string|null} patientId - FHIR patient id (required for live fetch)
  * @param {Array|boolean|null|undefined} notesOverride -
- *   Pass USE_DUMMY_NOTES (true) for dummy notes from dummyNotes.json, a ClinicalNote[] to return custom fixtures,
+ *   Pass USE_DUMMY_NOTES (true) for mock notes from mock-notes.json, a ClinicalNote[] to return custom fixtures,
  *   or omit/null for live FHIR fetch.
  */
 export default async function fetchNotes(client, patientId, notesOverride) {
-    if (notesOverride === USE_DUMMY_NOTES) {
-        const dummyNotes = await loadDummyNotes();
-        return { notesList: dummyNotes, totalNotes: dummyNotes.length };
+    if (isMockNotesOverride(notesOverride)) {
+        const mockNotes = await loadMockNotes(mockNoteCollectionsFromOverride(notesOverride));
+        return { notesList: mockNotes, totalNotes: mockNotes.length };
     }
 
     if (Array.isArray(notesOverride)) {
@@ -440,16 +456,14 @@ function buildNoteTitle(type, author, practitionerRole, titleDate) {
     return parts.join(': ');
 }
 
-async function loadDummyNotes() {
-    const response = await fetch(configUrl('dummyNotes.json'));
+async function loadMockNotes(collectionKeys = DEFAULT_MOCK_NOTE_COLLECTIONS) {
+    const response = await fetch(configUrl('mock-notes.json'));
     if (!response.ok) {
-        throw new Error(`Failed to load dummy notes: HTTP ${response.status}`);
+        throw new Error(`Failed to load mock notes: HTTP ${response.status}`);
     }
 
-    const records = await response.json();
-    if (!Array.isArray(records)) {
-        throw new Error('dummyNotes.json must be a JSON array');
-    }
+    const data = parseMockNotesFile(await response.json());
+    const records = flattenMockNotesRecords(data, collectionKeys);
 
     return records.map(clinicalNoteFromRecord);
 }

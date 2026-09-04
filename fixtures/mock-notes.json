@@ -1,0 +1,408 @@
+{
+  "synthetic-notes-baby-ellison": [
+     {
+      "id": "demo-ellison-n1-admission",
+      "date": "2026-03-02",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-ellison-n1-admission",
+      "text": "*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***\nPatient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male\nDOB: 2026-03-02 (DOL 0)      Location: NICU, Bed 12\nAttending: A. Okafor, MD         Author: R. Patel, MD (Neonatology)\nNote type: NICU Admission Note (History & Physical)               Date/Time: 2026-03-02 03:40\n------------------------------------------------------------------------\n\nCHIEF COMPLAINT\nRespiratory distress and inability to pass a nasogastric catheter shortly\nafter birth.\n\nHISTORY OF PRESENT ILLNESS\nBaby Boy Ellison is a 37+2 week male infant delivered by spontaneous vaginal\ndelivery to a 31-year-old G2P1 mother whose pregnancy was complicated by\npolyhydramnios. Apgars were 6 and 8. In the delivery room the infant became\ndusky with quiet handling and pinked up promptly with vigorous crying; the\nteam was unable to pass a suction catheter through either naris, raising\nconcern for bilateral choanal atresia. A grade III/VI systolic murmur was\nappreciated at the left sternal border, and a congenital heart defect was\nsuspected pending echocardiography. The infant did not pass the newborn\nhearing screen in either ear. On penlight examination the bedside team noted\na possible coloboma of the right iris; ophthalmology was consulted for formal\nevaluation.\n\nPHYSICAL EXAMINATION\nGeneral: alert, mildly dysmorphic term-appearing male.\nHEENT: cup-shaped, low-set external ears bilaterally. There was no cleft lip\n  or palate on direct visualization and palpation. An oral airway was placed\n  to relieve obstruction during quiet periods.\nCardiac: regular rhythm with the murmur described above.\nGenitourinary: both testes were undescended in the inguinal canals.\nNeuro: the infant was diffusely hypotonic with reduced spontaneous movement.\n\nASSESSMENT & PLAN\nLate-preterm male with multiple congenital anomalies concerning for an\nunderlying genetic syndrome. Genetics and Cardiology consulted. NG tube placed\nfor feeds. Continue cardiorespiratory monitoring.",
+      "title": "NICU Admission Note (History & Physical) - R. Patel, MD",
+      "html": "<h1>NICU Admission Note (History &amp; Physical) - R. Patel, MD</h1><p>*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***</p><p>Patient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male</p><p>DOB: 2026-03-02 (DOL 0)      Location: NICU, Bed 12</p><p>Attending: A. Okafor, MD         Author: R. Patel, MD (Neonatology)</p><p>Note type: NICU Admission Note (History &amp; Physical)               Date/Time: 2026-03-02 03:40</p><h2>Chief Complaint</h2><p>Respiratory distress and inability to pass a nasogastric catheter shortly after birth.</p><h2>History of Present Illness</h2><p>Baby Boy Ellison is a 37+2 week male infant delivered by spontaneous vaginal delivery to a 31-year-old G2P1 mother whose pregnancy was complicated by polyhydramnios.</p><p>Apgars were 6 and 8.</p><p>In the delivery room the infant became dusky with quiet handling and pinked up promptly with vigorous crying; the team was unable to pass a suction catheter through either naris, raising concern for bilateral choanal atresia.</p><p>A grade III/VI systolic murmur was appreciated at the left sternal border, and a congenital heart defect was suspected pending echocardiography.</p><p>The infant did not pass the newborn hearing screen in either ear.</p><p>On penlight examination the bedside team noted a possible coloboma of the right iris; ophthalmology was consulted for formal evaluation.</p><h2>Physical Examination</h2><p>General: alert, mildly dysmorphic term-appearing male.</p><p>HEENT: cup-shaped, low-set external ears bilaterally.</p><p>There was no cleft lip or palate on direct visualization and palpation.</p><p>An oral airway was placed to relieve obstruction during quiet periods.</p><p>Cardiac: regular rhythm with the murmur described above.</p><p>Genitourinary: both testes were undescended in the inguinal canals.</p><p>Neuro: the infant was diffusely hypotonic with reduced spontaneous movement.</p><h2>Assessment &amp; Plan</h2><p>Late-preterm male with multiple congenital anomalies concerning for an underlying genetic syndrome. Genetics and Cardiology consulted. NG tube placed for feeds. Continue cardiorespiratory monitoring.</p>"
+    },
+    {
+      "id": "demo-ellison-n2-progress",
+      "date": "2026-03-06",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-ellison-n2-progress",
+      "text": "*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***\nPatient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male\nDOB: 2026-03-02 (DOL 4)      Location: NICU, Bed 12\nAttending: A. Okafor, MD         Author: M. Nguyen, DO (Neonatology)\nNote type: Progress Note (SOAP)               Date/Time: 2026-03-06 07:15\n------------------------------------------------------------------------\n\nSUBJECTIVE\nDOL 4. Infant tolerating continuous NG feeds with intermittent oxygen\ndesaturations during handling. Nursing reports intermittent nystagmus noted at\nthe bedside overnight.\n\nOBJECTIVE\nExam notable for persistent central hypotonia with head lag on pull-to-sit.\nAttempts at oral feeding were poorly coordinated and the infant demonstrated\ndysphagia with pooling of secretions, so he remains NG-dependent. A head\nultrasound obtained yesterday showed no evidence of intraventricular\nhemorrhage. Morning labs revealed an ionized calcium of 0.92 mmol/L,\nconsistent with hypocalcemia, and calcium supplementation was started.\n\nASSESSMENT & PLAN\nOngoing multisystem workup as below. Continue NG feeds and monitor closely for\naspiration during any oral feeding trials. Repeat calcium this evening.\nAwaiting genetics and cardiology recommendations.",
+      "title": "Progress Note (SOAP) - M. Nguyen, DO",
+      "html": "<h1>Progress Note (SOAP) - M. Nguyen, DO</h1><p>*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***</p><p>Patient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male</p><p>DOB: 2026-03-02 (DOL 4)      Location: NICU, Bed 12</p><p>Attending: A. Okafor, MD         Author: M. Nguyen, DO (Neonatology)</p><p>Note type: Progress Note (SOAP)               Date/Time: 2026-03-06 07:15</p><h2>Subjective</h2><p>DOL 4. Infant tolerating continuous NG feeds with intermittent oxygen desaturations during handling.</p><p>Nursing reports intermittent nystagmus noted at the bedside overnight.</p><h2>Objective</h2><p>Exam notable for persistent central hypotonia with head lag on pull-to-sit.</p><p>Attempts at oral feeding were poorly coordinated and the infant demonstrated dysphagia with pooling of secretions, so he remains NG-dependent.</p><p>A head ultrasound obtained yesterday showed no evidence of intraventricular hemorrhage.</p><p>Morning labs revealed an ionized calcium of 0.92 mmol/L, consistent with hypocalcemia, and calcium supplementation was started.</p><h2>Assessment &amp; Plan</h2><p>Ongoing multisystem workup as below. Continue NG feeds and monitor closely for aspiration during any oral feeding trials.</p><p>Repeat calcium this evening. Awaiting genetics and cardiology recommendations.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "demo-ellison-n3-genetics",
+      "date": "2026-03-07",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-ellison-n3-genetics",
+      "text": "*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***\nPatient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male\nDOB: 2026-03-02 (DOL 5)      Location: NICU, Bed 12\nAttending: A. Okafor, MD         Author: S. Ibarra, MD (Medical Genetics)\nNote type: Genetics Consult Note               Date/Time: 2026-03-07 14:20\n------------------------------------------------------------------------\n\nREASON FOR CONSULT\nMultiple congenital anomalies, evaluate for a unifying genetic diagnosis.\n\nFINDINGS\nWe examined the infant and reviewed imaging and subspecialty input.\nNasal endoscopy by ENT confirmed bilateral choanal atresia. Ophthalmology's\ndilated exam demonstrated bilateral chorioretinal coloboma. There was a\nleft-sided facial weakness producing an asymmetric crying facies, consistent\nwith a cranial nerve VII palsy. The external ears were cup-shaped with\ndeficient earlobes, and an auditory brainstem response study was consistent\nwith bilateral sensorineural hearing loss. CT of the temporal bones showed\nhypoplasia of both semicircular canals. Both testes remained undescended,\nconfirming bilateral cryptorchidism.\n\nFAMILY HISTORY\nThere is one older sibling who underwent repair of a cleft lip in infancy. The\nmother has hypothyroidism managed with levothyroxine. No family history of\nsudden death or consanguinity.\n\nIMPRESSION\nThe constellation of coloboma, choanal atresia, cranial nerve dysfunction,\ncharacteristic external ears with sensorineural hearing loss, semicircular\ncanal hypoplasia, and genital hypoplasia meets clinical criteria for CHARGE\nsyndrome. CHD7 sequencing has been sent.",
+      "title": "Genetics Consult Note - S. Ibarra, MD",
+      "html": "<h1>Genetics Consult Note - S. Ibarra, MD</h1><p>*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***</p><p>Patient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male</p><p>DOB: 2026-03-02 (DOL 5)      Location: NICU, Bed 12</p><p>Attending: A. Okafor, MD         Author: S. Ibarra, MD (Medical Genetics)</p><p>Note type: Genetics Consult Note               Date/Time: 2026-03-07 14:20</p><h2>Reason for Consult</h2><p>Multiple congenital anomalies, evaluate for a unifying genetic diagnosis.</p><h2>Findings</h2><p>We examined the infant and reviewed imaging and subspecialty input.</p><p>Nasal endoscopy by ENT confirmed bilateral choanal atresia.</p><p>Ophthalmology's dilated exam demonstrated bilateral chorioretinal coloboma.</p><p>There was a left-sided facial weakness producing an asymmetric crying facies, consistent with a cranial nerve VII palsy.</p><p>The external ears were cup-shaped with deficient earlobes, and an auditory brainstem response study was consistent with bilateral sensorineural hearing loss.</p><p>CT of the temporal bones showed hypoplasia of both semicircular canals.</p><p>Both testes remained undescended, confirming bilateral cryptorchidism.</p><h2>Family History</h2><p>There is one older sibling who underwent repair of a cleft lip in infancy.</p><p>The mother has hypothyroidism managed with levothyroxine.</p><p>No family history of sudden death or consanguinity.</p><h2>Impression</h2><p>The constellation of coloboma, choanal atresia, cranial nerve dysfunction, characteristic external ears with sensorineural hearing loss, semicircular canal hypoplasia, and genital hypoplasia meets clinical criteria for CHARGE syndrome.</p><p>CHD7 sequencing has been sent.</p>"
+    },
+    {
+      "id": "demo-ellison-n4-cardiology",
+      "date": "2026-03-07",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-ellison-n4-cardiology",
+      "text": "*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***\nPatient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male\nDOB: 2026-03-02 (DOL 5)      Location: NICU, Bed 12\nAttending: A. Okafor, MD         Author: D. Cho, MD (Pediatric Cardiology)\nNote type: Cardiology Consult Note               Date/Time: 2026-03-07 16:45\n------------------------------------------------------------------------\n\nREASON FOR CONSULT\nSystolic murmur and suspected structural heart disease.\n\nECHOCARDIOGRAM\nThe transthoracic echocardiogram demonstrated a large malaligned\nventricular septal defect with an overriding aorta, right ventricular\noutflow tract obstruction, and right ventricular hypertrophy - findings\ndiagnostic of tetralogy of Fallot. A small patent ductus arteriosus was\nalso present with left-to-right flow. Biventricular systolic function was\npreserved.\n\nASSESSMENT & PLAN\nTetralogy of Fallot with currently balanced physiology and adequate\nsaturations off prostaglandin. No immediate intervention required. We will\nfollow serially for progression of outflow obstruction and coordinate\nsurgical timing with the multidisciplinary team given the broader syndromic\npicture.",
+      "title": "Cardiology Consult Note - D. Cho, MD",
+      "html": "<h1>Cardiology Consult Note - D. Cho, MD</h1><p>*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***</p><p>Patient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male</p><p>DOB: 2026-03-02 (DOL 5)      Location: NICU, Bed 12</p><p>Attending: A. Okafor, MD         Author: D. Cho, MD (Pediatric Cardiology)</p><p>Note type: Cardiology Consult Note               Date/Time: 2026-03-07 16:45</p><h2>Reason for Consult</h2><p>Systolic murmur and suspected structural heart disease.</p><h2>Echocardiogram</h2><p>The transthoracic echocardiogram demonstrated a large malaligned ventricular septal defect with an overriding aorta, right ventricular outflow tract obstruction, and right ventricular hypertrophy - findings diagnostic of tetralogy of Fallot.</p><p>A small patent ductus arteriosus was also present with left-to-right flow.</p><p>Biventricular systolic function was preserved.</p><h2>Assessment &amp; Plan</h2><p>Tetralogy of Fallot with currently balanced physiology and adequate saturations off prostaglandin.</p><p>No immediate intervention required.</p><p>We will follow serially for progression of outflow obstruction and coordinate surgical timing with the multidisciplinary team given the broader syndromic picture.</p>"
+    },
+    {
+      "id": "demo-ellison-n5-discharge",
+      "date": "2026-03-28",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-ellison-n5-discharge",
+      "text": "*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***\nPatient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male\nDOB: 2026-03-02 (DOL 26)      Location: NICU, Bed 12\nAttending: A. Okafor, MD         Author: R. Patel, MD (Neonatology)\nNote type: Discharge Summary               Date/Time: 2026-03-28 11:00\n------------------------------------------------------------------------\n\nHOSPITAL COURSE\nBaby Boy Ellison was admitted at birth with respiratory obstruction and\nmultiple congenital anomalies. Bilateral choanal atresia was confirmed and\nstented by ENT. CHD7 sequencing returned a pathogenic variant, confirming a\nmolecular diagnosis of CHARGE syndrome. His cardiac lesion was characterized\nas tetralogy of Fallot, which remained stable off prostaglandin throughout\nadmission. Feeding was limited by ongoing dysphagia; after a failed oral\nfeeding trial a gastrostomy tube was placed, and caregivers were trained on\ntube feeds with continued precautions for aspiration. Audiology reconfirmed\nbilateral sensorineural hearing loss and arranged early-intervention\nfollow-up. Bilateral cryptorchidism will be followed by urology as an\noutpatient.\n\nDISCHARGE DIAGNOSES\n1. CHARGE syndrome (pathogenic CHD7 variant)\n2. Tetralogy of Fallot\n3. Bilateral chorioretinal coloboma\n4. Bilateral choanal atresia, stented\n5. Bilateral sensorineural hearing loss\n6. Dysphagia, G-tube dependent\n7. Bilateral cryptorchidism\n\nDISCHARGE PLAN\nHome on G-tube feeds with cardiology, genetics, ENT, audiology, ophthalmology,\nand urology follow-up.",
+      "title": "Discharge Summary - R. Patel, MD",
+      "html": "<h1>Discharge Summary - R. Patel, MD</h1><p>*** SYNTHETIC DEMONSTRATION RECORD - NOT A REAL PATIENT ***</p><p>Patient: Baby Boy Ellison        MRN: 00-DEMO-4471        Sex: Male</p><p>DOB: 2026-03-02 (DOL 26)      Location: NICU, Bed 12</p><p>Attending: A. Okafor, MD         Author: R. Patel, MD (Neonatology)</p><p>Note type: Discharge Summary               Date/Time: 2026-03-28 11:00</p><h2>Hospital Course</h2><p>Baby Boy Ellison was admitted at birth with respiratory obstruction and multiple congenital anomalies.</p><p>Bilateral choanal atresia was confirmed and stented by ENT.</p><p>CHD7 sequencing returned a pathogenic variant, confirming a molecular diagnosis of CHARGE syndrome.</p><p>His cardiac lesion was characterized as tetralogy of Fallot, which remained stable off prostaglandin throughout admission.</p><p>Feeding was limited by ongoing dysphagia; after a failed oral feeding trial a gastrostomy tube was placed, and caregivers were trained on tube feeds with continued precautions for aspiration.</p><p>Audiology reconfirmed bilateral sensorineural hearing loss and arranged early-intervention follow-up.</p><p>Bilateral cryptorchidism will be followed by urology as an outpatient.</p><h2>Discharge Diagnoses</h2><p>1. CHARGE syndrome (pathogenic CHD7 variant)</p><p>2. Tetralogy of Fallot</p><p>3. Bilateral chorioretinal coloboma</p><p>4. Bilateral choanal atresia, stented</p><p>5. Bilateral sensorineural hearing loss</p><p>6. Dysphagia, G-tube dependent</p><p>7. Bilateral cryptorchidism</p><h2>Discharge Plan</h2><p>Home on G-tube feeds with cardiology, genetics, ENT, audiology, ophthalmology, and urology follow-up.</p>"
+    },
+    {
+      "id": "demo-charge-genetics-list",
+      "date": "2026-03-08",
+      "encounterId": "Encounter/demo-ellison-4471",
+      "binaryUrl": "Binary/demo-charge-genetics-list",
+      "text": "Genetics Consult Note\n\nFindings:\nCT of the temporal bones showed hypoplasia of semicircular canals.\n\nImpression:\nThe constellation of the following meets the clinical criteria for CHARGE syndrom:\n- coloboma\n- choanal atresia,\n- cranial nerve dysfunction\n- characteristic external ears with sensorineural hearing loss with semicircular canal hypoplasia\n- and genital hypoplasia",
+      "title": "Genetics Consult Note",
+      "html": "Genetics Consult Note\n\nFindings:\nCT of the temporal bones showed hypoplasia of semicircular canals.\n\nImpression:\nThe constellation of the following meets the clinical criteria for CHARGE syndrom:\n- coloboma\n- choanal atresia,\n- cranial nerve dysfunction\n- characteristic external ears with sensorineural hearing loss with semicircular canal hypoplasia\n- and genital hypoplasia"
+    }
+  ],
+  "benchmark-hpo-rag": [],
+  "test": [
+    {
+      "id": "0000001test",
+      "date": "2019-01-01",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "MPPH; Megalencephaly-Polymicrogyria-Polydactyly-Hydrocephalus syndrome; multiple congenital anomalies; tetralogy of fallot; brain anomalies consisting of bilateral polymicrogyria and cortical dysplasia; post axial polysyndactyly of hand and feet; macrosomia affecting head and length; hypotonic with global developmental delays",
+      "title": "Test Note One - Joe Smith MD",
+      "html": "\n        <!DOCTYPE html>\n        <html lang=\"en\">\n        <head>\n            <meta charset=\"UTF-8\">\n            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n            <title>Medical Syndromes and Anomalies</title>\n            <style>\n                body {\n                    font-family: Arial, sans-serif;\n                    line-height: 1.6;\n                    margin: 20px;\n                }\n                h1, h2, h3 {\n                    color: #2c3e50;\n                }\n                ul {\n                    margin: 10px 0;\n                }\n                li {\n                    margin: 5px 0;\n                }\n                .highlight {\n                    background-color: #f0f8ff;\n                    padding: 5px;\n                    border-left: 3px solid #3498db;\n                }\n            </style>\n        </head>\n        <body>\n            <header>\n                <h1>Overview of Rare Syndromes and Associated Anomalies</h1>\n                <p>This document provides an overview of complex syndromes, including detailed descriptions of symptoms, associated conditions, and key characteristics for better understanding.</p>\n            </header>\n\n            <main>\n                <section>\n                    <h2>Megalencephaly-Polymicrogyria-Polydactyly-Hydrocephalus (MPPH) Syndrome</h2>\n                    <p class=\"highlight\">\n                        MPPH syndrome is a complex condition involving various congenital anomalies and developmental issues. Key characteristics include:\n                    </p>\n                    <ul>\n                        <li>Bilateral polymicrogyria and cortical dysplasia</li>\n                        <li>Post-axial polysyndactyly of hands and feet</li>\n                        <li>Macrosomia affecting both head size and overall length</li>\n                        <li>Hypotonia and global developmental delays</li>\n                        <li>Hydrocephalus contributing to increased head size</li>\n                    </ul>\n                </section>\n\n                <section>\n                    <h2>Multiple Congenital Anomalies</h2>\n                    <p>This term refers to the presence of multiple birth defects involving different organ systems. Commonly associated conditions include:</p>\n                    <ul>\n                        <li>Tetralogy of Fallot, a complex congenital heart defect</li>\n                        <li>Brain anomalies, including polymicrogyria and hydrocephalus</li>\n                        <li>Post-axial polydactyly and syndactyly</li>\n                        <li>Macrocephaly and disproportionate growth patterns</li>\n                    </ul>\n                    <p>Management often requires a multidisciplinary approach involving cardiology, neurology, orthopedics, and genetic counseling.</p>\n                </section>\n\n                <section>\n                    <h2>Detailed Case Study: Tetralogy of Fallot</h2>\n                    <p>Tetralogy of Fallot is characterized by four distinct cardiac anomalies:</p>\n                    <ol>\n                        <li>Ventricular septal defect (VSD)</li>\n                        <li>Pulmonary stenosis</li>\n                        <li>Overriding aorta</li>\n                        <li>Right ventricular hypertrophy</li>\n                    </ol>\n                    <p>Early surgical intervention is critical for survival and improving long-term outcomes.</p>\n                </section>\n\n                <section>\n                    <h2>Associated Brain Anomalies</h2>\n                    <p>In MPPH syndrome, brain anomalies are a hallmark feature, including:</p>\n                    <ul>\n                        <li>Polymicrogyria: An abnormal organization of the brain's cortical layers</li>\n                        <li>Hydrocephalus: Excess cerebrospinal fluid (CSF) within the brain's ventricles</li>\n                        <li>Cortical dysplasia: Disruption of normal brain structure and function</li>\n                    </ul>\n                    <p>These anomalies contribute to cognitive and developmental delays, as well as seizures in some cases.</p>\n                </section>\n\n                <section>\n                    <h2>Macrosomia and Growth Patterns</h2>\n                    <p>Macrosomia in MPPH syndrome is defined by:</p>\n                    <ul>\n                        <li>Significant enlargement of the head circumference (macrocephaly)</li>\n                        <li>Increased body length relative to age-matched peers</li>\n                        <li>Disproportionate growth patterns affecting overall symmetry</li>\n                    </ul>\n                    <p>Monitoring growth is critical for early intervention and management of associated complications.</p>\n                </section>\n\n                <section>\n                    <h2>Developmental Delays and Hypotonia</h2>\n                    <p>Children with MPPH syndrome often exhibit:</p>\n                    <ul>\n                        <li>Global developmental delays impacting motor and cognitive milestones</li>\n                        <li>Hypotonia, resulting in reduced muscle strength and tone</li>\n                        <li>Speech and language delays requiring therapy</li>\n                    </ul>\n                    <p>Intervention programs, including physical and occupational therapy, are vital to support development.</p>\n                </section>\n            </main>\n        </body>\n        </html>\n        "
+    },
+    {
+      "id": "0000002test",
+      "date": "2019-01-03",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking",
+      "title": "Test Note Two - Phil Parker MD",
+      "html": "<h1>Test Note Two - Phil Parker MD</h1><p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        <p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>\n        "
+    },
+    {
+      "id": "0000003test",
+      "date": "2019-01-01",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "MPPH; Megalencephaly-Polymicrogyria-Polydactyly-Hydrocephalus syndrome; multiple congenital anomalies; tetralogy of fallot; brain anomalies consisting of bilateral polymicrogyria and cortical dysplasia; post axial polysyndactyly of hand and feet; macrosomia affecting head and length; hypotonic with global developmental delays",
+      "title": "Test Note Three - Sara Kahal MD",
+      "html": "<h1>Test Note Three - Sara Kahal MD</h1><p>MPPH; Megalencephaly-Polymicrogyria-Polydactyly-Hydrocephalus syndrome; multiple congenital anomalies; tetralogy of fallot; brain anomalies consisting of bilateral polymicrogyria and cortical dysplasia; post axial polysyndactyly of hand and feet; macrosomia affecting head and length; hypotonic with global developmental delays</p>"
+    },
+    {
+      "id": "0000004test",
+      "date": "2019-01-03",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking",
+      "title": "Clinical Summary - Blake Null NP",
+      "html": "<h1>Test Note Four - Blake Null NP</h1><p>Charcot-Marie-Tooth disease; demyelination; Dejerine sottas disease possibly; sensory neuropathy; hammertoes; difficulty walking</p>"
+    },
+    {
+      "id": "0000005test",
+      "date": "2019-01-06",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "Progress note: macrocephaly; hypotonia; global developmental delay; hydrocephalus",
+      "title": "Progress Note - Alex Rivera MD",
+      "html": "<h1>Progress Note - Alex Rivera MD</h1><p>macrocephaly; hypotonia; global developmental delay; hydrocephalus</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000006test",
+      "date": "2019-01-07",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "Progress note: sensory neuropathy; distal weakness; hammertoes; difficulty walking",
+      "title": "Progress Note - Morgan Lee MD",
+      "html": "<h1>Progress Note - Morgan Lee MD</h1><p>sensory neuropathy; distal weakness; hammertoes; difficulty walking</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000007test",
+      "date": "2019-01-08",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "Progress note: developmental delay; speech delay; hypotonia; seizures",
+      "title": "Progress Note - Taylor Chen MD",
+      "html": "<h1>Progress Note - Taylor Chen MD</h1><p>developmental delay; speech delay; hypotonia; seizures</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000009test",
+      "date": "2019-01-09",
+      "encounterId": "Encounter/testid123",
+      "binaryUrl": "Binary/testid123",
+      "text": "A 44-year- old super-morbidly- obese man body mass index (BMI 63) underwent sleeve gastrectomy for weight loss and was found to have multiple adenomatous fundic gland polyps on final pathology. Subsequent workup included esophagogastroduodenoscopy which revealed innumerable polyps of the remaining gastric fundus and body consistent with fundic gland polyps, normal duodenum without polyps, and Barrett’s oesophagus. Colonoscopy was significant for innumerable polyps of varying sizes up to 1.5 cm throughout the colon, with relative rectal sparing. Biopsies were consistent with tubular adenoma and hyperplastic polyps. Thyroid ultrasound was within normal limits and abdominal CT was significant for left-sided 3.4 cm mesenteric mass representing scarring versus possible desmoid. Family history was significant for colon cancer diagnosed in his maternal grandfather at age 72, paternal grandmother who died of metastatic cancer at age 50 with unknown primary and mother diagnosed with thyroid cancer at age 40. Physical examination was notable for morbid obesity (BMI 45), cardiopulmonary examination within normal limits and abdomen with well-healing surgical scars from prior sleeve gastrectomy.",
+      "title": "Test Note - HPO Rag test case 1",
+      "html": "<h1>Test Note - HPO Rag test case 1</h1><p>A 44-year- old super-morbidly- obese man body mass index (BMI 63) underwent sleeve gastrectomy for weight loss and was found to have multiple adenomatous fundic gland polyps on final pathology. Subsequent workup included esophagogastroduodenoscopy which revealed innumerable polyps of the remaining gastric fundus and body consistent with fundic gland polyps, normal duodenum without polyps, and Barrett’s oesophagus. Colonoscopy was significant for innumerable polyps of varying sizes up to 1.5 cm throughout the colon, with relative rectal sparing. Biopsies were consistent with tubular adenoma and hyperplastic polyps. Thyroid ultrasound was within normal limits and abdominal CT was significant for left-sided 3.4 cm mesenteric mass representing scarring versus possible desmoid. Family history was significant for colon cancer diagnosed in his maternal grandfather at age 72, paternal grandmother who died of metastatic cancer at age 50 with unknown primary and mother diagnosed with thyroid cancer at age 40. Physical examination was notable for morbid obesity (BMI 45), cardiopulmonary examination within normal limits and abdomen with well-healing surgical scars from prior sleeve gastrectomy.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000001neuro",
+      "date": "2019-01-10",
+      "encounterId": "Encounter/testid-neuro01",
+      "binaryUrl": "Binary/testid-neuro01",
+      "text": "Progress Note — Neurology Follow-up\nHPI: 3 yo male, here for follow-up of global dev delay. Per mom, he still isn't combining words and only has a handful of single words — speech therapy ongoing. Gross motor also behind; he didn't walk until 22 months and remains unsteady, frequently tripping over his own feet. Mom notes his eyes sometimes drift and jerk when he's tired, worse at the end of the day.\nHas a h/o sz, last event ~6 months ago. Denies any recent seizure activity, and a spell of staring last month was felt to be behavioral rather than epileptic after review. No regression noted.\nExam: HSM present on abdominal exam. Head circumference tracking below the 3rd percentile. Mild RUE weakness, otherwise grossly nonfocal. He fatigues quickly with exertion and asks to be carried after short distances.\nFHx: Notable for early hearing loss in mother and a maternal uncle with ID. No known consanguinity.",
+      "title": "Test Note - Neurology Follow-up",
+      "html": "<h1>Progress Note — Neurology Follow-up</h1><p>HPI: 3 yo male, here for follow-up of global dev delay. Per mom, he still isn&#x27;t combining words and only has a handful of single words — speech therapy ongoing. Gross motor also behind; he didn&#x27;t walk until 22 months and remains unsteady, frequently tripping over his own feet. Mom notes his eyes sometimes drift and jerk when he&#x27;s tired, worse at the end of the day.</p><p>Has a h/o sz, last event ~6 months ago. Denies any recent seizure activity, and a spell of staring last month was felt to be behavioral rather than epileptic after review. No regression noted.</p><p>Exam: HSM present on abdominal exam. Head circumference tracking below the 3rd percentile. Mild RUE weakness, otherwise grossly nonfocal. He fatigues quickly with exertion and asks to be carried after short distances.</p><p>FHx: Notable for early hearing loss in mother and a maternal uncle with ID. No known consanguinity.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000100composite",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-composite",
+      "binaryUrl": "Binary/testid-composite",
+      "text": "Progress Note — Pediatric Genetics / Multisystem Evaluation\n\nHPI: Patient is a young child referred for multisystem concerns. On exam the patient has low muscle tone and an unusually small head. Parents report he has difficulty swallowing and the baby has trouble feeding and often spits up. He experiences frequent headaches per mom, and has poor coordination noted both at home and in clinic.\n\nGrowth & Development: The patient is short for his age. He stopped meeting milestones and lost skills he had. His speech is hard to understand even for family, and he can't keep up with other kids on the playground.\n\nCardiopulmonary: He gets winded climbing a single flight of stairs. There have been repeated chest infections since birth.\n\nHEENT / Sensory: Her hearing has gotten noticeably worse over the past year. Her vision is blurry and getting worse.\n\nMusculoskeletal / Skin: There is curvature of the spine. The patient's muscles have been wasting away. Skin is very stretchy and joints bend too far.\n\nAbdominal: The child has an enlarged liver.\n\nHeme: He bruises very easily.\n\nPertinent negatives: The patient does not have seizures. There is no evidence of hearing loss on formal screening today. We initially suspected ataxia, but this was not confirmed.\n\nFamily history: His brother has cystic fibrosis, but the patient is unaffected.",
+      "title": "ClinPhen Test Note - Composite multisystem (batch 2)",
+      "html": "<h1>Progress Note — Pediatric Genetics / Multisystem Evaluation</h1><p>HPI: Patient is a young child referred for multisystem concerns. On exam the patient has low muscle tone and an unusually small head. Parents report he has difficulty swallowing and the baby has trouble feeding and often spits up. He experiences frequent headaches per mom, and has poor coordination noted both at home and in clinic.</p><p>Growth &amp; Development: The patient is short for his age. He stopped meeting milestones and lost skills he had. His speech is hard to understand even for family, and he can&#x27;t keep up with other kids on the playground.</p><p>Cardiopulmonary: He gets winded climbing a single flight of stairs. There have been repeated chest infections since birth.</p><p>HEENT / Sensory: Her hearing has gotten noticeably worse over the past year. Her vision is blurry and getting worse.</p><p>Musculoskeletal / Skin: There is curvature of the spine. The patient&#x27;s muscles have been wasting away. Skin is very stretchy and joints bend too far.</p><p>Abdominal: The child has an enlarged liver.</p><p>Heme: He bruises very easily.</p><p>Pertinent negatives: The patient does not have seizures. There is no evidence of hearing loss on formal screening today. We initially suspected ataxia, but this was not confirmed.</p><p>Family history: His brother has cystic fibrosis, but the patient is unaffected.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000100composite",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-composite",
+      "binaryUrl": "Binary/testid-composite",
+      "text": "Progress Note — Pediatric Genetics / Multisystem Evaluation\n\nHPI: Patient is a young child referred for multisystem concerns. On exam the patient has low muscle tone and an unusually small head. Parents report he has difficulty swallowing and the baby has trouble feeding and often spits up. He experiences frequent headaches per mom, and has poor coordination noted both at home and in clinic.\n\nGrowth & Development: The patient is short for his age. He stopped meeting milestones and lost skills he had. His speech is hard to understand even for family, and he can't keep up with other kids on the playground.\n\nCardiopulmonary: He gets winded climbing a single flight of stairs. There have been repeated chest infections since birth.\n\nHEENT / Sensory: Her hearing has gotten noticeably worse over the past year. Her vision is blurry and getting worse.\n\nMusculoskeletal / Skin: There is curvature of the spine. The patient's muscles have been wasting away. Skin is very stretchy and joints bend too far.\n\nAbdominal: The child has an enlarged liver.\n\nHeme: He bruises very easily.\n\nPertinent negatives: The patient does not have seizures. There is no evidence of hearing loss on formal screening today. We initially suspected ataxia, but this was not confirmed.\n\nFamily history: His brother has cystic fibrosis, but the patient is unaffected.",
+      "title": "Test Note - Composite multisystem (batch 2)",
+      "html": "<h1>Progress Note — Pediatric Genetics / Multisystem Evaluation</h1><p>HPI: Patient is a young child referred for multisystem concerns. On exam the patient has low muscle tone and an unusually small head. Parents report he has difficulty swallowing and the baby has trouble feeding and often spits up. He experiences frequent headaches per mom, and has poor coordination noted both at home and in clinic.</p><p>Growth &amp; Development: The patient is short for his age. He stopped meeting milestones and lost skills he had. His speech is hard to understand even for family, and he can&#x27;t keep up with other kids on the playground.</p><p>Cardiopulmonary: He gets winded climbing a single flight of stairs. There have been repeated chest infections since birth.</p><p>HEENT / Sensory: Her hearing has gotten noticeably worse over the past year. Her vision is blurry and getting worse.</p><p>Musculoskeletal / Skin: There is curvature of the spine. The patient&#x27;s muscles have been wasting away. Skin is very stretchy and joints bend too far.</p><p>Abdominal: The child has an enlarged liver.</p><p>Heme: He bruises very easily.</p><p>Pertinent negatives: The patient does not have seizures. There is no evidence of hearing loss on formal screening today. We initially suspected ataxia, but this was not confirmed.</p><p>Family history: His brother has cystic fibrosis, but the patient is unaffected.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "hpo-rag-test-case-108",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-hpo-rag-test-case-108",
+      "binaryUrl": "Binary/testid-hpo-rag-test-case-108",
+      "text": "The first case was the second child of healthy non-consanguineous parents of Palestinian origin. She was born at 32 weeks gestation, weighing 1.800 kg via normal vaginal delivery, and required admission to the Neonatal unit for prematurity and respiratory distress. At 5 months of age, she was admitted to the pediatric ward due to recurrent vomiting, poor weight gain, and chronic constipation of 2 months duration. Physical examination showed a dehydrated, pale, cachectic infant, with poor eye contact but normal power and tone. Laboratory tests showed leukopenia, anemia, salt wasting, renal failure with elevated blood lactate, marked hyperuricemia, hypercholesterolemia, and hypertriglyceridemia. Abdominal ultrasound showed normal kidneys, heart echocardiography revealed no pulmonary hypertension. Moreover, Her clinical condition gradually deteriorated and within a few weeks of admission, she was in multiorgan failure, reached end-stage renal failure and regular peritoneal dialysis was initiated. At 12 months of age, the patient died after developing respiratory failure. Whole exome sequencing showed a homozygous variant in the SARS2 gene (c.1175A>G (p. Asp392Gly)), defined as a pathogenic variant according to the American College of Medical Genetics and Genomics (ACMG) classification",
+      "title": "Test Note - HPO RAG test case 108",
+      "html": "<h1>Test Note - HPO RAG test case 108</h1><p>The first case was the second child of healthy non-consanguineous parents of Palestinian origin. She was born at 32 weeks gestation, weighing 1.800 kg via normal vaginal delivery, and required admission to the Neonatal unit for prematurity and respiratory distress. At 5 months of age, she was admitted to the pediatric ward due to recurrent vomiting, poor weight gain, and chronic constipation of 2 months duration. Physical examination showed a dehydrated, pale, cachectic infant, with poor eye contact but normal power and tone. Laboratory tests showed leukopenia, anemia, salt wasting, renal failure with elevated blood lactate, marked hyperuricemia, hypercholesterolemia, and hypertriglyceridemia. Abdominal ultrasound showed normal kidneys, heart echocardiography revealed no pulmonary hypertension. Moreover, Her clinical condition gradually deteriorated and within a few weeks of admission, she was in multiorgan failure, reached end-stage renal failure and regular peritoneal dialysis was initiated. At 12 months of age, the patient died after developing respiratory failure. Whole exome sequencing showed a homozygous variant in the SARS2 gene (c.1175A>G (p. Asp392Gly)), defined as a pathogenic variant according to the American College of Medical Genetics and Genomics (ACMG) classification</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000001b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-01",
+      "binaryUrl": "Binary/testid-b2-01",
+      "text": "The patient has low muscle tone.",
+      "title": "Test Note - batch2 A1-hypotonia",
+      "html": "<h1>Test Note - batch2 A1-hypotonia</h1><p>The patient has low muscle tone.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000002b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-02",
+      "binaryUrl": "Binary/testid-b2-02",
+      "text": "He has an unusually small head.",
+      "title": "Test Note - batch2 A2-microcephaly",
+      "html": "<h1>Test Note - batch2 A2-microcephaly</h1><p>He has an unusually small head.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000003b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-03",
+      "binaryUrl": "Binary/testid-b2-03",
+      "text": "She has difficulty swallowing.",
+      "title": "Test Note - batch2 A3-dysphagia",
+      "html": "<h1>Test Note - batch2 A3-dysphagia</h1><p>She has difficulty swallowing.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000004b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-04",
+      "binaryUrl": "Binary/testid-b2-04",
+      "text": "The patient experiences frequent headaches.",
+      "title": "Test Note - batch2 A4-headache",
+      "html": "<h1>Test Note - batch2 A4-headache</h1><p>The patient experiences frequent headaches.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000005b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-05",
+      "binaryUrl": "Binary/testid-b2-05",
+      "text": "He has poor coordination.",
+      "title": "Test Note - batch2 A5-incoordination",
+      "html": "<h1>Test Note - batch2 A5-incoordination</h1><p>He has poor coordination.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000006b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-06",
+      "binaryUrl": "Binary/testid-b2-06",
+      "text": "The child has an enlarged liver.",
+      "title": "Test Note - batch2 A6-hepatomegaly",
+      "html": "<h1>Test Note - batch2 A6-hepatomegaly</h1><p>The child has an enlarged liver.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000007b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-07",
+      "binaryUrl": "Binary/testid-b2-07",
+      "text": "There is curvature of the spine.",
+      "title": "Test Note - batch2 A7-scoliosis",
+      "html": "<h1>Test Note - batch2 A7-scoliosis</h1><p>There is curvature of the spine.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000008b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-08",
+      "binaryUrl": "Binary/testid-b2-08",
+      "text": "The patient is short for his age.",
+      "title": "Test Note - batch2 A8-short-stature",
+      "html": "<h1>Test Note - batch2 A8-short-stature</h1><p>The patient is short for his age.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000009b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-09",
+      "binaryUrl": "Binary/testid-b2-09",
+      "text": "He gets winded climbing a single flight of stairs.",
+      "title": "Test Note - batch2 B1-exertional-dyspnea",
+      "html": "<h1>Test Note - batch2 B1-exertional-dyspnea</h1><p>He gets winded climbing a single flight of stairs.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000010b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-10",
+      "binaryUrl": "Binary/testid-b2-10",
+      "text": "Her hearing has gotten noticeably worse over the past year.",
+      "title": "Test Note - batch2 B2-hearing-impairment",
+      "html": "<h1>Test Note - batch2 B2-hearing-impairment</h1><p>Her hearing has gotten noticeably worse over the past year.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000011b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-11",
+      "binaryUrl": "Binary/testid-b2-11",
+      "text": "The baby has trouble feeding and often spits up.",
+      "title": "Test Note - batch2 B3-feeding-difficulties",
+      "html": "<h1>Test Note - batch2 B3-feeding-difficulties</h1><p>The baby has trouble feeding and often spits up.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000012b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-12",
+      "binaryUrl": "Binary/testid-b2-12",
+      "text": "He bruises very easily.",
+      "title": "Test Note - batch2 B4-bruising",
+      "html": "<h1>Test Note - batch2 B4-bruising</h1><p>He bruises very easily.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000013b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-13",
+      "binaryUrl": "Binary/testid-b2-13",
+      "text": "Her vision is blurry and getting worse.",
+      "title": "Test Note - batch2 B5-visual-impairment",
+      "html": "<h1>Test Note - batch2 B5-visual-impairment</h1><p>Her vision is blurry and getting worse.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000014b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-14",
+      "binaryUrl": "Binary/testid-b2-14",
+      "text": "The patient's muscles have been wasting away.",
+      "title": "Test Note - batch2 B6-muscle-atrophy",
+      "html": "<h1>Test Note - batch2 B6-muscle-atrophy</h1><p>The patient&#x27;s muscles have been wasting away.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000015b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-15",
+      "binaryUrl": "Binary/testid-b2-15",
+      "text": "He can't keep up with other kids on the playground.",
+      "title": "Test Note - batch2 C1-exercise-intolerance",
+      "html": "<h1>Test Note - batch2 C1-exercise-intolerance</h1><p>He can&#x27;t keep up with other kids on the playground.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000016b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-16",
+      "binaryUrl": "Binary/testid-b2-16",
+      "text": "Her speech is hard to understand even for family.",
+      "title": "Test Note - batch2 C2-dysarthria",
+      "html": "<h1>Test Note - batch2 C2-dysarthria</h1><p>Her speech is hard to understand even for family.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000017b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-17",
+      "binaryUrl": "Binary/testid-b2-17",
+      "text": "Repeated chest infections since birth.",
+      "title": "Test Note - batch2 C3-recurrent-resp-infections",
+      "html": "<h1>Test Note - batch2 C3-recurrent-resp-infections</h1><p>Repeated chest infections since birth.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000018b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-18",
+      "binaryUrl": "Binary/testid-b2-18",
+      "text": "He stopped meeting milestones and lost skills he had.",
+      "title": "Test Note - batch2 C4-developmental-regression",
+      "html": "<h1>Test Note - batch2 C4-developmental-regression</h1><p>He stopped meeting milestones and lost skills he had.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000019b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-19",
+      "binaryUrl": "Binary/testid-b2-19",
+      "text": "Skin is very stretchy and joints bend too far.",
+      "title": "Test Note - batch2 C5-hyperextensible-skin-joint-hypermobility",
+      "html": "<h1>Test Note - batch2 C5-hyperextensible-skin-joint-hypermobility</h1><p>Skin is very stretchy and joints bend too far.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000020b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-20",
+      "binaryUrl": "Binary/testid-b2-20",
+      "text": "The patient does not have seizures.",
+      "title": "Test Note - batch2 D1-suppress-seizure",
+      "html": "<h1>Test Note - batch2 D1-suppress-seizure</h1><p>The patient does not have seizures.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000021b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-21",
+      "binaryUrl": "Binary/testid-b2-21",
+      "text": "There is no evidence of hearing loss.",
+      "title": "Test Note - batch2 D2-suppress-hearing-loss",
+      "html": "<h1>Test Note - batch2 D2-suppress-hearing-loss</h1><p>There is no evidence of hearing loss.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000022b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-22",
+      "binaryUrl": "Binary/testid-b2-22",
+      "text": "His brother has cystic fibrosis, but the patient is unaffected.",
+      "title": "Test Note - batch2 D3-suppress-attribution-cf",
+      "html": "<h1>Test Note - batch2 D3-suppress-attribution-cf</h1><p>His brother has cystic fibrosis, but the patient is unaffected.</p>",
+      "isProgressNote": true
+    },
+    {
+      "id": "0000023b2",
+      "date": "2019-01-11",
+      "encounterId": "Encounter/testid-b2-23",
+      "binaryUrl": "Binary/testid-b2-23",
+      "text": "We initially suspected ataxia, but this was not confirmed.",
+      "title": "Test Note - batch2 D4-suppress-ataxia",
+      "html": "<h1>Test Note - batch2 D4-suppress-ataxia</h1><p>We initially suspected ataxia, but this was not confirmed.</p>",
+      "isProgressNote": true
+    }
+  ]
+}
